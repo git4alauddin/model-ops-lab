@@ -4,9 +4,11 @@ Production-style, versioned MLOps project built incrementally.
 
 ### V1 Status
 
-V1 chunk 1 scaffolding is in place:
+V1 chunks 1-2 completed:
 - app entrypoints and modules
 - config template
+- config validation + robust dataset loading
+- focused tests for config and dataset loader
 - docs structure
 - environment and dependency files
 
@@ -23,6 +25,9 @@ modelOpsLab/
     utils/
   configs/
     training.yaml
+  tests/
+    test_v1_config_validation.py
+    test_v1_dataset_loading.py
   data/
   artifacts/
   docs/

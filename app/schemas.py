@@ -1,4 +1,8 @@
-"""Config/data schema placeholders for V1."""
+"""Lightweight contracts used by V1 configuration validation."""
 
-# V1-C1 note:
-# Detailed schema validation is added in a later implementation chunk.
+REQUIRED_CONFIG_KEYS: tuple[str, ...] = (
+    "dataset.path",
+    "dataset.target_column",
+    "training.test_size",
+    "training.random_state",
+)
