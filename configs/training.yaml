@@ -1,0 +1,19 @@
+dataset:
+  path: data/churn.csv
+  target_column: churn
+
+training:
+  test_size: 0.2
+  random_state: 42
+
+model:
+  type: logistic_regression
+  params:
+    max_iter: 200
+
+artifacts:
+  dir: artifacts
+  model_file: model.pkl
+  metrics_file: metrics.json
+  config_snapshot_file: config_snapshot.json
+  metadata_file: training_metadata.json
