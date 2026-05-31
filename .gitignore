@@ -1,18 +1,13 @@
-# Python
+# Virtual environment (current)
+vir_env/
+
+# Python cache
 __pycache__/
 *.py[cod]
-.venv/
-venv/
 
-# Env/config
+# Local environment file
 .env
 
-# ML artifacts
-artifacts/
-mlruns/
-data/raw/
-data/processed/
-
-# OS
+# OS files
 .DS_Store
 Thumbs.db
