@@ -1,6 +1,8 @@
 dataset:
   path: data/churn.csv
   target_column: churn
+  drop_columns:
+    - customer_id
 
 training:
   test_size: 0.2

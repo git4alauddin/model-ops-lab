@@ -8,6 +8,7 @@ Chunk V1-C4: train-test split.
 Chunk V1-C5: feature type detection.
 Chunk V1-C6: preprocessing pipeline construction.
 Chunk V1-C7: baseline model training.
+Chunk V1-C8: sample churn dataset smoke run.
 
 ## Folder Structure
 Established `app/`, `configs/`, `data/`, `artifacts/`, and documentation hierarchy under `docs/`.
@@ -121,6 +122,24 @@ Tests follow `tests/test_v1_cX_<component>.py` naming so each test file maps to 
   - validates sklearn pipeline composition
   - validates successful training
   - validates controlled training failure
+
+## V1-C8 Additions
+- `data/churn.csv`
+  - added small synthetic binary churn dataset
+  - includes mixed numeric and categorical feature columns
+  - includes binary `churn` target
+- `configs/training.yaml`
+  - added `dataset.drop_columns`
+  - configured `customer_id` removal before training
+- `app/train.py`
+  - added `drop_configured_columns`
+  - applies configured column drops after dataset loading and before feature-target split
+  - validates configured drop columns exist
+- `tests/test_v1_c8_sample_churn_dataset.py`
+  - validates sample dataset loads
+  - validates binary target values
+  - validates configured column drop behavior
+  - validates missing drop column failure
 
 ## Configs Used
 - `configs/training.yaml` created with placeholder baseline settings.

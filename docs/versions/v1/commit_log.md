@@ -105,7 +105,7 @@ This file records meaningful V1 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `23 passed in 1.32s`.
 - `.\vir_env\Scripts\python.exe -m app.train` still fails with controlled missing dataset error, as expected before adding real data.
 
-## Pending - v1-c7: add baseline model training
+## 5f0a604 - v1-c7: add baseline model training with focused tests
 
 ### What Changed
 - Implemented baseline training helpers in `app/pipeline/trainer.py`.
@@ -126,3 +126,24 @@ This file records meaningful V1 commits and the operational purpose of each chan
 ### Verification
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `28 passed in 1.27s` after the train entrypoint cleanup.
 - `.\vir_env\Scripts\python.exe -m app.train` still fails with controlled missing dataset error, as expected before adding real data.
+
+## Pending - v1-c8: add sample churn dataset smoke run
+
+### What Changed
+- Added `data/churn.csv` as a small synthetic binary churn dataset.
+- Added `dataset.drop_columns` to `configs/training.yaml`.
+- Configured `customer_id` to be dropped before training.
+- Added `drop_configured_columns` in `app/train.py`.
+- Updated training flow to drop configured non-feature columns before feature-target split.
+- Added focused tests for sample dataset loading and configured column dropping.
+- Updated README and V1 documentation.
+
+### What Problem It Solved
+- Allows `python -m app.train` to prove the success path instead of only controlled failure handling.
+- Provides a stable V1 smoke dataset for local training verification.
+- Prevents identifier columns from entering model features.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `31 passed in 1.32s`.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully using `data/churn.csv`.
+- Training logs showed `rows=20`, `train_rows=16`, `test_rows=4`, `numeric_features=3`, `categorical_features=4`, and `fitted_steps=2`.

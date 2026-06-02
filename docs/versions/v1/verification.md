@@ -9,6 +9,7 @@
 - Ran unit tests for feature type detection.
 - Ran unit tests for preprocessing pipeline construction and unknown-category handling.
 - Ran unit tests for baseline model construction, training pipeline composition, and controlled training failure.
+- Ran unit tests and training bootstrap against the synthetic churn smoke dataset.
 
 ## Commands Executed
 - `Get-ChildItem -Recurse -File app,configs,docs,data,artifacts`
@@ -19,6 +20,7 @@
 ## Expected Output
 - Training bootstrap starts.
 - If dataset is missing, process exits with controlled `Dataset file not found` error.
+- With `data/churn.csv` present, training bootstrap completes successfully.
 
 ## Actual Output
 - `INFO Training bootstrap started`
@@ -33,7 +35,9 @@
 - After renaming tests to component-aware filenames: `23 passed in 1.31s`.
 - After adding baseline model training tests: `28 passed in 1.36s`.
 - After cleaning `train.py` IDE inspection issues: `28 passed in 1.27s`.
+- After adding sample churn dataset smoke tests: `31 passed in 1.32s`.
+- `python -m app.train` completed successfully with `rows=20`, `train_rows=16`, `test_rows=4`, `numeric_features=3`, `categorical_features=4`, and `fitted_steps=2`.
 
 ## Outcome
-Scaffold, V1-C2 error handling path, V1-C3 feature-target split, V1-C4 train-test split, V1-C5 feature type detection, V1-C6 preprocessing pipeline construction, and V1-C7 baseline model training are operational.
+Scaffold, V1-C2 error handling path, V1-C3 feature-target split, V1-C4 train-test split, V1-C5 feature type detection, V1-C6 preprocessing pipeline construction, V1-C7 baseline model training, and V1-C8 sample dataset smoke run are operational.
 Unit tests are passing in the project virtual environment.

@@ -16,3 +16,5 @@
 - Combining preprocessing and model in one sklearn pipeline prevents training-serving skew later.
 - Model construction should reject unsupported config values before training begins.
 - Training duration should be tracked from the first baseline so later automation has timing context.
+- A small local smoke dataset is useful for proving success paths before artifact persistence exists.
+- Identifier columns should be dropped explicitly through config instead of being silently used as model features.

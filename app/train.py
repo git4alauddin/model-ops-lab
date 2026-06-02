@@ -27,6 +27,23 @@ class DataError(ValueError):
     """Raised when dataset loading or validation fails."""
 
 
+def drop_configured_columns(
+    dataframe: pd.DataFrame,
+    drop_columns: list[str],
+) -> pd.DataFrame:
+    """Drop configured non-feature columns before training."""
+    if not drop_columns:
+        return dataframe
+
+    missing_columns = [
+        column for column in drop_columns if column not in dataframe.columns
+    ]
+    if missing_columns:
+        raise DataError(f"Configured drop columns not found: {missing_columns}")
+
+    return dataframe.drop(columns=drop_columns)
+
+
 def load_dataset(dataset_path: str | Path) -> pd.DataFrame:
     """Load dataset from CSV with controlled failures."""
     path = Path(dataset_path)
@@ -59,10 +76,12 @@ def main() -> None:
         model_config = cast(dict[str, Any], config["model"])
         dataset_path = cast(str, dataset_config["path"])
         target_column = cast(str, dataset_config["target_column"])
+        drop_columns = cast(list[str], dataset_config.get("drop_columns", []))
         test_size = cast(float, training_config["test_size"])
         random_state = cast(int, training_config["random_state"])
 
         dataframe = load_dataset(dataset_path)
+        dataframe = drop_configured_columns(dataframe, drop_columns)
         features, target = split_features_target(dataframe, target_column)
         x_train, x_test, y_train, y_test = split_train_test(
             features,
@@ -89,6 +108,7 @@ def main() -> None:
             len(dataframe.columns),
             target_column,
         )
+        logger.info("Dropped configured columns. columns=%s", drop_columns)
         logger.info(
             "Feature-target split completed. feature_cols=%s target_rows=%s",
             len(features.columns),
