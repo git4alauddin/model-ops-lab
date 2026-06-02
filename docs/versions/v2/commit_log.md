@@ -27,7 +27,7 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - Validation command returned a passed readiness report with `rows=20`, `columns=9`, `schema_version='v1'`, and no issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after moving shared dataset loading into `app/data.py`.
 
-## Pending - v2-c2: add structural schema validation
+## ce48590 - v2-c2: add structural schema validation
 
 ### What Changed
 - Added required column validation in `app/validation/checks.py`.
@@ -47,3 +47,24 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `54 passed in 2.79s`.
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no structural issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after structural validation changes.
+
+## Pending - v2-c3: add datatype validation
+
+### What Changed
+- Added column datatype validation in `app/validation/checks.py`.
+- Added pandas dtype mapping for schema labels: `string`, `integer`, `float`, `boolean`, and `category`.
+- Updated schema loading to reject unsupported schema dtype labels.
+- Updated `app/validate_data.py` to include datatype issues in the validation report.
+- Updated README and V2 documentation.
+- Added focused datatype validation tests.
+
+### What Problem It Solved
+- Detects dataframe columns with the right names but wrong types.
+- Blocks schema drift where numeric, boolean, or categorical fields arrive in an unexpected representation.
+- Keeps validation reporting consistent by returning `ERROR` issues for dtype mismatches.
+- Prepares the validation layer for null, range, and categorical value checks.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `59 passed in 1.70s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no dtype issues.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully after datatype validation changes.

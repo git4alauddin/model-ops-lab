@@ -3,6 +3,7 @@
 ## Scope
 Chunk V2-C1: validation foundation.
 Chunk V2-C2: structural schema validation.
+Chunk V2-C3: datatype validation.
 
 ## V2-C1 Additions
 - `app/validate_data.py`
@@ -74,8 +75,39 @@ configs/training.yaml
   -> log validation result
 ```
 
+## V2-C3 Additions
+- `app/validation/checks.py`
+  - added `validate_column_dtypes`
+  - maps schema dtype labels to pandas-compatible checks
+  - supports `string`, `integer`, `float`, `boolean`, and `category`
+  - skips missing columns so structural validation remains the source for missing-column issues
+  - rejects unsupported schema dtype labels during schema loading
+- `app/validate_data.py`
+  - runs datatype checks after structural checks
+  - includes datatype failures in the validation report
+- `tests/test_v2_c3_datatype_validation.py`
+  - validates current churn dataset dtype success
+  - validates wrong integer dtype failure
+  - validates wrong float dtype failure
+  - validates wrong boolean/category dtype failures
+  - validates failed readiness report for wrong dtype
+- `README.md`
+  - updated V2 status with datatype validation
+
+## Current V2-C3 Workflow
+```text
+configs/training.yaml
+  -> resolve dataset path
+  -> load data/churn.csv
+  -> load schema_versions/customer_churn_v1.yaml
+  -> compare dataframe columns with schema columns
+  -> compare present dataframe dtypes with schema dtype rules
+  -> add ERROR issue for dtype mismatches
+  -> build validation report with passed/failed status
+  -> log validation result
+```
+
 ## Not Yet Implemented
-- dataframe dtype validation
 - nullable field validation
 - range and categorical checks
 - duplicate checks

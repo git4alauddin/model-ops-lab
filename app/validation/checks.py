@@ -4,10 +4,17 @@ from pathlib import Path
 from typing import Any
 
 import pandas as pd
+from pandas.api.types import (
+    is_bool_dtype,
+    is_float_dtype,
+    is_integer_dtype,
+)
 import yaml
 from yaml import YAMLError
 
 from app.validation.reports import ValidationIssue
+
+SUPPORTED_SCHEMA_DTYPES = {"boolean", "category", "float", "integer", "string"}
 
 
 class ValidationError(ValueError):
@@ -83,6 +90,33 @@ def validate_schema_columns(
     return issues
 
 
+def validate_column_dtypes(
+    dataframe: pd.DataFrame,
+    schema: dict[str, Any],
+) -> list[ValidationIssue]:
+    """Return issues for present columns whose pandas dtype does not match schema."""
+    issues: list[ValidationIssue] = []
+    for column_name, column_rules in _schema_columns(schema).items():
+        if column_name not in dataframe.columns:
+            continue
+
+        expected_dtype = str(column_rules["dtype"]).lower()
+        series = dataframe[column_name]
+        if not _series_matches_schema_dtype(series, expected_dtype):
+            issues.append(
+                ValidationIssue(
+                    severity="ERROR",
+                    check="column_dtypes",
+                    message=(
+                        f"column '{column_name}' expected {expected_dtype} "
+                        f"but found {series.dtype}"
+                    ),
+                )
+            )
+
+    return issues
+
+
 def _validate_schema_contract(schema: dict[str, Any]) -> None:
     required_keys = ["name", "version", "columns"]
     for key in required_keys:
@@ -100,12 +134,53 @@ def _validate_schema_contract(schema: dict[str, Any]) -> None:
             )
         if column_rules.get("dtype") in (None, ""):
             raise ValidationError(f"Missing dtype for column: {column_name}")
+        dtype = str(column_rules["dtype"]).lower()
+        if dtype not in SUPPORTED_SCHEMA_DTYPES:
+            raise ValidationError(
+                f"Unsupported dtype '{dtype}' for column: {column_name}"
+            )
         if "nullable" not in column_rules:
             raise ValidationError(f"Missing nullable rule for column: {column_name}")
 
 
 def _schema_column_names(schema: dict[str, Any]) -> list[str]:
+    return list(_schema_columns(schema).keys())
+
+
+def _schema_columns(schema: dict[str, Any]) -> dict[str, Any]:
     columns = schema.get("columns")
     if not isinstance(columns, dict):
         raise ValidationError("Validation schema columns must be a map.")
-    return list(columns.keys())
+    return columns
+
+
+def _series_matches_schema_dtype(series: pd.Series, expected_dtype: str) -> bool:
+    dtype_name = str(series.dtype)
+    if expected_dtype == "boolean":
+        return bool(is_bool_dtype(series))
+
+    if expected_dtype == "integer":
+        return bool(is_integer_dtype(series) and not is_bool_dtype(series))
+
+    if expected_dtype == "float":
+        return bool(is_float_dtype(series))
+
+    if expected_dtype == "string":
+        return bool(
+            dtype_name in {"str", "string"}
+            or _non_null_values_match_type(series, str)
+        )
+
+    if expected_dtype == "category":
+        return bool(
+            isinstance(series.dtype, pd.CategoricalDtype)
+            or dtype_name in {"str", "string"}
+            or _non_null_values_match_type(series, str)
+        )
+
+    raise ValidationError(f"Unsupported dtype: {expected_dtype}")
+
+
+def _non_null_values_match_type(series: pd.Series, expected_type: type) -> bool:
+    non_null_values = series.dropna()
+    return bool(non_null_values.map(lambda value: isinstance(value, expected_type)).all())

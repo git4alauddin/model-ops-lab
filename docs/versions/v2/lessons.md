@@ -6,3 +6,5 @@
 - Starting with schema loading keeps V2 grounded before adding many checks.
 - Structural validation should happen before dtype, null, range, and category checks.
 - Missing and unexpected columns are blocking schema drift signals.
+- Datatype validation should run after structural checks so missing columns are not reported twice.
+- Schema dtype labels should stay simple and explicit before introducing a heavier validation framework.
