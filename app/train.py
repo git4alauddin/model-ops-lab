@@ -1,6 +1,7 @@
 """V1 training entrypoint for config and dataset validation."""
 
 from pathlib import Path
+from typing import Any, cast
 
 import pandas as pd
 from pandas.errors import EmptyDataError, ParserError
@@ -12,6 +13,12 @@ from app.pipeline.preprocessing import (
     PreprocessingError,
     split_features_target,
     split_train_test,
+)
+from app.pipeline.trainer import (
+    TrainingError,
+    build_model,
+    build_training_pipeline,
+    train_model,
 )
 from app.utils.logger import get_logger
 
@@ -47,10 +54,13 @@ def main() -> None:
     try:
         logger.info("Training bootstrap started.")
         config = load_config(config_path)
-        dataset_path = config["dataset"]["path"]
-        target_column = config["dataset"]["target_column"]
-        test_size = config["training"]["test_size"]
-        random_state = config["training"]["random_state"]
+        dataset_config = cast(dict[str, Any], config["dataset"])
+        training_config = cast(dict[str, Any], config["training"])
+        model_config = cast(dict[str, Any], config["model"])
+        dataset_path = cast(str, dataset_config["path"])
+        target_column = cast(str, dataset_config["target_column"])
+        test_size = cast(float, training_config["test_size"])
+        random_state = cast(int, training_config["random_state"])
 
         dataframe = load_dataset(dataset_path)
         features, target = split_features_target(dataframe, target_column)
@@ -65,6 +75,13 @@ def main() -> None:
             numeric_features,
             categorical_features,
         )
+        model = build_model(model_config)
+        training_pipeline = build_training_pipeline(preprocessing_pipeline, model)
+        fitted_pipeline, training_duration = train_model(
+            training_pipeline,
+            x_train,
+            y_train,
+        )
 
         logger.info(
             "Dataset loaded successfully. rows=%s cols=%s target=%s",
@@ -78,25 +95,45 @@ def main() -> None:
             len(target),
         )
         logger.info(
-            "Train-test split completed. train_rows=%s test_rows=%s test_size=%s random_state=%s",
+            (
+                "Train-test split completed. train_rows=%s test_rows=%s "
+                "train_targets=%s test_targets=%s test_size=%s random_state=%s"
+            ),
             len(x_train),
             len(x_test),
+            len(y_train),
+            len(y_test),
             test_size,
             random_state,
         )
         logger.info(
-            "Feature type detection completed. numeric_features=%s categorical_features=%s",
+            (
+                "Feature type detection completed. numeric_features=%s "
+                "categorical_features=%s"
+            ),
             len(numeric_features),
             len(categorical_features),
         )
         logger.info(
-            "Preprocessing pipeline created. numeric_enabled=%s categorical_enabled=%s transformers=%s",
+            (
+                "Preprocessing pipeline created. numeric_enabled=%s "
+                "categorical_enabled=%s transformers=%s"
+            ),
             bool(numeric_features),
             bool(categorical_features),
             len(preprocessing_pipeline.transformers),
         )
+        logger.info(
+            (
+                "Model training completed. model_type=%s "
+                "duration_seconds=%.6f fitted_steps=%s"
+            ),
+            model_config["type"],
+            training_duration,
+            len(fitted_pipeline.steps),
+        )
         logger.info("Training bootstrap completed.")
-    except (ConfigError, DataError, PreprocessingError) as exc:
+    except (ConfigError, DataError, PreprocessingError, TrainingError) as exc:
         logger.exception("Training bootstrap failed: %s", exc)
         raise SystemExit(1) from exc
 

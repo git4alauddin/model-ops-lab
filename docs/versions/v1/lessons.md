@@ -13,3 +13,6 @@
 - Feature type detection should fail loudly on unsupported dtypes to avoid silent column loss.
 - `OneHotEncoder(handle_unknown="ignore")` prevents unseen categories from breaking future inference.
 - Preprocessing construction should be reusable and separate from training orchestration.
+- Combining preprocessing and model in one sklearn pipeline prevents training-serving skew later.
+- Model construction should reject unsupported config values before training begins.
+- Training duration should be tracked from the first baseline so later automation has timing context.

@@ -7,6 +7,7 @@ Chunk V1-C3: feature-target split.
 Chunk V1-C4: train-test split.
 Chunk V1-C5: feature type detection.
 Chunk V1-C6: preprocessing pipeline construction.
+Chunk V1-C7: baseline model training.
 
 ## Folder Structure
 Established `app/`, `configs/`, `data/`, `artifacts/`, and documentation hierarchy under `docs/`.
@@ -99,6 +100,27 @@ Tests follow `tests/test_v1_cX_<component>.py` naming so each test file maps to 
   - validates mixed, numeric-only, and categorical-only pipeline construction
   - validates empty feature config failure
   - validates unknown categorical values do not break transformation
+
+## V1-C7 Additions
+- `app/pipeline/trainer.py`
+  - added `TrainingError`
+  - added `build_model`
+  - added Logistic Regression baseline support
+  - added `build_training_pipeline`
+  - added `train_model` with training duration tracking
+  - wraps training failures in controlled errors
+- `app/train.py`
+  - reads model config from `configs/training.yaml`
+  - builds model after preprocessing pipeline construction
+  - builds a full sklearn training pipeline
+  - fits the pipeline on training data
+  - logs model type, duration, and fitted step count
+- `tests/test_v1_c7_baseline_model_training.py`
+  - validates Logistic Regression model construction
+  - validates unsupported model type failure
+  - validates sklearn pipeline composition
+  - validates successful training
+  - validates controlled training failure
 
 ## Configs Used
 - `configs/training.yaml` created with placeholder baseline settings.

@@ -4,7 +4,7 @@ Production-style, versioned MLOps project built incrementally.
 
 ### V1 Status
 
-V1 chunks 1-6 completed:
+V1 chunks 1-7 completed:
 - app entrypoints and modules
 - config template
 - config validation + robust dataset loading
@@ -12,6 +12,7 @@ V1 chunks 1-6 completed:
 - train-test split
 - feature type detection
 - preprocessing pipeline construction
+- baseline model training
 - focused tests for config and dataset loader
 - docs structure
 - environment and dependency files
@@ -36,6 +37,7 @@ modelOpsLab/
     test_v1_c4_train_test_split.py
     test_v1_c5_feature_type_detection.py
     test_v1_c6_preprocessing_pipeline.py
+    test_v1_c7_baseline_model_training.py
   data/
   artifacts/
   docs/

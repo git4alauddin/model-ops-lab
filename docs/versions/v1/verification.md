@@ -8,6 +8,7 @@
 - Ran unit tests for train-test split behavior and reproducibility.
 - Ran unit tests for feature type detection.
 - Ran unit tests for preprocessing pipeline construction and unknown-category handling.
+- Ran unit tests for baseline model construction, training pipeline composition, and controlled training failure.
 
 ## Commands Executed
 - `Get-ChildItem -Recurse -File app,configs,docs,data,artifacts`
@@ -30,7 +31,9 @@
 - After adding feature type detection tests: `18 passed in 1.34s`.
 - After adding preprocessing pipeline tests: `23 passed in 1.32s`.
 - After renaming tests to component-aware filenames: `23 passed in 1.31s`.
+- After adding baseline model training tests: `28 passed in 1.36s`.
+- After cleaning `train.py` IDE inspection issues: `28 passed in 1.27s`.
 
 ## Outcome
-Scaffold, V1-C2 error handling path, V1-C3 feature-target split, V1-C4 train-test split, V1-C5 feature type detection, and V1-C6 preprocessing pipeline construction are operational.
+Scaffold, V1-C2 error handling path, V1-C3 feature-target split, V1-C4 train-test split, V1-C5 feature type detection, V1-C6 preprocessing pipeline construction, and V1-C7 baseline model training are operational.
 Unit tests are passing in the project virtual environment.

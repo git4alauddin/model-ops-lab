@@ -84,7 +84,7 @@ This file records meaningful V1 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `18 passed in 1.34s`.
 - `.\vir_env\Scripts\python.exe -m app.train` still fails with controlled missing dataset error, as expected before adding real data.
 
-## Pending - v1-c6: build preprocessing pipeline
+## 4245035 - v1-c6: build preprocessing pipeline with focused tests
 
 ### What Changed
 - Implemented `build_preprocessing_pipeline` in `app/pipeline/preprocessing.py`.
@@ -103,4 +103,26 @@ This file records meaningful V1 commits and the operational purpose of each chan
 
 ### Verification
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `23 passed in 1.32s`.
+- `.\vir_env\Scripts\python.exe -m app.train` still fails with controlled missing dataset error, as expected before adding real data.
+
+## Pending - v1-c7: add baseline model training
+
+### What Changed
+- Implemented baseline training helpers in `app/pipeline/trainer.py`.
+- Added Logistic Regression model construction from config.
+- Added full sklearn training pipeline composition with preprocessing and model steps.
+- Added controlled `TrainingError` handling.
+- Added training duration tracking.
+- Updated `app/train.py` to train the fitted pipeline after preprocessing pipeline construction.
+- Cleaned `app/train.py` static inspection issues with typed config extraction, used split outputs, and shorter log strings.
+- Added focused baseline model training tests.
+- Updated README and V1 documentation.
+
+### What Problem It Solved
+- Turns the prepared train/test data and preprocessing pipeline into an actual fitted baseline model.
+- Keeps model construction and fitting logic out of the training entrypoint.
+- Establishes the first reusable training pipeline needed before evaluation and artifact persistence.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `28 passed in 1.27s` after the train entrypoint cleanup.
 - `.\vir_env\Scripts\python.exe -m app.train` still fails with controlled missing dataset error, as expected before adding real data.
