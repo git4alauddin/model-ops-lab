@@ -196,6 +196,8 @@ Tests follow `tests/test_v1_cX_<component>.py` naming so each test file maps to 
   - configures logger with file path from training config
   - logs configured log file path
   - adds a run-start separator with timestamp for appended log readability
+  - uses stable logger name `modelopslab.training`
+  - writes key runtime outputs as readable sectioned key-value blocks
 - `.gitignore`
   - ignores runtime logs
 - `tests/test_v1_c11_file_logging.py`

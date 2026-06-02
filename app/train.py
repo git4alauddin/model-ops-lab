@@ -30,6 +30,8 @@ from app.utils.artifacts import (
 )
 from app.utils.logger import build_log_path, get_logger
 
+LOGGER_NAME = "modelopslab.training"
+
 
 class DataError(ValueError):
     """Raised when dataset loading or validation fails."""
@@ -71,22 +73,28 @@ def load_dataset(dataset_path: str | Path) -> pd.DataFrame:
     return dataframe
 
 
+def _format_log_section(title: str, values: dict[str, Any]) -> str:
+    """Format a readable key-value section for runtime logs."""
+    key_width = max(len(key) for key in values)
+    lines = [f"[{title}]"]
+    lines.extend(f"{key:<{key_width}} : {value}" for key, value in values.items())
+    return "\n".join(lines)
+
+
 def main() -> None:
     """Validate config and dataset readiness for the V1 training flow."""
     config_path = Path("configs/training.yaml")
-    logger = get_logger(__name__)
+    logger = get_logger(LOGGER_NAME)
 
     try:
         config = load_config(config_path)
         log_path = build_log_path(config)
-        logger = get_logger(__name__, log_path)
+        logger = get_logger(LOGGER_NAME, log_path)
         run_started_at = datetime.now(UTC).isoformat()
         logger.info(
             "===== RUN STARTED %s | workflow=training =====",
             run_started_at,
         )
-        logger.info("Training bootstrap started.")
-        logger.info("Runtime log file configured. path=%s", log_path)
         dataset_config = cast(dict[str, Any], config["dataset"])
         training_config = cast(dict[str, Any], config["training"])
         model_config = cast(dict[str, Any], config["model"])
@@ -140,76 +148,85 @@ def main() -> None:
         save_json(config, artifact_paths["config_snapshot"])
         save_json(metadata, artifact_paths["metadata"])
 
+        logger.info(_format_log_section("RUNTIME", {"log_file": log_path}))
         logger.info(
-            "Dataset loaded successfully. rows=%s cols=%s target=%s",
-            len(dataframe),
-            len(dataframe.columns),
-            target_column,
-        )
-        logger.info("Dropped configured columns. columns=%s", drop_columns)
-        logger.info(
-            "Feature-target split completed. feature_cols=%s target_rows=%s",
-            len(features.columns),
-            len(target),
-        )
-        logger.info(
-            (
-                "Train-test split completed. train_rows=%s test_rows=%s "
-                "train_targets=%s test_targets=%s test_size=%s random_state=%s"
-            ),
-            len(x_train),
-            len(x_test),
-            len(y_train),
-            len(y_test),
-            test_size,
-            random_state,
+            _format_log_section(
+                "DATASET",
+                {
+                    "path": dataset_path,
+                    "rows": len(dataframe),
+                    "columns": len(dataframe.columns),
+                    "target": target_column,
+                    "dropped_columns": drop_columns,
+                },
+            )
         )
         logger.info(
-            (
-                "Feature type detection completed. numeric_features=%s "
-                "categorical_features=%s"
-            ),
-            len(numeric_features),
-            len(categorical_features),
+            _format_log_section(
+                "SPLIT",
+                {
+                    "feature_columns": len(features.columns),
+                    "target_rows": len(target),
+                    "train_rows": len(x_train),
+                    "test_rows": len(x_test),
+                    "train_targets": len(y_train),
+                    "test_targets": len(y_test),
+                    "test_size": test_size,
+                    "random_state": random_state,
+                },
+            )
         )
         logger.info(
-            (
-                "Preprocessing pipeline created. numeric_enabled=%s "
-                "categorical_enabled=%s transformers=%s"
-            ),
-            bool(numeric_features),
-            bool(categorical_features),
-            len(preprocessing_pipeline.transformers),
+            _format_log_section(
+                "FEATURES",
+                {
+                    "numeric_features": len(numeric_features),
+                    "categorical_features": len(categorical_features),
+                },
+            )
         )
         logger.info(
-            (
-                "Model training completed. model_type=%s "
-                "duration_seconds=%.6f fitted_steps=%s"
-            ),
-            model_config["type"],
-            training_duration,
-            len(fitted_pipeline.steps),
+            _format_log_section(
+                "PREPROCESSING",
+                {
+                    "numeric_enabled": bool(numeric_features),
+                    "categorical_enabled": bool(categorical_features),
+                    "transformers": len(preprocessing_pipeline.transformers),
+                },
+            )
         )
         logger.info(
-            (
-                "Evaluation completed. accuracy=%.6f precision=%.6f "
-                "recall=%.6f f1=%.6f confusion_matrix=%s"
-            ),
-            metrics["accuracy"],
-            metrics["precision"],
-            metrics["recall"],
-            metrics["f1"],
-            metrics["confusion_matrix"],
+            _format_log_section(
+                "MODEL",
+                {
+                    "type": model_config["type"],
+                    "duration_seconds": f"{training_duration:.6f}",
+                    "fitted_steps": len(fitted_pipeline.steps),
+                },
+            )
         )
         logger.info(
-            (
-                "Artifacts saved. model=%s metrics=%s config_snapshot=%s "
-                "metadata=%s"
-            ),
-            artifact_paths["model"],
-            artifact_paths["metrics"],
-            artifact_paths["config_snapshot"],
-            artifact_paths["metadata"],
+            _format_log_section(
+                "EVALUATION",
+                {
+                    "accuracy": f"{metrics['accuracy']:.6f}",
+                    "precision": f"{metrics['precision']:.6f}",
+                    "recall": f"{metrics['recall']:.6f}",
+                    "f1": f"{metrics['f1']:.6f}",
+                    "confusion_matrix": metrics["confusion_matrix"],
+                },
+            )
+        )
+        logger.info(
+            _format_log_section(
+                "ARTIFACTS",
+                {
+                    "model": artifact_paths["model"],
+                    "metrics": artifact_paths["metrics"],
+                    "config_snapshot": artifact_paths["config_snapshot"],
+                    "metadata": artifact_paths["metadata"],
+                },
+            )
         )
         logger.info("Training bootstrap completed.")
     except (

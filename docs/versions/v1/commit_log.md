@@ -206,6 +206,8 @@ This file records meaningful V1 commits and the operational purpose of each chan
 - Added `logging.dir` and `logging.file` to `configs/training.yaml`.
 - Updated `app/train.py` to write logs to `logs/modelopslab.log`.
 - Added a run-start separator with timestamp for appended runtime logs.
+- Replaced `__main__` log name with stable `modelopslab.training` logger name.
+- Reworked runtime log entries into sectioned key-value blocks.
 - Updated `.gitignore` to ignore runtime logs.
 - Added focused file logging tests.
 - Updated README and V1 documentation.
@@ -220,3 +222,6 @@ This file records meaningful V1 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully.
 - Training generated `logs/modelopslab.log`.
 - `logs/modelopslab.log` is ignored by git.
+- After log-name cleanup: `.\vir_env\Scripts\python.exe -m pytest -q` returned `44 passed in 3.73s`.
+- After stable logger name and sectioned block polish: `.\vir_env\Scripts\python.exe -m pytest -q` returned `46 passed in 1.80s`.
+- `.\vir_env\Scripts\python.exe -m app.train` logged with `modelopslab.training` and readable runtime sections.

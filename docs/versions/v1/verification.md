@@ -47,11 +47,13 @@
 - After adding artifact persistence tests: `40 passed in 1.74s`.
 - `python -m app.train` generated `artifacts/model.pkl`, `artifacts/metrics.json`, `artifacts/config_snapshot.json`, and `artifacts/training_metadata.json`.
 - After adding file-based logging tests: `44 passed in 1.40s`.
-- `python -m app.train` generated `logs/training.log`.
-- `logs/training.log` is ignored by git.
 - After renaming runtime log file and adding run separators: `44 passed in 1.35s`.
 - `python -m app.train` generated `logs/modelopslab.log`.
 - `logs/modelopslab.log` contains a `RUN STARTED` separator and is ignored by git.
+- Removed stale local `logs/training.log`; no tracked references to `training.log` remain.
+- After log-name cleanup: `44 passed in 3.73s`.
+- After polishing logger name and sectioned log blocks: `46 passed in 1.80s`.
+- `python -m app.train` logged with `modelopslab.training` and sectioned blocks for runtime, dataset, split, features, preprocessing, model, evaluation, and artifacts.
 
 ## Outcome
 Scaffold, V1-C2 error handling path, V1-C3 feature-target split, V1-C4 train-test split, V1-C5 feature type detection, V1-C6 preprocessing pipeline construction, V1-C7 baseline model training, V1-C8 sample dataset smoke run, V1-C9 evaluation metrics, V1-C10 artifact persistence, and V1-C11 file-based logging are operational.
