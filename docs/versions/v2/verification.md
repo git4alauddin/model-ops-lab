@@ -14,6 +14,9 @@
 - Verified non-nullable column null values are reported as `ERROR`.
 - Verified nullable columns can contain null values.
 - Verified nullability validation failures make the readiness report status `failed`.
+- Verified numeric range violations are reported as `ERROR`.
+- Verified below-minimum and above-maximum values are detected.
+- Verified range validation failures make the readiness report status `failed`.
 
 ## Commands Executed
 - `python -m pytest -q`
@@ -26,6 +29,7 @@
 - Structural validation returns no issues for the current sample churn dataset.
 - Datatype validation returns no issues for the current sample churn dataset.
 - Nullability validation returns no issues for the current sample churn dataset.
+- Numeric range validation returns no issues for the current sample churn dataset.
 
 ## Actual Output
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `50 passed in 1.44s`.
@@ -41,6 +45,9 @@
 - After V2-C4 nullability validation: `.\vir_env\Scripts\python.exe -m pytest -q` returned `63 passed in 1.81s`.
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no nullability issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after nullability validation changes.
+- After V2-C5 numeric range validation: `.\vir_env\Scripts\python.exe -m pytest -q` returned `68 passed in 3.03s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no range issues.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully after range validation changes.
 
 ## Outcome
 V2-C1 validation foundation is operational.
@@ -48,3 +55,4 @@ The validation command can load the current training config, sample dataset, and
 V2-C2 structural validation is operational.
 V2-C3 datatype validation is operational.
 V2-C4 nullability validation is operational.
+V2-C5 numeric range validation is operational.

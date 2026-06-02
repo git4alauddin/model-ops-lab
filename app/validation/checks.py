@@ -8,6 +8,7 @@ from pandas.api.types import (
     is_bool_dtype,
     is_float_dtype,
     is_integer_dtype,
+    is_numeric_dtype,
 )
 import yaml
 from yaml import YAMLError
@@ -146,6 +147,56 @@ def validate_nullable_columns(
     return issues
 
 
+def validate_numeric_ranges(
+    dataframe: pd.DataFrame,
+    schema: dict[str, Any],
+) -> list[ValidationIssue]:
+    """Return issues for numeric values outside schema min/max bounds."""
+    issues: list[ValidationIssue] = []
+    for column_name, column_rules in _schema_columns(schema).items():
+        if column_name not in dataframe.columns:
+            continue
+
+        min_value = column_rules.get("min")
+        max_value = column_rules.get("max")
+        if min_value is None and max_value is None:
+            continue
+
+        series = dataframe[column_name].dropna()
+        if series.empty or not _series_supports_numeric_ranges(series):
+            continue
+
+        if min_value is not None:
+            below_min_count = int((series < min_value).sum())
+            if below_min_count:
+                issues.append(
+                    ValidationIssue(
+                        severity="ERROR",
+                        check="numeric_ranges",
+                        message=(
+                            f"column '{column_name}' has {below_min_count} "
+                            f"value(s) below min {min_value}"
+                        ),
+                    )
+                )
+
+        if max_value is not None:
+            above_max_count = int((series > max_value).sum())
+            if above_max_count:
+                issues.append(
+                    ValidationIssue(
+                        severity="ERROR",
+                        check="numeric_ranges",
+                        message=(
+                            f"column '{column_name}' has {above_max_count} "
+                            f"value(s) above max {max_value}"
+                        ),
+                    )
+                )
+
+    return issues
+
+
 def _validate_schema_contract(schema: dict[str, Any]) -> None:
     required_keys = ["name", "version", "columns"]
     for key in required_keys:
@@ -170,6 +221,8 @@ def _validate_schema_contract(schema: dict[str, Any]) -> None:
             )
         if "nullable" not in column_rules:
             raise ValidationError(f"Missing nullable rule for column: {column_name}")
+        _validate_numeric_bound(column_name, column_rules, "min")
+        _validate_numeric_bound(column_name, column_rules, "max")
 
 
 def _schema_column_names(schema: dict[str, Any]) -> list[str]:
@@ -210,6 +263,25 @@ def _series_matches_schema_dtype(series: pd.Series, expected_dtype: str) -> bool
     raise ValidationError(f"Unsupported dtype: {expected_dtype}")
 
 
+def _series_supports_numeric_ranges(series: pd.Series) -> bool:
+    return bool(is_numeric_dtype(series) and not is_bool_dtype(series))
+
+
 def _non_null_values_match_type(series: pd.Series, expected_type: type) -> bool:
     non_null_values = series.dropna()
     return bool(non_null_values.map(lambda value: isinstance(value, expected_type)).all())
+
+
+def _validate_numeric_bound(
+    column_name: str,
+    column_rules: dict[str, Any],
+    bound_name: str,
+) -> None:
+    if bound_name not in column_rules:
+        return
+
+    bound_value = column_rules[bound_name]
+    if isinstance(bound_value, bool) or not isinstance(bound_value, (int, float)):
+        raise ValidationError(
+            f"{bound_name} for column '{column_name}' must be numeric."
+        )

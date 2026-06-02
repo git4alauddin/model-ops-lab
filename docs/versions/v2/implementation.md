@@ -5,6 +5,7 @@ Chunk V2-C1: validation foundation.
 Chunk V2-C2: structural schema validation.
 Chunk V2-C3: datatype validation.
 Chunk V2-C4: nullability validation.
+Chunk V2-C5: numeric range validation.
 
 ## V2-C1 Additions
 - `app/validate_data.py`
@@ -139,8 +140,42 @@ configs/training.yaml
   -> log validation result
 ```
 
+## V2-C5 Additions
+- `app/validation/checks.py`
+  - added `validate_numeric_ranges`
+  - reads `min` and `max` rules from the versioned schema
+  - skips missing, null-only, and non-numeric columns
+  - emits `ERROR` issues when numeric values fall below `min` or above `max`
+  - validates schema numeric bounds during schema loading
+- `app/validate_data.py`
+  - runs numeric range checks after structural, dtype, and nullability checks
+  - includes range failures in the validation report
+- `tests/test_v2_c5_range_validation.py`
+  - validates current churn dataset range success
+  - validates below-minimum failures
+  - validates above-maximum failures
+  - validates negative charge failures
+  - validates failed readiness report for range violations
+- `README.md`
+  - updated V2 status with numeric range validation
+
+## Current V2-C5 Workflow
+```text
+configs/training.yaml
+  -> resolve dataset path
+  -> load data/churn.csv
+  -> load schema_versions/customer_churn_v1.yaml
+  -> compare dataframe columns with schema columns
+  -> compare present dataframe dtypes with schema dtype rules
+  -> check nullable:false columns for null values
+  -> check numeric columns against min/max bounds
+  -> add ERROR issue for range violations
+  -> build validation report with passed/failed status
+  -> log validation result
+```
+
 ## Not Yet Implemented
-- range and categorical checks
+- categorical allowed-value checks
 - duplicate checks
 - persisted validation reports
 - training pipeline integration

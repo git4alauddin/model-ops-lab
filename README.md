@@ -30,6 +30,7 @@ V2 has started with the data validation foundation:
 - required and unexpected column checks
 - datatype checks
 - nullability checks
+- numeric range checks
 - focused validation foundation tests
 
 ## Setup

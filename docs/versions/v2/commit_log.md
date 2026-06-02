@@ -69,7 +69,7 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no dtype issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after datatype validation changes.
 
-## Pending - v2-c4: add nullability validation
+## c32f845 - v2-c4: add nullability validation
 
 ### What Changed
 - Added nullable field validation in `app/validation/checks.py`.
@@ -88,3 +88,24 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `63 passed in 1.81s`.
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no nullability issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after nullability validation changes.
+
+## Pending - v2-c5: add range validation
+
+### What Changed
+- Added numeric range validation in `app/validation/checks.py`.
+- Added `validate_numeric_ranges` using `min` and `max` rules from the versioned schema.
+- Added schema validation for numeric range bounds.
+- Updated `app/validate_data.py` to include range issues in the validation report.
+- Updated README and V2 documentation.
+- Added focused range validation tests.
+
+### What Problem It Solved
+- Detects impossible or unrealistic numeric values before training.
+- Blocks values below schema minimums or above schema maximums.
+- Keeps range failures separate from dtype and nullability failures.
+- Prepares validation for categorical allowed-value checks.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `68 passed in 3.03s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no range issues.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully after range validation changes.
