@@ -6,6 +6,11 @@ import pandas as pd
 from pandas.errors import EmptyDataError, ParserError
 
 from app.config import ConfigError, load_config
+from app.pipeline.preprocessing import (
+    PreprocessingError,
+    split_features_target,
+    split_train_test,
+)
 from app.utils.logger import get_logger
 
 
@@ -42,10 +47,17 @@ def main() -> None:
         config = load_config(config_path)
         dataset_path = config["dataset"]["path"]
         target_column = config["dataset"]["target_column"]
+        test_size = config["training"]["test_size"]
+        random_state = config["training"]["random_state"]
 
         dataframe = load_dataset(dataset_path)
-        if target_column not in dataframe.columns:
-            raise DataError(f"Target column '{target_column}' not found in dataset.")
+        features, target = split_features_target(dataframe, target_column)
+        x_train, x_test, y_train, y_test = split_train_test(
+            features,
+            target,
+            test_size,
+            random_state,
+        )
 
         logger.info(
             "Dataset loaded successfully. rows=%s cols=%s target=%s",
@@ -53,8 +65,20 @@ def main() -> None:
             len(dataframe.columns),
             target_column,
         )
+        logger.info(
+            "Feature-target split completed. feature_cols=%s target_rows=%s",
+            len(features.columns),
+            len(target),
+        )
+        logger.info(
+            "Train-test split completed. train_rows=%s test_rows=%s test_size=%s random_state=%s",
+            len(x_train),
+            len(x_test),
+            test_size,
+            random_state,
+        )
         logger.info("Training bootstrap completed.")
-    except (ConfigError, DataError) as exc:
+    except (ConfigError, DataError, PreprocessingError) as exc:
         logger.exception("Training bootstrap failed: %s", exc)
         raise SystemExit(1) from exc
 

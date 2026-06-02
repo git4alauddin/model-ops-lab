@@ -4,6 +4,8 @@
 - Confirmed required folders were created.
 - Confirmed required scaffold files were created.
 - Ran training bootstrap to verify controlled failure handling.
+- Ran unit tests for config validation, dataset loading, and feature-target split.
+- Ran unit tests for train-test split behavior and reproducibility.
 
 ## Commands Executed
 - `Get-ChildItem -Recurse -File app,configs,docs,data,artifacts`
@@ -21,7 +23,9 @@
 - Process exited with status code `1`.
 - Initial test run failed with: `No module named pytest` (interpreter mismatch).
 - After selecting the correct interpreter and installing dependencies: `6 passed in 0.38s`.
+- After adding feature-target split tests: `9 passed in 1.07s`.
+- After adding train-test split tests: `13 passed in 2.55s`.
 
 ## Outcome
-Scaffold and V1-C2 error handling path are operational.
+Scaffold, V1-C2 error handling path, V1-C3 feature-target split, and V1-C4 train-test split are operational.
 Unit tests are passing in the project virtual environment.
