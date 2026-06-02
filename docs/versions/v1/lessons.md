@@ -18,3 +18,7 @@
 - Training duration should be tracked from the first baseline so later automation has timing context.
 - A small local smoke dataset is useful for proving success paths before artifact persistence exists.
 - Identifier columns should be dropped explicitly through config instead of being silently used as model features.
+- Evaluation must run on the held-out test set, not the training split.
+- `zero_division=0` keeps classification metrics stable on small or imbalanced test samples.
+- Returning metrics as a dictionary prepares the next persistence step without coupling to file output yet.
+- Binary confusion matrices should pass explicit labels to keep output shape stable across small test splits.

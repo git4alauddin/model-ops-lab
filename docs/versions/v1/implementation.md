@@ -9,6 +9,7 @@ Chunk V1-C5: feature type detection.
 Chunk V1-C6: preprocessing pipeline construction.
 Chunk V1-C7: baseline model training.
 Chunk V1-C8: sample churn dataset smoke run.
+Chunk V1-C9: evaluation metrics.
 
 ## Folder Structure
 Established `app/`, `configs/`, `data/`, `artifacts/`, and documentation hierarchy under `docs/`.
@@ -140,6 +141,24 @@ Tests follow `tests/test_v1_cX_<component>.py` naming so each test file maps to 
   - validates binary target values
   - validates configured column drop behavior
   - validates missing drop column failure
+
+## V1-C9 Additions
+- `app/evaluate.py`
+  - added `EvaluationError`
+  - added `evaluate_model`
+  - computes accuracy, precision, recall, F1 score, and confusion matrix
+  - uses `zero_division=0` for precision/recall/F1 stability
+  - validates test feature/target row alignment
+- `app/train.py`
+  - evaluates the fitted training pipeline on the held-out test set
+  - logs evaluation metrics after model training
+  - handles evaluation failures as controlled bootstrap failures
+- `tests/test_v1_c9_evaluation_metrics.py`
+  - validates metric keys
+  - validates numeric metric values
+  - validates confusion matrix shape
+  - validates mismatched test input failure
+  - validates missing predict method failure
 
 ## Configs Used
 - `configs/training.yaml` created with placeholder baseline settings.

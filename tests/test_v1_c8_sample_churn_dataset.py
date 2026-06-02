@@ -6,9 +6,11 @@ import pandas as pd
 
 from app.train import DataError, drop_configured_columns, load_dataset
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
 
 def test_sample_churn_dataset_exists_and_loads():
-    dataframe = load_dataset(Path("data/churn.csv"))
+    dataframe = load_dataset(PROJECT_ROOT / "data" / "churn.csv")
 
     assert not dataframe.empty
     assert "churn" in dataframe.columns

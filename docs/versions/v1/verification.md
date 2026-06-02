@@ -10,6 +10,7 @@
 - Ran unit tests for preprocessing pipeline construction and unknown-category handling.
 - Ran unit tests for baseline model construction, training pipeline composition, and controlled training failure.
 - Ran unit tests and training bootstrap against the synthetic churn smoke dataset.
+- Ran unit tests for evaluation metric generation and failure handling.
 
 ## Commands Executed
 - `Get-ChildItem -Recurse -File app,configs,docs,data,artifacts`
@@ -37,7 +38,11 @@
 - After cleaning `train.py` IDE inspection issues: `28 passed in 1.27s`.
 - After adding sample churn dataset smoke tests: `31 passed in 1.32s`.
 - `python -m app.train` completed successfully with `rows=20`, `train_rows=16`, `test_rows=4`, `numeric_features=3`, `categorical_features=4`, and `fitted_steps=2`.
+- After making the c8 dataset test independent of the IDE working directory: `31 passed in 1.33s`.
+- Initial c9 run failed because a tiny test split produced a `1x1` confusion matrix.
+- After fixing confusion matrix labels: `36 passed in 1.35s`.
+- `python -m app.train` completed successfully and logged `accuracy=1.000000`, `precision=1.000000`, `recall=1.000000`, `f1=1.000000`, and `confusion_matrix=[[3, 0], [0, 1]]`.
 
 ## Outcome
-Scaffold, V1-C2 error handling path, V1-C3 feature-target split, V1-C4 train-test split, V1-C5 feature type detection, V1-C6 preprocessing pipeline construction, V1-C7 baseline model training, and V1-C8 sample dataset smoke run are operational.
+Scaffold, V1-C2 error handling path, V1-C3 feature-target split, V1-C4 train-test split, V1-C5 feature type detection, V1-C6 preprocessing pipeline construction, V1-C7 baseline model training, V1-C8 sample dataset smoke run, and V1-C9 evaluation metrics are operational.
 Unit tests are passing in the project virtual environment.

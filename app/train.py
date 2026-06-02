@@ -7,6 +7,7 @@ import pandas as pd
 from pandas.errors import EmptyDataError, ParserError
 
 from app.config import ConfigError, load_config
+from app.evaluate import EvaluationError, evaluate_model
 from app.pipeline.preprocessing import (
     build_preprocessing_pipeline,
     identify_feature_types,
@@ -101,6 +102,7 @@ def main() -> None:
             x_train,
             y_train,
         )
+        metrics = evaluate_model(fitted_pipeline, x_test, y_test)
 
         logger.info(
             "Dataset loaded successfully. rows=%s cols=%s target=%s",
@@ -152,8 +154,25 @@ def main() -> None:
             training_duration,
             len(fitted_pipeline.steps),
         )
+        logger.info(
+            (
+                "Evaluation completed. accuracy=%.6f precision=%.6f "
+                "recall=%.6f f1=%.6f confusion_matrix=%s"
+            ),
+            metrics["accuracy"],
+            metrics["precision"],
+            metrics["recall"],
+            metrics["f1"],
+            metrics["confusion_matrix"],
+        )
         logger.info("Training bootstrap completed.")
-    except (ConfigError, DataError, PreprocessingError, TrainingError) as exc:
+    except (
+        ConfigError,
+        DataError,
+        EvaluationError,
+        PreprocessingError,
+        TrainingError,
+    ) as exc:
         logger.exception("Training bootstrap failed: %s", exc)
         raise SystemExit(1) from exc
 

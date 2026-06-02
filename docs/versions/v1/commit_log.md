@@ -127,7 +127,7 @@ This file records meaningful V1 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `28 passed in 1.27s` after the train entrypoint cleanup.
 - `.\vir_env\Scripts\python.exe -m app.train` still fails with controlled missing dataset error, as expected before adding real data.
 
-## Pending - v1-c8: add sample churn dataset smoke run
+## 7486fa2 - v1-c8: add sample churn dataset smoke run
 
 ### What Changed
 - Added `data/churn.csv` as a small synthetic binary churn dataset.
@@ -136,6 +136,7 @@ This file records meaningful V1 commits and the operational purpose of each chan
 - Added `drop_configured_columns` in `app/train.py`.
 - Updated training flow to drop configured non-feature columns before feature-target split.
 - Added focused tests for sample dataset loading and configured column dropping.
+- Made the sample dataset test resolve `data/churn.csv` from the project root so IDE working directories do not break it.
 - Updated README and V1 documentation.
 
 ### What Problem It Solved
@@ -145,5 +146,30 @@ This file records meaningful V1 commits and the operational purpose of each chan
 
 ### Verification
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `31 passed in 1.32s`.
+- `.\vir_env\Scripts\python.exe -m pytest tests\test_v1_c8_sample_churn_dataset.py -q` returned `3 passed in 1.18s` after the path-stability fix.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `31 passed in 1.33s` after the path-stability fix.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully using `data/churn.csv`.
 - Training logs showed `rows=20`, `train_rows=16`, `test_rows=4`, `numeric_features=3`, `categorical_features=4`, and `fitted_steps=2`.
+
+## Pending - v1-c9: add evaluation metrics
+
+### What Changed
+- Implemented evaluation helpers in `app/evaluate.py`.
+- Added `EvaluationError`.
+- Added accuracy, precision, recall, F1 score, and confusion matrix calculation.
+- Updated `app/train.py` to evaluate the fitted pipeline on the test set.
+- Added evaluation metric logging.
+- Added focused tests for metric structure, numeric metric values, confusion matrix shape, mismatched test input, and missing predict method.
+- Carried the c8 sample dataset test path-stability fix into this pending commit.
+- Updated README and V1 documentation.
+
+### What Problem It Solved
+- Adds the first model quality measurement layer to the V1 training workflow.
+- Ensures evaluation uses held-out test data instead of training data.
+- Produces a structured metrics dictionary that can be persisted in the next artifact step.
+
+### Verification
+- Initial `.\vir_env\Scripts\python.exe -m pytest -q` run returned `1 failed, 35 passed` because a tiny test split produced a `1x1` confusion matrix.
+- Fixed evaluation by passing explicit binary labels `[0, 1]` to `confusion_matrix`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `36 passed in 1.35s`.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully and logged accuracy, precision, recall, F1, and a stable `2x2` confusion matrix.
