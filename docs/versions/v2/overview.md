@@ -1,0 +1,25 @@
+# V2 Overview
+
+## Version Goal
+Add a production-style data validation and data quality layer before training.
+
+## Components Introduced
+- validation command entrypoint
+- validation package
+- versioned dataset schema
+- validation report structure
+- V2 documentation and commit log
+
+## Workflow Introduced
+Validate dataset readiness before adding deeper schema and quality checks.
+
+## Engineering Objectives
+- separate validation from training logic
+- make dataset contracts version-controlled
+- prepare for deterministic validation reports
+- fail early on data problems
+
+## Operational Objectives
+- make data assumptions explicit
+- create a foundation for validation logging and reports
+- prepare for training pipeline integration in later chunks

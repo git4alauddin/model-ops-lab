@@ -1,0 +1,72 @@
+name: customer_churn
+version: v1
+dataset: data/churn.csv
+target_column: churn
+id_column: customer_id
+
+columns:
+  customer_id:
+    dtype: string
+    nullable: false
+    role: identifier
+
+  tenure_months:
+    dtype: integer
+    nullable: false
+    min: 0
+    max: 120
+    role: feature
+
+  monthly_charges:
+    dtype: float
+    nullable: false
+    min: 0
+    role: feature
+
+  total_charges:
+    dtype: float
+    nullable: false
+    min: 0
+    role: feature
+
+  contract_type:
+    dtype: category
+    nullable: false
+    allowed_values:
+      - month_to_month
+      - one_year
+      - two_year
+    role: feature
+
+  internet_service:
+    dtype: category
+    nullable: false
+    allowed_values:
+      - dsl
+      - fiber_optic
+    role: feature
+
+  payment_method:
+    dtype: category
+    nullable: false
+    allowed_values:
+      - bank_transfer
+      - credit_card
+      - electronic_check
+    role: feature
+
+  is_senior:
+    dtype: boolean
+    nullable: false
+    allowed_values:
+      - true
+      - false
+    role: feature
+
+  churn:
+    dtype: integer
+    nullable: false
+    allowed_values:
+      - 0
+      - 1
+    role: target

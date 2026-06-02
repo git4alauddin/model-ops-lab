@@ -19,6 +19,16 @@ V1 is the baseline ML pipeline foundation. It now supports an end-to-end local t
 - readable console and file logs
 - focused tests for each meaningful V1 component
 
+## V2 Status
+
+V2 has started with the data validation foundation:
+
+- validation command scaffold
+- validation package
+- first versioned churn dataset schema
+- validation report structure
+- focused validation foundation tests
+
 ## Setup
 
 ```powershell
@@ -47,6 +57,12 @@ The default config uses:
 python -m pytest -q
 ```
 
+## Run Validation
+
+```powershell
+python -m app.validate_data
+```
+
 ## Runtime Outputs
 
 Generated runtime files are intentionally ignored by git:
@@ -65,8 +81,10 @@ The repository keeps the artifact placeholder folder with `.gitkeep`, but traine
 modelOpsLab/
   app/
     train.py
+    validate_data.py
     evaluate.py
     config.py
+    data.py
     schemas.py
     pipeline/
       preprocessing.py
@@ -74,8 +92,13 @@ modelOpsLab/
     utils/
       artifacts.py
       logger.py
+    validation/
+      checks.py
+      reports.py
   configs/
     training.yaml
+  schema_versions/
+    customer_churn_v1.yaml
   data/
     churn.csv
   artifacts/
@@ -92,8 +115,10 @@ modelOpsLab/
     test_v1_c9_evaluation_metrics.py
     test_v1_c10_artifact_persistence.py
     test_v1_c11_file_logging.py
+    test_v2_c1_validation_foundation.py
   docs/
     versions/v1/
+    versions/v2/
     architecture/
     decisions/
     experiments/
