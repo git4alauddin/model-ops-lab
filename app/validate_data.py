@@ -17,7 +17,14 @@ from app.validation.checks import (
     validate_numeric_ranges,
     validate_schema_columns,
 )
-from app.validation.reports import ValidationReport, build_validation_report
+from app.validation.reports import (
+    ValidationReport,
+    ValidationReportError,
+    build_report_paths,
+    build_validation_report,
+    save_validation_report,
+    save_validation_summary,
+)
 
 LOGGER_NAME = "modelopslab.validation"
 DEFAULT_CONFIG_PATH = Path("configs/training.yaml")
@@ -75,8 +82,12 @@ def main() -> None:
         log_path = build_log_path(config)
         logger = get_logger(LOGGER_NAME, log_path)
         report = validate_dataset_readiness(DEFAULT_CONFIG_PATH, DEFAULT_SCHEMA_PATH)
+        report_paths = build_report_paths(config)
+        save_validation_report(report, report_paths["json"])
+        save_validation_summary(report, report_paths["summary"])
         logger.info("Validation scaffold completed: %s", report.to_dict())
-    except (ConfigError, DataError, ValidationError) as exc:
+        logger.info("Validation report saved: %s", report_paths)
+    except (ConfigError, DataError, ValidationError, ValidationReportError) as exc:
         logger.exception("Validation scaffold failed: %s", exc)
         raise SystemExit(1) from exc
 

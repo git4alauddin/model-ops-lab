@@ -24,6 +24,10 @@
 - Verified duplicate IDs are reported as `ERROR`.
 - Verified duplicate row warnings do not fail the report by themselves.
 - Verified duplicate ID errors make the readiness report status `failed`.
+- Verified validation report JSON persistence.
+- Verified validation text summary persistence.
+- Verified validation report paths are config-driven.
+- Verified warning/error counts are written to the text summary.
 
 ## Commands Executed
 - `python -m pytest -q`
@@ -39,6 +43,7 @@
 - Numeric range validation returns no issues for the current sample churn dataset.
 - Allowed-value validation returns no issues for the current sample churn dataset.
 - Duplicate validation returns no issues for the current sample churn dataset.
+- Validation command generates ignored JSON and text report files.
 
 ## Actual Output
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `50 passed in 1.44s`.
@@ -65,6 +70,11 @@
 - After V2-C7 duplicate validation: `.\vir_env\Scripts\python.exe -m pytest -q` returned `79 passed in 1.47s`.
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no duplicate issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after duplicate validation changes.
+- After V2-C8 validation report persistence: `.\vir_env\Scripts\python.exe -m pytest -q` returned `83 passed in 1.52s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully and generated `reports/validation_report.json` and `reports/validation_summary.txt`.
+- Generated validation report files showed `status='passed'`, `rows=20`, `columns=9`, and `issues=[]`.
+- Generated validation report files are ignored by git while `reports/.gitkeep` remains tracked.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully after validation report persistence changes.
 
 ## Outcome
 V2-C1 validation foundation is operational.
@@ -75,3 +85,4 @@ V2-C4 nullability validation is operational.
 V2-C5 numeric range validation is operational.
 V2-C6 allowed-value validation is operational.
 V2-C7 duplicate validation is operational.
+V2-C8 validation report persistence is operational.

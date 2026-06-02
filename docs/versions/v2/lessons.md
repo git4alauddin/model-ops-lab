@@ -16,3 +16,5 @@
 - Allowed-value validation should run after structural, dtype, nullability, and range checks for clearer issue ownership.
 - Duplicate rows are suspicious enough to warn, but duplicate entity IDs should block validation.
 - Severity levels matter because not every data quality issue should have the same operational outcome.
+- Validation reports should be persisted as runtime outputs, not committed artifacts.
+- A text summary complements JSON because humans need quick inspection while automation needs structured data.

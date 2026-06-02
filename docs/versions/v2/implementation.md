@@ -8,6 +8,7 @@ Chunk V2-C4: nullability validation.
 Chunk V2-C5: numeric range validation.
 Chunk V2-C6: allowed-value validation.
 Chunk V2-C7: duplicate validation.
+Chunk V2-C8: validation report persistence.
 
 ## V2-C1 Additions
 - `app/validate_data.py`
@@ -248,6 +249,40 @@ configs/training.yaml
   -> log validation result
 ```
 
+## V2-C8 Additions
+- `app/validation/reports.py`
+  - added `ValidationReportError`
+  - added `build_report_paths`
+  - added `save_validation_report`
+  - added `build_validation_summary`
+  - added `save_validation_summary`
+  - summarizes total issues and severity counts
+- `configs/training.yaml`
+  - added config-driven validation report paths
+- `app/validate_data.py`
+  - persists `reports/validation_report.json`
+  - persists `reports/validation_summary.txt`
+  - logs generated report paths
+- `.gitignore`
+  - ignores generated validation report files
+  - keeps `reports/.gitkeep` tracked
+- `tests/test_v2_c8_validation_report_persistence.py`
+  - validates config-driven report paths
+  - validates JSON report persistence
+  - validates text summary persistence
+  - validates warning/error counts in the summary
+- `README.md`
+  - documents generated validation reports as ignored runtime outputs
+
+## Current V2-C8 Workflow
+```text
+python -m app.validate_data
+  -> run validation checks
+  -> build validation report object
+  -> save reports/validation_report.json
+  -> save reports/validation_summary.txt
+  -> log validation report paths
+```
+
 ## Not Yet Implemented
-- persisted validation reports
 - training pipeline integration

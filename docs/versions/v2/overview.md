@@ -14,6 +14,7 @@ Add a production-style data validation and data quality layer before training.
 - numeric range validation
 - allowed-value validation
 - duplicate validation
+- validation report persistence
 - V2 documentation and commit log
 
 ## Workflow Introduced
@@ -24,6 +25,7 @@ Check required fields for null values before range and category checks.
 Check numeric values against schema min/max bounds.
 Check controlled categorical, boolean, and target values against allowed sets.
 Check duplicate rows and duplicate entity IDs.
+Persist validation reports for auditability and local inspection.
 
 ## Engineering Objectives
 - separate validation from training logic

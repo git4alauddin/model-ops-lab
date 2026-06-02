@@ -16,6 +16,10 @@ artifacts/*
 logs/
 *.log
 
+# Runtime validation reports
+reports/*
+!reports/.gitkeep
+
 # OS files
 .DS_Store
 Thumbs.db

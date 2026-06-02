@@ -33,6 +33,7 @@ V2 has started with the data validation foundation:
 - numeric range checks
 - allowed-value checks
 - duplicate row and duplicate ID checks
+- validation report persistence
 - focused validation foundation tests
 
 ## Setup
@@ -77,6 +78,8 @@ Generated runtime files are intentionally ignored by git:
 - `artifacts/metrics.json`
 - `artifacts/config_snapshot.json`
 - `artifacts/training_metadata.json`
+- `reports/validation_report.json`
+- `reports/validation_summary.txt`
 - `logs/modelopslab.log`
 
 The repository keeps the artifact placeholder folder with `.gitkeep`, but trained models, metrics, metadata snapshots, and logs are local run outputs.
@@ -108,6 +111,8 @@ modelOpsLab/
   data/
     churn.csv
   artifacts/
+    .gitkeep
+  reports/
     .gitkeep
   tests/
     test_v1_c2_config_validation.py

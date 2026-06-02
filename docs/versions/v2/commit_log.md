@@ -131,7 +131,7 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no allowed-value issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after allowed-value validation changes.
 
-## Pending - v2-c7: add duplicate validation
+## 1b67cf7 - v2-c7: add duplicate validation
 
 ### What Changed
 - Added duplicate row validation in `app/validation/checks.py`.
@@ -154,3 +154,30 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `79 passed in 1.47s`.
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no duplicate issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after duplicate validation changes.
+
+## Pending - v2-c8: persist validation reports
+
+### What Changed
+- Added validation report path construction in `app/validation/reports.py`.
+- Added validation report JSON persistence.
+- Added validation summary text persistence.
+- Added validation report persistence errors.
+- Added validation report output config in `configs/training.yaml`.
+- Updated `app/validate_data.py` to persist JSON and text validation reports.
+- Added `reports/.gitkeep`.
+- Updated `.gitignore` to ignore generated validation reports.
+- Updated README and V2 documentation.
+- Added focused validation report persistence tests.
+
+### What Problem It Solved
+- Makes validation results inspectable after the command finishes.
+- Provides structured JSON output for automation.
+- Provides readable text output for quick local review.
+- Keeps generated validation outputs out of git while preserving the report folder.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `83 passed in 1.52s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully and generated `reports/validation_report.json` and `reports/validation_summary.txt`.
+- Generated validation report files showed `status='passed'`, `rows=20`, `columns=9`, and `issues=[]`.
+- Generated validation report files are ignored by git while `reports/.gitkeep` remains tracked.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully after validation report persistence changes.

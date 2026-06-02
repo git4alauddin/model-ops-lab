@@ -23,3 +23,9 @@ artifacts:
 logging:
   dir: logs
   file: modelopslab.log
+
+validation:
+  reports:
+    dir: reports
+    json_file: validation_report.json
+    summary_file: validation_summary.txt
