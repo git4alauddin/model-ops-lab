@@ -27,3 +27,5 @@
 - Config snapshots and metadata make a training run explainable after the command finishes.
 - File logs preserve operational evidence after the terminal output is gone.
 - Logger setup must avoid duplicate handlers because repeated setup can duplicate every log line.
+- Appended runtime logs need run separators so repeated executions remain readable.
+- A general log name is better than a workflow-specific name when the same file may later include validation, training, evaluation, and artifact events.

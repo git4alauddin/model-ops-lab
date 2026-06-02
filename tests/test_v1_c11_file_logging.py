@@ -43,11 +43,11 @@ def test_get_logger_does_not_duplicate_file_handlers(tmp_path):
 
 
 def test_build_log_path_from_config():
-    config = {"logging": {"dir": "logs", "file": "training.log"}}
+    config = {"logging": {"dir": "logs", "file": "modelopslab.log"}}
 
     log_path = build_log_path(config)
 
-    assert str(log_path) == "logs\\training.log"
+    assert str(log_path) == "logs\\modelopslab.log"
 
 
 def test_build_log_path_missing_config_returns_none():

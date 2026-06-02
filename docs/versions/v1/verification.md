@@ -49,6 +49,9 @@
 - After adding file-based logging tests: `44 passed in 1.40s`.
 - `python -m app.train` generated `logs/training.log`.
 - `logs/training.log` is ignored by git.
+- After renaming runtime log file and adding run separators: `44 passed in 1.35s`.
+- `python -m app.train` generated `logs/modelopslab.log`.
+- `logs/modelopslab.log` contains a `RUN STARTED` separator and is ignored by git.
 
 ## Outcome
 Scaffold, V1-C2 error handling path, V1-C3 feature-target split, V1-C4 train-test split, V1-C5 feature type detection, V1-C6 preprocessing pipeline construction, V1-C7 baseline model training, V1-C8 sample dataset smoke run, V1-C9 evaluation metrics, V1-C10 artifact persistence, and V1-C11 file-based logging are operational.

@@ -22,4 +22,4 @@ artifacts:
 
 logging:
   dir: logs
-  file: training.log
+  file: modelopslab.log

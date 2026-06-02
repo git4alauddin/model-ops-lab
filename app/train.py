@@ -80,8 +80,13 @@ def main() -> None:
         config = load_config(config_path)
         log_path = build_log_path(config)
         logger = get_logger(__name__, log_path)
+        run_started_at = datetime.now(UTC).isoformat()
+        logger.info(
+            "===== RUN STARTED %s | workflow=training =====",
+            run_started_at,
+        )
         logger.info("Training bootstrap started.")
-        logger.info("Training log file configured. path=%s", log_path)
+        logger.info("Runtime log file configured. path=%s", log_path)
         dataset_config = cast(dict[str, Any], config["dataset"])
         training_config = cast(dict[str, Any], config["training"])
         model_config = cast(dict[str, Any], config["model"])
@@ -115,7 +120,7 @@ def main() -> None:
         metrics = evaluate_model(fitted_pipeline, x_test, y_test)
         artifact_paths = build_artifact_paths(config)
         metadata = {
-            "generated_at": datetime.now(UTC).isoformat(),
+            "generated_at": run_started_at,
             "dataset_path": dataset_path,
             "target_column": target_column,
             "dropped_columns": drop_columns,

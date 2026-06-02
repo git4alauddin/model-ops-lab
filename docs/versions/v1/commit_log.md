@@ -204,7 +204,8 @@ This file records meaningful V1 commits and the operational purpose of each chan
 - Added duplicate handler protection for logger setup.
 - Added config-driven log path construction.
 - Added `logging.dir` and `logging.file` to `configs/training.yaml`.
-- Updated `app/train.py` to write logs to `logs/training.log`.
+- Updated `app/train.py` to write logs to `logs/modelopslab.log`.
+- Added a run-start separator with timestamp for appended runtime logs.
 - Updated `.gitignore` to ignore runtime logs.
 - Added focused file logging tests.
 - Updated README and V1 documentation.
@@ -217,5 +218,5 @@ This file records meaningful V1 commits and the operational purpose of each chan
 ### Verification
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `44 passed in 1.40s`.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully.
-- Training generated `logs/training.log`.
-- `logs/training.log` is ignored by git.
+- Training generated `logs/modelopslab.log`.
+- `logs/modelopslab.log` is ignored by git.
