@@ -12,3 +12,5 @@
 - Null counts in validation messages make data quality failures easier to triage.
 - Range checks should run after nullability checks and ignore nulls so each failure has one clear owner.
 - Count-based range messages are more useful than only reporting that a column failed.
+- Allowed-value checks make categorical and controlled target constraints explicit.
+- Allowed-value validation should run after structural, dtype, nullability, and range checks for clearer issue ownership.

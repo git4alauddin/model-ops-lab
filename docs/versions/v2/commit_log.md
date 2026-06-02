@@ -89,7 +89,7 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no nullability issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after nullability validation changes.
 
-## Pending - v2-c5: add range validation
+## ce7a840 - v2-c5: add range validation
 
 ### What Changed
 - Added numeric range validation in `app/validation/checks.py`.
@@ -109,3 +109,24 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `68 passed in 3.03s`.
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no range issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after range validation changes.
+
+## Pending - v2-c6: add allowed-value validation
+
+### What Changed
+- Added allowed-value validation in `app/validation/checks.py`.
+- Added `validate_allowed_values` using `allowed_values` rules from the versioned schema.
+- Added schema validation for `allowed_values` rules.
+- Updated `app/validate_data.py` to include allowed-value issues in the validation report.
+- Updated README and V2 documentation.
+- Added focused allowed-value validation tests.
+
+### What Problem It Solved
+- Detects invalid categorical values before training.
+- Detects controlled target values outside the expected set.
+- Detects invalid boolean-like values for schema-controlled boolean fields.
+- Keeps categorical constraints explicit and version-controlled.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `74 passed in 2.54s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no allowed-value issues.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully after allowed-value validation changes.

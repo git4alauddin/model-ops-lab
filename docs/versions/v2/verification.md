@@ -17,6 +17,9 @@
 - Verified numeric range violations are reported as `ERROR`.
 - Verified below-minimum and above-maximum values are detected.
 - Verified range validation failures make the readiness report status `failed`.
+- Verified allowed-value violations are reported as `ERROR`.
+- Verified invalid categorical, boolean-like, and target values are detected.
+- Verified allowed-value validation failures make the readiness report status `failed`.
 
 ## Commands Executed
 - `python -m pytest -q`
@@ -30,6 +33,7 @@
 - Datatype validation returns no issues for the current sample churn dataset.
 - Nullability validation returns no issues for the current sample churn dataset.
 - Numeric range validation returns no issues for the current sample churn dataset.
+- Allowed-value validation returns no issues for the current sample churn dataset.
 
 ## Actual Output
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `50 passed in 1.44s`.
@@ -48,6 +52,9 @@
 - After V2-C5 numeric range validation: `.\vir_env\Scripts\python.exe -m pytest -q` returned `68 passed in 3.03s`.
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no range issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after range validation changes.
+- After V2-C6 allowed-value validation: `.\vir_env\Scripts\python.exe -m pytest -q` returned `74 passed in 2.54s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no allowed-value issues.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully after allowed-value validation changes.
 
 ## Outcome
 V2-C1 validation foundation is operational.
@@ -56,3 +63,4 @@ V2-C2 structural validation is operational.
 V2-C3 datatype validation is operational.
 V2-C4 nullability validation is operational.
 V2-C5 numeric range validation is operational.
+V2-C6 allowed-value validation is operational.

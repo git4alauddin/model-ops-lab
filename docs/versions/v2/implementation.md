@@ -6,6 +6,7 @@ Chunk V2-C2: structural schema validation.
 Chunk V2-C3: datatype validation.
 Chunk V2-C4: nullability validation.
 Chunk V2-C5: numeric range validation.
+Chunk V2-C6: allowed-value validation.
 
 ## V2-C1 Additions
 - `app/validate_data.py`
@@ -174,8 +175,43 @@ configs/training.yaml
   -> log validation result
 ```
 
+## V2-C6 Additions
+- `app/validation/checks.py`
+  - added `validate_allowed_values`
+  - reads `allowed_values` lists from the versioned schema
+  - skips missing and null values so structural and nullability checks own those failures
+  - emits `ERROR` issues when observed values are outside the allowed set
+  - validates `allowed_values` schema rules during schema loading
+- `app/validate_data.py`
+  - runs allowed-value checks after range checks
+  - includes categorical, boolean, and controlled-target value failures in the validation report
+- `tests/test_v2_c6_allowed_values_validation.py`
+  - validates current churn dataset allowed-value success
+  - validates invalid contract type failure
+  - validates invalid internet service failure
+  - validates invalid target value failure
+  - validates invalid boolean-like value failure
+  - validates failed readiness report for invalid allowed values
+- `README.md`
+  - updated V2 status with allowed-value validation
+
+## Current V2-C6 Workflow
+```text
+configs/training.yaml
+  -> resolve dataset path
+  -> load data/churn.csv
+  -> load schema_versions/customer_churn_v1.yaml
+  -> compare dataframe columns with schema columns
+  -> compare present dataframe dtypes with schema dtype rules
+  -> check nullable:false columns for null values
+  -> check numeric columns against min/max bounds
+  -> check controlled columns against allowed_values
+  -> add ERROR issue for invalid observed values
+  -> build validation report with passed/failed status
+  -> log validation result
+```
+
 ## Not Yet Implemented
-- categorical allowed-value checks
 - duplicate checks
 - persisted validation reports
 - training pipeline integration

@@ -197,6 +197,41 @@ def validate_numeric_ranges(
     return issues
 
 
+def validate_allowed_values(
+    dataframe: pd.DataFrame,
+    schema: dict[str, Any],
+) -> list[ValidationIssue]:
+    """Return issues for values outside schema allowed_values lists."""
+    issues: list[ValidationIssue] = []
+    for column_name, column_rules in _schema_columns(schema).items():
+        if column_name not in dataframe.columns:
+            continue
+
+        allowed_values = column_rules.get("allowed_values")
+        if allowed_values is None:
+            continue
+
+        allowed_set = set(allowed_values)
+        observed_values = set(dataframe[column_name].dropna().unique())
+        invalid_values = sorted(
+            observed_values - allowed_set,
+            key=lambda value: str(value),
+        )
+        if invalid_values:
+            issues.append(
+                ValidationIssue(
+                    severity="ERROR",
+                    check="allowed_values",
+                    message=(
+                        f"column '{column_name}' contains invalid value(s): "
+                        f"{invalid_values}"
+                    ),
+                )
+            )
+
+    return issues
+
+
 def _validate_schema_contract(schema: dict[str, Any]) -> None:
     required_keys = ["name", "version", "columns"]
     for key in required_keys:
@@ -223,6 +258,7 @@ def _validate_schema_contract(schema: dict[str, Any]) -> None:
             raise ValidationError(f"Missing nullable rule for column: {column_name}")
         _validate_numeric_bound(column_name, column_rules, "min")
         _validate_numeric_bound(column_name, column_rules, "max")
+        _validate_allowed_values(column_name, column_rules)
 
 
 def _schema_column_names(schema: dict[str, Any]) -> list[str]:
@@ -284,4 +320,18 @@ def _validate_numeric_bound(
     if isinstance(bound_value, bool) or not isinstance(bound_value, (int, float)):
         raise ValidationError(
             f"{bound_name} for column '{column_name}' must be numeric."
+        )
+
+
+def _validate_allowed_values(
+    column_name: str,
+    column_rules: dict[str, Any],
+) -> None:
+    if "allowed_values" not in column_rules:
+        return
+
+    allowed_values = column_rules["allowed_values"]
+    if not isinstance(allowed_values, list) or not allowed_values:
+        raise ValidationError(
+            f"allowed_values for column '{column_name}' must be a non-empty list."
         )

@@ -31,6 +31,7 @@ V2 has started with the data validation foundation:
 - datatype checks
 - nullability checks
 - numeric range checks
+- allowed-value checks
 - focused validation foundation tests
 
 ## Setup
