@@ -7,6 +7,7 @@ Chunk V2-C3: datatype validation.
 Chunk V2-C4: nullability validation.
 Chunk V2-C5: numeric range validation.
 Chunk V2-C6: allowed-value validation.
+Chunk V2-C7: duplicate validation.
 
 ## V2-C1 Additions
 - `app/validate_data.py`
@@ -211,7 +212,42 @@ configs/training.yaml
   -> log validation result
 ```
 
+## V2-C7 Additions
+- `app/validation/checks.py`
+  - added `validate_duplicate_rows`
+  - added `validate_duplicate_ids`
+  - duplicate rows produce `WARNING`
+  - duplicate IDs produce `ERROR` using schema `id_column`
+  - validates schema `id_column` type during schema loading
+- `app/validate_data.py`
+  - runs duplicate checks after allowed-value checks
+  - includes duplicate row warnings and duplicate ID errors in the validation report
+- `tests/test_v2_c7_duplicate_validation.py`
+  - validates current churn dataset duplicate success
+  - validates duplicate row warning behavior
+  - validates duplicate ID error behavior
+  - validates passed readiness report for duplicate row warning only
+  - validates failed readiness report for duplicate IDs
+- `README.md`
+  - updated V2 status with duplicate validation
+
+## Current V2-C7 Workflow
+```text
+configs/training.yaml
+  -> resolve dataset path
+  -> load data/churn.csv
+  -> load schema_versions/customer_churn_v1.yaml
+  -> compare dataframe columns with schema columns
+  -> compare present dataframe dtypes with schema dtype rules
+  -> check nullable:false columns for null values
+  -> check numeric columns against min/max bounds
+  -> check controlled columns against allowed_values
+  -> check duplicate rows
+  -> check duplicate id_column values
+  -> build validation report with passed/failed status
+  -> log validation result
+```
+
 ## Not Yet Implemented
-- duplicate checks
 - persisted validation reports
 - training pipeline integration

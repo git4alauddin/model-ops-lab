@@ -32,6 +32,7 @@ V2 has started with the data validation foundation:
 - nullability checks
 - numeric range checks
 - allowed-value checks
+- duplicate row and duplicate ID checks
 - focused validation foundation tests
 
 ## Setup

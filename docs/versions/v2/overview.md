@@ -13,6 +13,7 @@ Add a production-style data validation and data quality layer before training.
 - nullability validation
 - numeric range validation
 - allowed-value validation
+- duplicate validation
 - V2 documentation and commit log
 
 ## Workflow Introduced
@@ -22,6 +23,7 @@ Compare present dataframe column dtypes against schema dtype rules.
 Check required fields for null values before range and category checks.
 Check numeric values against schema min/max bounds.
 Check controlled categorical, boolean, and target values against allowed sets.
+Check duplicate rows and duplicate entity IDs.
 
 ## Engineering Objectives
 - separate validation from training logic

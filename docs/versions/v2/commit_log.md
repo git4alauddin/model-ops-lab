@@ -110,7 +110,7 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no range issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after range validation changes.
 
-## Pending - v2-c6: add allowed-value validation
+## 82bac44 - v2-c6: add allowed-value validation
 
 ### What Changed
 - Added allowed-value validation in `app/validation/checks.py`.
@@ -130,3 +130,27 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `74 passed in 2.54s`.
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no allowed-value issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after allowed-value validation changes.
+
+## Pending - v2-c7: add duplicate validation
+
+### What Changed
+- Added duplicate row validation in `app/validation/checks.py`.
+- Added duplicate ID validation using schema `id_column`.
+- Added `WARNING` severity for duplicate rows.
+- Added `ERROR` severity for duplicate IDs.
+- Updated `app/validate_data.py` to include duplicate issues in the validation report.
+- Updated README and V2 documentation.
+- Added focused duplicate validation tests.
+
+### What Problem It Solved
+- Detects repeated records before training.
+- Detects broken customer identity uniqueness before training.
+- Uses severity levels to distinguish suspicious duplicates from blocking identity errors.
+- Moves V2 closer to a practical data quality gate.
+
+### Verification
+- Initial `.\vir_env\Scripts\python.exe -m pytest -q` returned `1 failed, 78 passed` because a duplicate row with `id_column` also correctly triggered duplicate ID failure.
+- Adjusted the warning-only duplicate row test to omit `id_column`; duplicate ID failure remains covered separately.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `79 passed in 1.47s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no duplicate issues.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully after duplicate validation changes.

@@ -232,6 +232,52 @@ def validate_allowed_values(
     return issues
 
 
+def validate_duplicate_rows(dataframe: pd.DataFrame) -> list[ValidationIssue]:
+    """Return a warning when exact duplicate rows exist."""
+    duplicate_count = int(dataframe.duplicated().sum())
+    if not duplicate_count:
+        return []
+
+    return [
+        ValidationIssue(
+            severity="WARNING",
+            check="duplicate_rows",
+            message=f"dataset contains {duplicate_count} duplicate row(s)",
+        )
+    ]
+
+
+def validate_duplicate_ids(
+    dataframe: pd.DataFrame,
+    schema: dict[str, Any],
+) -> list[ValidationIssue]:
+    """Return an error when the schema id_column has duplicate values."""
+    id_column = schema.get("id_column")
+    if not id_column:
+        return []
+
+    if not isinstance(id_column, str):
+        raise ValidationError("Validation schema id_column must be a string.")
+
+    if id_column not in dataframe.columns:
+        return []
+
+    duplicate_id_count = int(dataframe[id_column].dropna().duplicated().sum())
+    if not duplicate_id_count:
+        return []
+
+    return [
+        ValidationIssue(
+            severity="ERROR",
+            check="duplicate_ids",
+            message=(
+                f"id column '{id_column}' contains "
+                f"{duplicate_id_count} duplicate value(s)"
+            ),
+        )
+    ]
+
+
 def _validate_schema_contract(schema: dict[str, Any]) -> None:
     required_keys = ["name", "version", "columns"]
     for key in required_keys:
@@ -241,6 +287,10 @@ def _validate_schema_contract(schema: dict[str, Any]) -> None:
     columns = schema["columns"]
     if not isinstance(columns, dict) or not columns:
         raise ValidationError("Validation schema columns must be a non-empty map.")
+
+    id_column = schema.get("id_column")
+    if id_column is not None and not isinstance(id_column, str):
+        raise ValidationError("Validation schema id_column must be a string.")
 
     for column_name, column_rules in columns.items():
         if not isinstance(column_rules, dict):

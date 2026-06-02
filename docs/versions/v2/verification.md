@@ -20,6 +20,10 @@
 - Verified allowed-value violations are reported as `ERROR`.
 - Verified invalid categorical, boolean-like, and target values are detected.
 - Verified allowed-value validation failures make the readiness report status `failed`.
+- Verified duplicate rows are reported as `WARNING`.
+- Verified duplicate IDs are reported as `ERROR`.
+- Verified duplicate row warnings do not fail the report by themselves.
+- Verified duplicate ID errors make the readiness report status `failed`.
 
 ## Commands Executed
 - `python -m pytest -q`
@@ -34,6 +38,7 @@
 - Nullability validation returns no issues for the current sample churn dataset.
 - Numeric range validation returns no issues for the current sample churn dataset.
 - Allowed-value validation returns no issues for the current sample churn dataset.
+- Duplicate validation returns no issues for the current sample churn dataset.
 
 ## Actual Output
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `50 passed in 1.44s`.
@@ -55,6 +60,11 @@
 - After V2-C6 allowed-value validation: `.\vir_env\Scripts\python.exe -m pytest -q` returned `74 passed in 2.54s`.
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no allowed-value issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after allowed-value validation changes.
+- Initial V2-C7 duplicate validation test run returned `1 failed, 78 passed` because a duplicate row with `id_column` also correctly triggered duplicate ID failure.
+- Adjusted the warning-only duplicate row test to omit `id_column`; duplicate ID failure remains covered separately.
+- After V2-C7 duplicate validation: `.\vir_env\Scripts\python.exe -m pytest -q` returned `79 passed in 1.47s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no duplicate issues.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully after duplicate validation changes.
 
 ## Outcome
 V2-C1 validation foundation is operational.
@@ -64,3 +74,4 @@ V2-C3 datatype validation is operational.
 V2-C4 nullability validation is operational.
 V2-C5 numeric range validation is operational.
 V2-C6 allowed-value validation is operational.
+V2-C7 duplicate validation is operational.

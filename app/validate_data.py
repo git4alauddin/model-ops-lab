@@ -11,6 +11,8 @@ from app.validation.checks import (
     load_validation_schema,
     validate_allowed_values,
     validate_column_dtypes,
+    validate_duplicate_ids,
+    validate_duplicate_rows,
     validate_nullable_columns,
     validate_numeric_ranges,
     validate_schema_columns,
@@ -42,6 +44,8 @@ def validate_dataset_readiness(
     issues.extend(validate_nullable_columns(dataframe, schema))
     issues.extend(validate_numeric_ranges(dataframe, schema))
     issues.extend(validate_allowed_values(dataframe, schema))
+    issues.extend(validate_duplicate_rows(dataframe))
+    issues.extend(validate_duplicate_ids(dataframe, schema))
 
     return build_validation_report(
         dataset_path=str(dataset_path),
