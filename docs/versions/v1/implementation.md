@@ -5,6 +5,7 @@ Chunk V1-C1: project scaffolding only.
 Chunk V1-C2: config validation and robust dataset loading.
 Chunk V1-C3: feature-target split.
 Chunk V1-C4: train-test split.
+Chunk V1-C5: feature type detection.
 
 ## Folder Structure
 Established `app/`, `configs/`, `data/`, `artifacts/`, and documentation hierarchy under `docs/`.
@@ -66,6 +67,21 @@ Added `docs/versions/v1/commit_log.md` to connect V1 implementation progress wit
   - validates reproducibility with fixed random seed
   - validates mismatched feature/target length failure
   - validates invalid `test_size` failure
+
+## V1-C5 Additions
+- `app/pipeline/preprocessing.py`
+  - added `identify_feature_types`
+  - detects numeric feature columns
+  - detects categorical feature columns
+  - rejects empty feature dataframes
+  - rejects unsupported feature dtypes instead of dropping them silently
+- `app/train.py`
+  - detects feature types from `x_train` after train-test split
+  - logs numeric and categorical feature counts
+- `tests/test_v1_feature_type_detection.py`
+  - validates mixed, numeric-only, and categorical-only feature detection
+  - validates empty feature dataframe failure
+  - validates unsupported dtype failure
 
 ## Configs Used
 - `configs/training.yaml` created with placeholder baseline settings.

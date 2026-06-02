@@ -10,3 +10,4 @@
 - A dataset with only the target column is invalid for training even if it loads successfully.
 - Train-test splitting must use config values so model results are reproducible.
 - Reproducibility checks should test stable row partitions, not only row counts.
+- Feature type detection should fail loudly on unsupported dtypes to avoid silent column loss.
