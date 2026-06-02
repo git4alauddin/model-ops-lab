@@ -15,6 +15,7 @@ Add a production-style data validation and data quality layer before training.
 - allowed-value validation
 - duplicate validation
 - validation report persistence
+- training validation gate
 - V2 documentation and commit log
 
 ## Workflow Introduced
@@ -26,6 +27,7 @@ Check numeric values against schema min/max bounds.
 Check controlled categorical, boolean, and target values against allowed sets.
 Check duplicate rows and duplicate entity IDs.
 Persist validation reports for auditability and local inspection.
+Block training when validation reports blocking data quality failures.
 
 ## Engineering Objectives
 - separate validation from training logic

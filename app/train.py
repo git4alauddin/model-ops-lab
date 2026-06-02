@@ -29,8 +29,14 @@ from app.utils.artifacts import (
     save_model,
 )
 from app.utils.logger import build_log_path, get_logger
+from app.validate_data import DEFAULT_SCHEMA_PATH, validate_dataset_readiness
+from app.validation.reports import ValidationReport
 
 LOGGER_NAME = "modelopslab.training"
+
+
+class ValidationGateError(ValueError):
+    """Raised when validation blocks training."""
 
 
 def drop_configured_columns(
@@ -48,6 +54,36 @@ def drop_configured_columns(
         raise DataError(f"Configured drop columns not found: {missing_columns}")
 
     return dataframe.drop(columns=drop_columns)
+
+
+def enforce_validation_gate(report: ValidationReport) -> None:
+    """Stop training when validation reports blocking failures."""
+    if report.status != "passed":
+        raise ValidationGateError(
+            f"Training blocked because validation status is {report.status}."
+        )
+
+
+def count_validation_issues(report: ValidationReport) -> dict[str, int]:
+    """Return validation issue counts by severity."""
+    counts = {"INFO": 0, "WARNING": 0, "ERROR": 0, "CRITICAL": 0}
+    for issue in report.issues:
+        counts[issue.severity] = counts.get(issue.severity, 0) + 1
+    return counts
+
+
+def resolve_validation_schema_path(config: dict[str, Any]) -> Path:
+    """Return the validation schema path from config or the project default."""
+    validation_config = config.get("validation")
+    if not isinstance(validation_config, dict):
+        return DEFAULT_SCHEMA_PATH
+
+    schema_path = validation_config.get("schema_path")
+    if not schema_path:
+        return DEFAULT_SCHEMA_PATH
+
+    return Path(cast(str, schema_path))
+
 
 def _format_log_section(title: str, values: dict[str, Any]) -> str:
     """Format a readable key-value section for runtime logs."""
@@ -79,6 +115,27 @@ def main() -> None:
         drop_columns = cast(list[str], dataset_config.get("drop_columns", []))
         test_size = cast(float, training_config["test_size"])
         random_state = cast(int, training_config["random_state"])
+        validation_schema_path = resolve_validation_schema_path(config)
+
+        validation_report = validate_dataset_readiness(
+            config_path,
+            validation_schema_path,
+        )
+        validation_counts = count_validation_issues(validation_report)
+        logger.info(
+            _format_log_section(
+                "VALIDATION",
+                {
+                    "status": validation_report.status,
+                    "issues": len(validation_report.issues),
+                    "info": validation_counts["INFO"],
+                    "warnings": validation_counts["WARNING"],
+                    "errors": validation_counts["ERROR"],
+                    "critical": validation_counts["CRITICAL"],
+                },
+            )
+        )
+        enforce_validation_gate(validation_report)
 
         dataframe = load_dataset(dataset_path)
         dataframe = drop_configured_columns(dataframe, drop_columns)
@@ -212,6 +269,7 @@ def main() -> None:
         EvaluationError,
         PreprocessingError,
         TrainingError,
+        ValidationGateError,
     ) as exc:
         logger.exception("Training bootstrap failed: %s", exc)
         raise SystemExit(1) from exc

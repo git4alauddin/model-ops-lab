@@ -28,6 +28,10 @@
 - Verified validation text summary persistence.
 - Verified validation report paths are config-driven.
 - Verified warning/error counts are written to the text summary.
+- Verified training validation gate allows clean validation reports.
+- Verified training validation gate allows warning-only validation reports.
+- Verified training validation gate blocks failed validation reports.
+- Verified training logs validation status and issue counts before training.
 
 ## Commands Executed
 - `python -m pytest -q`
@@ -44,6 +48,7 @@
 - Allowed-value validation returns no issues for the current sample churn dataset.
 - Duplicate validation returns no issues for the current sample churn dataset.
 - Validation command generates ignored JSON and text report files.
+- Training command runs validation before training.
 
 ## Actual Output
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `50 passed in 1.44s`.
@@ -75,6 +80,10 @@
 - Generated validation report files showed `status='passed'`, `rows=20`, `columns=9`, and `issues=[]`.
 - Generated validation report files are ignored by git while `reports/.gitkeep` remains tracked.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after validation report persistence changes.
+- After V2-C9 training validation gate: `.\vir_env\Scripts\python.exe -m pytest -q` returned `89 passed in 1.52s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully and generated validation reports.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully and logged validation status before training.
+- Training validation log showed `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
 
 ## Outcome
 V2-C1 validation foundation is operational.
@@ -86,3 +95,4 @@ V2-C5 numeric range validation is operational.
 V2-C6 allowed-value validation is operational.
 V2-C7 duplicate validation is operational.
 V2-C8 validation report persistence is operational.
+V2-C9 training validation gate is operational.

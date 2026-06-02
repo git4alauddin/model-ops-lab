@@ -9,6 +9,7 @@ Chunk V2-C5: numeric range validation.
 Chunk V2-C6: allowed-value validation.
 Chunk V2-C7: duplicate validation.
 Chunk V2-C8: validation report persistence.
+Chunk V2-C9: training validation gate.
 
 ## V2-C1 Additions
 - `app/validate_data.py`
@@ -284,5 +285,38 @@ python -m app.validate_data
   -> log validation report paths
 ```
 
+## V2-C9 Additions
+- `configs/training.yaml`
+  - added `validation.schema_path`
+- `app/train.py`
+  - added `ValidationGateError`
+  - added `resolve_validation_schema_path`
+  - added `count_validation_issues`
+  - added `enforce_validation_gate`
+  - runs validation before dataset preprocessing and model training
+  - logs validation status and issue counts
+  - blocks training when validation report status is `failed`
+  - allows training to continue for warning-only validation reports
+- `tests/test_v2_c9_training_validation_gate.py`
+  - validates clean reports pass the gate
+  - validates warning-only reports pass the gate
+  - validates failed reports block training
+  - validates validation issue counts
+  - validates configured/default schema path resolution
+- `README.md`
+  - updated V2 status with training validation gate
+
+## Current V2-C9 Workflow
+```text
+python -m app.train
+  -> load configs/training.yaml
+  -> resolve validation.schema_path
+  -> run validation checks
+  -> log validation status and issue counts
+  -> if validation status is failed: stop training
+  -> if validation status is passed: continue training
+```
+
 ## Not Yet Implemented
-- training pipeline integration
+- target distribution sanity checks
+- final V2 closure documentation

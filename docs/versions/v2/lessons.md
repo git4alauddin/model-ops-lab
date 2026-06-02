@@ -18,3 +18,5 @@
 - Severity levels matter because not every data quality issue should have the same operational outcome.
 - Validation reports should be persisted as runtime outputs, not committed artifacts.
 - A text summary complements JSON because humans need quick inspection while automation needs structured data.
+- Training should fail before preprocessing or model fitting when validation reports blocking issues.
+- Warning-only validation reports should remain visible but should not always stop the pipeline.

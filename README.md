@@ -34,6 +34,7 @@ V2 has started with the data validation foundation:
 - allowed-value checks
 - duplicate row and duplicate ID checks
 - validation report persistence
+- training validation gate
 - focused validation foundation tests
 
 ## Setup

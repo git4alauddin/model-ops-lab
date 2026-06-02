@@ -25,6 +25,7 @@ logging:
   file: modelopslab.log
 
 validation:
+  schema_path: schema_versions/customer_churn_v1.yaml
   reports:
     dir: reports
     json_file: validation_report.json

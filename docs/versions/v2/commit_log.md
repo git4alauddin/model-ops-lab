@@ -155,7 +155,7 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no duplicate issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after duplicate validation changes.
 
-## Pending - v2-c8: persist validation reports
+## cb7f8af - v2-c8: persist validation reports
 
 ### What Changed
 - Added validation report path construction in `app/validation/reports.py`.
@@ -181,3 +181,28 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - Generated validation report files showed `status='passed'`, `rows=20`, `columns=9`, and `issues=[]`.
 - Generated validation report files are ignored by git while `reports/.gitkeep` remains tracked.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after validation report persistence changes.
+
+## Pending - v2-c9: integrate validation gate into training
+
+### What Changed
+- Added `validation.schema_path` to `configs/training.yaml`.
+- Added `ValidationGateError` in `app/train.py`.
+- Added validation schema path resolution in `app/train.py`.
+- Added validation issue counting in `app/train.py`.
+- Added training validation gate enforcement in `app/train.py`.
+- Updated training flow to run validation before dataset preprocessing and model training.
+- Updated training logs with validation status and issue counts.
+- Updated README and V2 documentation.
+- Added focused training validation gate tests.
+
+### What Problem It Solved
+- Turns validation from a separate command into a training safety gate.
+- Stops training before preprocessing or fitting when validation reports blocking issues.
+- Keeps warning-only validation reports visible without blocking training.
+- Makes the V2 validation layer operationally relevant to the training pipeline.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `89 passed in 1.52s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully and generated validation reports.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully and logged validation status before training.
+- Training validation log showed `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
