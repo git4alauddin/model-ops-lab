@@ -28,7 +28,7 @@ from app.utils.artifacts import (
     save_json,
     save_model,
 )
-from app.utils.logger import get_logger
+from app.utils.logger import build_log_path, get_logger
 
 
 class DataError(ValueError):
@@ -73,12 +73,15 @@ def load_dataset(dataset_path: str | Path) -> pd.DataFrame:
 
 def main() -> None:
     """Validate config and dataset readiness for the V1 training flow."""
-    logger = get_logger(__name__)
     config_path = Path("configs/training.yaml")
+    logger = get_logger(__name__)
 
     try:
-        logger.info("Training bootstrap started.")
         config = load_config(config_path)
+        log_path = build_log_path(config)
+        logger = get_logger(__name__, log_path)
+        logger.info("Training bootstrap started.")
+        logger.info("Training log file configured. path=%s", log_path)
         dataset_config = cast(dict[str, Any], config["dataset"])
         training_config = cast(dict[str, Any], config["training"])
         model_config = cast(dict[str, Any], config["model"])

@@ -4,7 +4,7 @@ Production-style, versioned MLOps project built incrementally.
 
 ### V1 Status
 
-V1 chunks 1-10 completed:
+V1 chunks 1-11 completed:
 - app entrypoints and modules
 - config template
 - config validation + robust dataset loading
@@ -16,6 +16,7 @@ V1 chunks 1-10 completed:
 - sample churn dataset smoke run
 - evaluation metrics
 - artifact persistence
+- file-based training logs
 - focused tests for config and dataset loader
 - docs structure
 - environment and dependency files
@@ -44,6 +45,7 @@ modelOpsLab/
     test_v1_c8_sample_churn_dataset.py
     test_v1_c9_evaluation_metrics.py
     test_v1_c10_artifact_persistence.py
+    test_v1_c11_file_logging.py
   data/
   artifacts/
   docs/

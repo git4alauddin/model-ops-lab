@@ -19,3 +19,7 @@ artifacts:
   metrics_file: metrics.json
   config_snapshot_file: config_snapshot.json
   metadata_file: training_metadata.json
+
+logging:
+  dir: logs
+  file: training.log

@@ -25,3 +25,5 @@
 - Artifacts should be generated reproducibly but not committed as runtime outputs.
 - Saving the full fitted sklearn pipeline preserves preprocessing and model behavior together.
 - Config snapshots and metadata make a training run explainable after the command finishes.
+- File logs preserve operational evidence after the terminal output is gone.
+- Logger setup must avoid duplicate handlers because repeated setup can duplicate every log line.

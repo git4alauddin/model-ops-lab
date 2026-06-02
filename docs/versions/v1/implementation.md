@@ -11,6 +11,7 @@ Chunk V1-C7: baseline model training.
 Chunk V1-C8: sample churn dataset smoke run.
 Chunk V1-C9: evaluation metrics.
 Chunk V1-C10: artifact persistence.
+Chunk V1-C11: file-based training logs.
 
 ## Folder Structure
 Established `app/`, `configs/`, `data/`, `artifacts/`, and documentation hierarchy under `docs/`.
@@ -182,6 +183,24 @@ Tests follow `tests/test_v1_cX_<component>.py` naming so each test file maps to 
   - validates model artifact is loadable and usable
   - validates artifact paths from config
   - validates controlled JSON persistence failure
+
+## V1-C11 Additions
+- `app/utils/logger.py`
+  - added optional file logging support
+  - added duplicate handler protection
+  - added `build_log_path`
+- `configs/training.yaml`
+  - added `logging.dir`
+  - added `logging.file`
+- `app/train.py`
+  - configures logger with file path from training config
+  - logs configured log file path
+- `.gitignore`
+  - ignores runtime logs
+- `tests/test_v1_c11_file_logging.py`
+  - validates file log creation
+  - validates duplicate file handlers are not added
+  - validates log path construction from config
 
 ## Configs Used
 - `configs/training.yaml` created with placeholder baseline settings.

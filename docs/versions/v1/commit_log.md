@@ -174,7 +174,7 @@ This file records meaningful V1 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `36 passed in 1.35s`.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully and logged accuracy, precision, recall, F1, and a stable `2x2` confusion matrix.
 
-## Pending - v1-c10: persist metrics and training artifacts
+## ea5bb70 - v1-c10: persist metrics and training artifacts
 
 ### What Changed
 - Implemented artifact persistence helpers in `app/utils/artifacts.py`.
@@ -196,3 +196,26 @@ This file records meaningful V1 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully.
 - Training generated `artifacts/model.pkl`, `artifacts/metrics.json`, `artifacts/config_snapshot.json`, and `artifacts/training_metadata.json`.
 - Generated artifact files are ignored by git while `artifacts/.gitkeep` remains tracked.
+
+## Pending - v1-c11: add file-based training logs
+
+### What Changed
+- Added optional file logging support in `app/utils/logger.py`.
+- Added duplicate handler protection for logger setup.
+- Added config-driven log path construction.
+- Added `logging.dir` and `logging.file` to `configs/training.yaml`.
+- Updated `app/train.py` to write logs to `logs/training.log`.
+- Updated `.gitignore` to ignore runtime logs.
+- Added focused file logging tests.
+- Updated README and V1 documentation.
+
+### What Problem It Solved
+- Preserves training logs after terminal output is gone.
+- Provides inspectable operational evidence for each local training run.
+- Prevents duplicate log lines when logger setup is called multiple times.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `44 passed in 1.40s`.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully.
+- Training generated `logs/training.log`.
+- `logs/training.log` is ignored by git.

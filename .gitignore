@@ -12,6 +12,10 @@ __pycache__/
 artifacts/*
 !artifacts/.gitkeep
 
+# Runtime logs
+logs/
+*.log
+
 # OS files
 .DS_Store
 Thumbs.db
