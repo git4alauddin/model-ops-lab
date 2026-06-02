@@ -48,7 +48,7 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no structural issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after structural validation changes.
 
-## Pending - v2-c3: add datatype validation
+## 9a123c5 - v2-c3: add datatype validation
 
 ### What Changed
 - Added column datatype validation in `app/validation/checks.py`.
@@ -68,3 +68,23 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `59 passed in 1.70s`.
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no dtype issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after datatype validation changes.
+
+## Pending - v2-c4: add nullability validation
+
+### What Changed
+- Added nullable field validation in `app/validation/checks.py`.
+- Added `validate_nullable_columns` using `nullable` rules from the versioned schema.
+- Updated `app/validate_data.py` to include nullability issues in the validation report.
+- Updated README and V2 documentation.
+- Added focused nullability validation tests.
+
+### What Problem It Solved
+- Detects required fields that are present but not filled.
+- Blocks datasets with null values in `nullable: false` columns.
+- Keeps required-column presence separate from required-field completeness.
+- Prepares validation for range and categorical value checks.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `63 passed in 1.81s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no nullability issues.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully after nullability validation changes.

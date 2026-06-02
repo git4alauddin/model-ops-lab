@@ -10,12 +10,14 @@ Add a production-style data validation and data quality layer before training.
 - validation report structure
 - structural schema validation
 - datatype validation
+- nullability validation
 - V2 documentation and commit log
 
 ## Workflow Introduced
 Validate dataset readiness before adding deeper schema and quality checks.
 Compare dataset columns against the versioned schema before training.
 Compare present dataframe column dtypes against schema dtype rules.
+Check required fields for null values before range and category checks.
 
 ## Engineering Objectives
 - separate validation from training logic

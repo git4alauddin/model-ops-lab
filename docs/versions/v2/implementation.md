@@ -4,6 +4,7 @@
 Chunk V2-C1: validation foundation.
 Chunk V2-C2: structural schema validation.
 Chunk V2-C3: datatype validation.
+Chunk V2-C4: nullability validation.
 
 ## V2-C1 Additions
 - `app/validate_data.py`
@@ -107,8 +108,38 @@ configs/training.yaml
   -> log validation result
 ```
 
+## V2-C4 Additions
+- `app/validation/checks.py`
+  - added `validate_nullable_columns`
+  - reads `nullable` rules from the versioned schema
+  - skips missing columns so structural validation remains the source for missing-column issues
+  - emits `ERROR` issues when `nullable: false` columns contain null values
+- `app/validate_data.py`
+  - runs nullability checks after structural and dtype checks
+  - includes nullability failures in the validation report
+- `tests/test_v2_c4_nullability_validation.py`
+  - validates current churn dataset nullability success
+  - validates non-nullable column failure
+  - validates nullable columns can contain null values
+  - validates failed readiness report for nullability violations
+- `README.md`
+  - updated V2 status with nullability validation
+
+## Current V2-C4 Workflow
+```text
+configs/training.yaml
+  -> resolve dataset path
+  -> load data/churn.csv
+  -> load schema_versions/customer_churn_v1.yaml
+  -> compare dataframe columns with schema columns
+  -> compare present dataframe dtypes with schema dtype rules
+  -> check nullable:false columns for null values
+  -> add ERROR issue for nullability violations
+  -> build validation report with passed/failed status
+  -> log validation result
+```
+
 ## Not Yet Implemented
-- nullable field validation
 - range and categorical checks
 - duplicate checks
 - persisted validation reports

@@ -117,6 +117,35 @@ def validate_column_dtypes(
     return issues
 
 
+def validate_nullable_columns(
+    dataframe: pd.DataFrame,
+    schema: dict[str, Any],
+) -> list[ValidationIssue]:
+    """Return issues for non-nullable columns that contain null values."""
+    issues: list[ValidationIssue] = []
+    for column_name, column_rules in _schema_columns(schema).items():
+        if column_name not in dataframe.columns:
+            continue
+
+        if bool(column_rules["nullable"]):
+            continue
+
+        null_count = int(dataframe[column_name].isna().sum())
+        if null_count:
+            issues.append(
+                ValidationIssue(
+                    severity="ERROR",
+                    check="nullable_columns",
+                    message=(
+                        f"column '{column_name}' is not nullable "
+                        f"but contains {null_count} null value(s)"
+                    ),
+                )
+            )
+
+    return issues
+
+
 def _validate_schema_contract(schema: dict[str, Any]) -> None:
     required_keys = ["name", "version", "columns"]
     for key in required_keys:
