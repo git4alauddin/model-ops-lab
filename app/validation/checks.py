@@ -1,10 +1,13 @@
-"""Validation schema loading helpers."""
+"""Validation schema loading and structural checks."""
 
 from pathlib import Path
 from typing import Any
 
+import pandas as pd
 import yaml
 from yaml import YAMLError
+
+from app.validation.reports import ValidationIssue
 
 
 class ValidationError(ValueError):
@@ -32,6 +35,54 @@ def load_validation_schema(schema_path: str | Path) -> dict[str, Any]:
     return schema
 
 
+def validate_required_columns(
+    dataframe: pd.DataFrame,
+    schema: dict[str, Any],
+) -> list[ValidationIssue]:
+    """Return issues for schema columns missing from the dataframe."""
+    expected_columns = _schema_column_names(schema)
+    actual_columns = set(dataframe.columns)
+
+    return [
+        ValidationIssue(
+            severity="ERROR",
+            check="required_columns",
+            message=f"missing required column: {column}",
+        )
+        for column in expected_columns
+        if column not in actual_columns
+    ]
+
+
+def validate_unexpected_columns(
+    dataframe: pd.DataFrame,
+    schema: dict[str, Any],
+) -> list[ValidationIssue]:
+    """Return issues for dataframe columns not defined in the schema."""
+    expected_columns = set(_schema_column_names(schema))
+
+    return [
+        ValidationIssue(
+            severity="ERROR",
+            check="unexpected_columns",
+            message=f"unexpected column: {column}",
+        )
+        for column in dataframe.columns
+        if column not in expected_columns
+    ]
+
+
+def validate_schema_columns(
+    dataframe: pd.DataFrame,
+    schema: dict[str, Any],
+) -> list[ValidationIssue]:
+    """Run structural dataframe-vs-schema column checks."""
+    issues: list[ValidationIssue] = []
+    issues.extend(validate_required_columns(dataframe, schema))
+    issues.extend(validate_unexpected_columns(dataframe, schema))
+    return issues
+
+
 def _validate_schema_contract(schema: dict[str, Any]) -> None:
     required_keys = ["name", "version", "columns"]
     for key in required_keys:
@@ -51,3 +102,10 @@ def _validate_schema_contract(schema: dict[str, Any]) -> None:
             raise ValidationError(f"Missing dtype for column: {column_name}")
         if "nullable" not in column_rules:
             raise ValidationError(f"Missing nullable rule for column: {column_name}")
+
+
+def _schema_column_names(schema: dict[str, Any]) -> list[str]:
+    columns = schema.get("columns")
+    if not isinstance(columns, dict):
+        raise ValidationError("Validation schema columns must be a map.")
+    return list(columns.keys())

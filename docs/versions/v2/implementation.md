@@ -2,6 +2,7 @@
 
 ## Scope
 Chunk V2-C1: validation foundation.
+Chunk V2-C2: structural schema validation.
 
 ## V2-C1 Additions
 - `app/validate_data.py`
@@ -42,9 +43,38 @@ configs/training.yaml
   -> log validation scaffold result
 ```
 
+## V2-C2 Additions
+- `app/validation/checks.py`
+  - added `validate_required_columns`
+  - added `validate_unexpected_columns`
+  - added `validate_schema_columns`
+  - returns `ValidationIssue` objects for structural failures
+- `app/validate_data.py`
+  - runs structural dataframe-vs-schema checks after loading data and schema
+  - includes structural issues in the validation report
+  - report status becomes `failed` when missing or unexpected columns exist
+- `tests/test_v2_c2_structural_validation.py`
+  - validates missing required column detection
+  - validates unexpected column detection
+  - validates matching structure success
+  - validates failed readiness report for bad dataset structure
+- `README.md`
+  - updated V2 status with structural column validation
+
+## Current V2-C2 Workflow
+```text
+configs/training.yaml
+  -> resolve dataset path
+  -> load data/churn.csv
+  -> load schema_versions/customer_churn_v1.yaml
+  -> compare dataframe columns with schema columns
+  -> add ERROR issue for missing required columns
+  -> add ERROR issue for unexpected columns
+  -> build validation report with passed/failed status
+  -> log validation result
+```
+
 ## Not Yet Implemented
-- required column validation against the dataframe
-- unexpected column detection
 - dataframe dtype validation
 - nullable field validation
 - range and categorical checks

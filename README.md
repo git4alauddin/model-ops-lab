@@ -27,6 +27,7 @@ V2 has started with the data validation foundation:
 - validation package
 - first versioned churn dataset schema
 - validation report structure
+- required and unexpected column checks
 - focused validation foundation tests
 
 ## Setup

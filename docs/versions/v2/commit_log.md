@@ -2,7 +2,7 @@
 
 This file records meaningful V2 commits and the operational purpose of each change.
 
-## Pending - v2-c1: create validation foundation
+## a2fd55d - v2-c1: create validation foundation
 
 ### What Changed
 - Added `app/validate_data.py` as the V2 validation command entrypoint.
@@ -26,3 +26,24 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully.
 - Validation command returned a passed readiness report with `rows=20`, `columns=9`, `schema_version='v1'`, and no issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after moving shared dataset loading into `app/data.py`.
+
+## Pending - v2-c2: add structural schema validation
+
+### What Changed
+- Added required column validation in `app/validation/checks.py`.
+- Added unexpected column validation in `app/validation/checks.py`.
+- Added combined structural schema validation helper.
+- Updated `app/validate_data.py` to include structural issues in the validation report.
+- Updated README and V2 documentation.
+- Added focused structural validation tests.
+
+### What Problem It Solved
+- Detects schema drift before dtype, null, range, or category checks run.
+- Flags missing required fields as blocking validation issues.
+- Flags unexpected dataframe columns as blocking validation issues.
+- Makes validation reports reflect actual dataframe-vs-schema structure.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `54 passed in 2.79s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no structural issues.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully after structural validation changes.

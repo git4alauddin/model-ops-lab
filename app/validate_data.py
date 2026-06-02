@@ -6,7 +6,11 @@ from typing import Any, cast
 from app.config import ConfigError, load_config
 from app.data import DataError, load_dataset
 from app.utils.logger import build_log_path, get_logger
-from app.validation.checks import ValidationError, load_validation_schema
+from app.validation.checks import (
+    ValidationError,
+    load_validation_schema,
+    validate_schema_columns,
+)
 from app.validation.reports import ValidationReport, build_validation_report
 
 LOGGER_NAME = "modelopslab.validation"
@@ -29,6 +33,7 @@ def validate_dataset_readiness(
         cast(str, dataset_config["path"]),
     )
     dataframe = load_dataset(dataset_path)
+    issues = validate_schema_columns(dataframe, schema)
 
     return build_validation_report(
         dataset_path=str(dataset_path),
@@ -36,6 +41,7 @@ def validate_dataset_readiness(
         schema_version=cast(str, schema["version"]),
         rows=len(dataframe),
         columns=len(dataframe.columns),
+        issues=issues,
     )
 
 
