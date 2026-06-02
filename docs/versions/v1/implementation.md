@@ -12,6 +12,7 @@ Chunk V1-C8: sample churn dataset smoke run.
 Chunk V1-C9: evaluation metrics.
 Chunk V1-C10: artifact persistence.
 Chunk V1-C11: file-based training logs.
+Chunk V1-C12: final README usage and V1 workflow documentation.
 
 ## Folder Structure
 Established `app/`, `configs/`, `data/`, `artifacts/`, and documentation hierarchy under `docs/`.
@@ -19,11 +20,13 @@ Added `docs/versions/v1/commit_log.md` to connect V1 implementation progress wit
 Tests follow `tests/test_v1_cX_<component>.py` naming so each test file maps to a version component.
 
 ## Important Modules
-- `app/train.py`: training entrypoint scaffold
-- `app/evaluate.py`: evaluation entrypoint scaffold
-- `app/config.py`: YAML config loader scaffold
-- `app/utils/logger.py`: basic logging setup
-- `app/utils/artifacts.py`: artifact directory helper
+- `app/train.py`: end-to-end V1 training orchestration
+- `app/evaluate.py`: held-out classification metric generation
+- `app/config.py`: YAML config loading and validation
+- `app/pipeline/preprocessing.py`: feature-target split, train-test split, feature typing, and preprocessing construction
+- `app/pipeline/trainer.py`: baseline model construction and training
+- `app/utils/logger.py`: console and file logger setup
+- `app/utils/artifacts.py`: model, JSON metrics, config snapshot, and metadata persistence
 
 ## V1-C2 Additions
 - `app/config.py`
@@ -205,8 +208,42 @@ Tests follow `tests/test_v1_cX_<component>.py` naming so each test file maps to 
   - validates duplicate file handlers are not added
   - validates log path construction from config
 
+## V1-C12 Additions
+- `README.md`
+  - updated from in-progress scaffold wording to completed V1 usage documentation
+  - added setup, training, and test commands
+  - documented generated artifacts and logs as ignored runtime outputs
+  - added the final V1 workflow summary
+- `docs/versions/v1/implementation.md`
+  - added final end-to-end V1 workflow summary
+  - updated important module descriptions to reflect implemented behavior
+- `docs/versions/v1/verification.md`
+  - added final V1 verification checkpoint
+  - documented expected runtime outputs and ignore behavior
+- `docs/versions/v1/commit_log.md`
+  - converted the V1-C11 pending entry into actual committed history
+  - added the V1-C12 documentation closure entry
+
+## Final V1 Workflow
+```text
+configs/training.yaml
+  -> load and validate config
+  -> resolve dataset, artifact, and logging paths
+  -> load CSV dataset with controlled failure handling
+  -> drop configured non-feature columns
+  -> split feature columns from the target column
+  -> create reproducible train/test partitions
+  -> detect numeric and categorical feature groups
+  -> build sklearn preprocessing pipeline
+  -> build Logistic Regression baseline model
+  -> fit preprocessing plus model as one sklearn pipeline
+  -> evaluate the fitted pipeline on held-out test data
+  -> persist model, metrics, config snapshot, and training metadata
+  -> write readable console and file logs
+```
+
 ## Configs Used
-- `configs/training.yaml` created with placeholder baseline settings.
+- `configs/training.yaml` drives dataset path, target column, dropped columns, split settings, model settings, artifact paths, and log path.
 
 ## Commands Used
 - directory creation with PowerShell `New-Item -ItemType Directory`.

@@ -197,17 +197,14 @@ This file records meaningful V1 commits and the operational purpose of each chan
 - Training generated `artifacts/model.pkl`, `artifacts/metrics.json`, `artifacts/config_snapshot.json`, and `artifacts/training_metadata.json`.
 - Generated artifact files are ignored by git while `artifacts/.gitkeep` remains tracked.
 
-## Pending - v1-c11: add file-based training logs
+## 91321dd - v1-c11: add file-based training logs
 
 ### What Changed
 - Added optional file logging support in `app/utils/logger.py`.
 - Added duplicate handler protection for logger setup.
 - Added config-driven log path construction.
 - Added `logging.dir` and `logging.file` to `configs/training.yaml`.
-- Updated `app/train.py` to write logs to `logs/modelopslab.log`.
-- Added a run-start separator with timestamp for appended runtime logs.
-- Replaced `__main__` log name with stable `modelopslab.training` logger name.
-- Reworked runtime log entries into sectioned key-value blocks.
+- Updated `app/train.py` to write runtime logs to a file.
 - Updated `.gitignore` to ignore runtime logs.
 - Added focused file logging tests.
 - Updated README and V1 documentation.
@@ -220,8 +217,60 @@ This file records meaningful V1 commits and the operational purpose of each chan
 ### Verification
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `44 passed in 1.40s`.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully.
+- Training generated a runtime log file that was ignored by git.
+
+## 2216b6f - v1-c11: standardize runtime log naming
+
+### What Changed
+- Renamed runtime logging from workflow-specific training log naming to general ModelOpsLab log naming.
+- Updated `configs/training.yaml` to use `logs/modelopslab.log`.
+- Updated `app/train.py` and file logging tests for the generalized log file.
+- Added a run-start separator with timestamp for appended runtime logs.
+- Updated README and V1 documentation.
+
+### What Problem It Solved
+- Keeps the runtime log file name broad enough for future pipeline steps beyond training.
+- Makes repeated log appends easier to inspect with visible run boundaries.
+- Removes stale `training.log` references from the tracked code and docs.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully.
 - Training generated `logs/modelopslab.log`.
 - `logs/modelopslab.log` is ignored by git.
-- After log-name cleanup: `.\vir_env\Scripts\python.exe -m pytest -q` returned `44 passed in 3.73s`.
-- After stable logger name and sectioned block polish: `.\vir_env\Scripts\python.exe -m pytest -q` returned `46 passed in 1.80s`.
-- `.\vir_env\Scripts\python.exe -m app.train` logged with `modelopslab.training` and readable runtime sections.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `44 passed in 3.73s`.
+
+## 5e3c030 - v1-c11: polish runtime log readability
+
+### What Changed
+- Replaced `__main__` log naming with stable `modelopslab.training` logger naming.
+- Reworked runtime log entries into sectioned key-value blocks.
+- Added tests around the polished logger name and readable runtime output.
+- Updated V1 implementation, verification, lessons, and commit log docs.
+
+### What Problem It Solved
+- Makes logs clearer when the training command is run as a module.
+- Reduces visual clutter in appended runtime logs.
+- Keeps operational details visible without long single-line log records.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `46 passed in 1.80s`.
+- `.\vir_env\Scripts\python.exe -m app.train` logged with `modelopslab.training`.
+- Runtime output included readable sections for runtime, dataset, split, features, preprocessing, model, evaluation, and artifacts.
+
+## Pending - v1-c12: finalize README usage and V1 workflow documentation
+
+### What Changed
+- Updated `README.md` with completed V1 setup, training, testing, runtime output, structure, and workflow guidance.
+- Updated `docs/versions/v1/implementation.md` with final V1 workflow and current module responsibilities.
+- Updated `docs/versions/v1/verification.md` with final V1 runtime output and verification notes.
+- Converted the previous V1-C11 pending commit log entry into actual committed c11 history.
+
+### What Problem It Solved
+- Makes the repository usable by another engineer without relying on the chat history.
+- Aligns V1 documentation with the actual implemented pipeline.
+- Closes V1 with a readable workflow summary before moving to V2.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `46 passed in 1.53s`.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully.
+- Training generated the expected ignored runtime outputs under `artifacts/` and `logs/modelopslab.log`.

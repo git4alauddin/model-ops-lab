@@ -1,27 +1,65 @@
-## ModelOpsLab
+# ModelOpsLab
 
 Production-style, versioned MLOps project built incrementally.
 
-### V1 Status
+## V1 Status
 
-V1 chunks 1-11 completed:
-- app entrypoints and modules
-- config template
-- config validation + robust dataset loading
+V1 is the baseline ML pipeline foundation. It now supports an end-to-end local training run:
+
+- YAML-driven configuration
+- robust CSV dataset loading
+- configured non-feature column dropping
 - feature-target split
-- train-test split
-- feature type detection
-- preprocessing pipeline construction
-- baseline model training
-- sample churn dataset smoke run
-- evaluation metrics
-- artifact persistence
-- file-based training logs
-- focused tests for config and dataset loader
-- docs structure
-- environment and dependency files
+- reproducible train/test split
+- numeric and categorical feature detection
+- sklearn preprocessing pipeline
+- Logistic Regression baseline model training
+- held-out evaluation metrics
+- model, metrics, config snapshot, and metadata persistence
+- readable console and file logs
+- focused tests for each meaningful V1 component
 
-### Expected Structure
+## Setup
+
+```powershell
+python -m venv vir_env
+.\vir_env\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+```
+
+## Run Training
+
+```powershell
+python -m app.train
+```
+
+The default config uses:
+
+- config: `configs/training.yaml`
+- dataset: `data/churn.csv`
+- target column: `churn`
+- dropped column: `customer_id`
+- model: Logistic Regression
+
+## Run Tests
+
+```powershell
+python -m pytest -q
+```
+
+## Runtime Outputs
+
+Generated runtime files are intentionally ignored by git:
+
+- `artifacts/model.pkl`
+- `artifacts/metrics.json`
+- `artifacts/config_snapshot.json`
+- `artifacts/training_metadata.json`
+- `logs/modelopslab.log`
+
+The repository keeps the artifact placeholder folder with `.gitkeep`, but trained models, metrics, metadata snapshots, and logs are local run outputs.
+
+## Structure
 
 ```text
 modelOpsLab/
@@ -31,9 +69,17 @@ modelOpsLab/
     config.py
     schemas.py
     pipeline/
+      preprocessing.py
+      trainer.py
     utils/
+      artifacts.py
+      logger.py
   configs/
     training.yaml
+  data/
+    churn.csv
+  artifacts/
+    .gitkeep
   tests/
     test_v1_c2_config_validation.py
     test_v1_c2_dataset_loading.py
@@ -46,8 +92,6 @@ modelOpsLab/
     test_v1_c9_evaluation_metrics.py
     test_v1_c10_artifact_persistence.py
     test_v1_c11_file_logging.py
-  data/
-  artifacts/
   docs/
     versions/v1/
     architecture/
@@ -59,6 +103,19 @@ modelOpsLab/
     diagrams/
 ```
 
-### Next Step
+## V1 Workflow
 
-Implement V1 dataset loading, preprocessing, and training flow in small chunks.
+```text
+configs/training.yaml
+  -> load and validate config
+  -> load data/churn.csv
+  -> drop configured non-feature columns
+  -> split features and target
+  -> create reproducible train/test split
+  -> detect numeric and categorical features
+  -> build preprocessing pipeline
+  -> train Logistic Regression baseline
+  -> evaluate on held-out test set
+  -> persist model, metrics, config snapshot, and metadata
+  -> write readable runtime logs
+```
