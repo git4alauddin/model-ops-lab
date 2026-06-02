@@ -11,3 +11,5 @@
 - Train-test splitting must use config values so model results are reproducible.
 - Reproducibility checks should test stable row partitions, not only row counts.
 - Feature type detection should fail loudly on unsupported dtypes to avoid silent column loss.
+- `OneHotEncoder(handle_unknown="ignore")` prevents unseen categories from breaking future inference.
+- Preprocessing construction should be reusable and separate from training orchestration.

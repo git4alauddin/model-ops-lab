@@ -7,6 +7,7 @@
 - Ran unit tests for config validation, dataset loading, and feature-target split.
 - Ran unit tests for train-test split behavior and reproducibility.
 - Ran unit tests for feature type detection.
+- Ran unit tests for preprocessing pipeline construction and unknown-category handling.
 
 ## Commands Executed
 - `Get-ChildItem -Recurse -File app,configs,docs,data,artifacts`
@@ -27,7 +28,9 @@
 - After adding feature-target split tests: `9 passed in 1.07s`.
 - After adding train-test split tests: `13 passed in 2.55s`.
 - After adding feature type detection tests: `18 passed in 1.34s`.
+- After adding preprocessing pipeline tests: `23 passed in 1.32s`.
+- After renaming tests to component-aware filenames: `23 passed in 1.31s`.
 
 ## Outcome
-Scaffold, V1-C2 error handling path, V1-C3 feature-target split, V1-C4 train-test split, and V1-C5 feature type detection are operational.
+Scaffold, V1-C2 error handling path, V1-C3 feature-target split, V1-C4 train-test split, V1-C5 feature type detection, and V1-C6 preprocessing pipeline construction are operational.
 Unit tests are passing in the project virtual environment.

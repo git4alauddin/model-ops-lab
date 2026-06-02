@@ -66,7 +66,7 @@ This file records meaningful V1 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `13 passed in 2.55s`.
 - `.\vir_env\Scripts\python.exe -m app.train` still fails with controlled missing dataset error, as expected before adding real data.
 
-## Pending - v1: add feature type detection
+## 2acea0f - v1-c5: add feature type detection with focused tests
 
 ### What Changed
 - Added `identify_feature_types` in `app/pipeline/preprocessing.py`.
@@ -82,4 +82,25 @@ This file records meaningful V1 commits and the operational purpose of each chan
 
 ### Verification
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `18 passed in 1.34s`.
+- `.\vir_env\Scripts\python.exe -m app.train` still fails with controlled missing dataset error, as expected before adding real data.
+
+## Pending - v1-c6: build preprocessing pipeline
+
+### What Changed
+- Implemented `build_preprocessing_pipeline` in `app/pipeline/preprocessing.py`.
+- Added sklearn `ColumnTransformer` construction.
+- Added `StandardScaler` for numeric feature columns.
+- Added `OneHotEncoder(handle_unknown="ignore")` for categorical feature columns.
+- Updated `app/train.py` to build and log the preprocessing pipeline after feature type detection.
+- Added focused preprocessing pipeline tests.
+- Renamed V1 tests to the component-aware convention `tests/test_v1_cX_<component>.py`.
+- Updated README and V1 documentation.
+
+### What Problem It Solved
+- Creates the reusable preprocessing object required before baseline model training.
+- Keeps scaling and encoding logic centralized in the preprocessing module.
+- Prevents unknown categorical values from breaking transformation.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `23 passed in 1.32s`.
 - `.\vir_env\Scripts\python.exe -m app.train` still fails with controlled missing dataset error, as expected before adding real data.

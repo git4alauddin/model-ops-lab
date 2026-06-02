@@ -7,6 +7,7 @@ from pandas.errors import EmptyDataError, ParserError
 
 from app.config import ConfigError, load_config
 from app.pipeline.preprocessing import (
+    build_preprocessing_pipeline,
     identify_feature_types,
     PreprocessingError,
     split_features_target,
@@ -60,6 +61,10 @@ def main() -> None:
             random_state,
         )
         numeric_features, categorical_features = identify_feature_types(x_train)
+        preprocessing_pipeline = build_preprocessing_pipeline(
+            numeric_features,
+            categorical_features,
+        )
 
         logger.info(
             "Dataset loaded successfully. rows=%s cols=%s target=%s",
@@ -83,6 +88,12 @@ def main() -> None:
             "Feature type detection completed. numeric_features=%s categorical_features=%s",
             len(numeric_features),
             len(categorical_features),
+        )
+        logger.info(
+            "Preprocessing pipeline created. numeric_enabled=%s categorical_enabled=%s transformers=%s",
+            bool(numeric_features),
+            bool(categorical_features),
+            len(preprocessing_pipeline.transformers),
         )
         logger.info("Training bootstrap completed.")
     except (ConfigError, DataError, PreprocessingError) as exc:

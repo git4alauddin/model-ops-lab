@@ -6,10 +6,12 @@ Chunk V1-C2: config validation and robust dataset loading.
 Chunk V1-C3: feature-target split.
 Chunk V1-C4: train-test split.
 Chunk V1-C5: feature type detection.
+Chunk V1-C6: preprocessing pipeline construction.
 
 ## Folder Structure
 Established `app/`, `configs/`, `data/`, `artifacts/`, and documentation hierarchy under `docs/`.
 Added `docs/versions/v1/commit_log.md` to connect V1 implementation progress with git history.
+Tests follow `tests/test_v1_cX_<component>.py` naming so each test file maps to a version component.
 
 ## Important Modules
 - `app/train.py`: training entrypoint scaffold
@@ -31,9 +33,9 @@ Added `docs/versions/v1/commit_log.md` to connect V1 implementation progress wit
   - added target column presence check
   - added dataset metadata logs (`rows`, `cols`, `target`)
   - added non-zero exit behavior on validation/load failure
-- `tests/test_v1_config_validation.py`
+- `tests/test_v1_c2_config_validation.py`
   - validates success path and key config failure paths
-- `tests/test_v1_dataset_loading.py`
+- `tests/test_v1_c2_dataset_loading.py`
   - validates missing/empty/success dataset loading behavior
 
 ## V1-C3 Additions
@@ -46,7 +48,7 @@ Added `docs/versions/v1/commit_log.md` to connect V1 implementation progress wit
   - uses `split_features_target` after dataset loading
   - logs feature column count and target row count
   - treats preprocessing validation failures as controlled bootstrap failures
-- `tests/test_v1_feature_target_split.py`
+- `tests/test_v1_c3_feature_target_split.py`
   - validates successful split
   - validates missing target failure
   - validates no-feature-column failure
@@ -62,7 +64,7 @@ Added `docs/versions/v1/commit_log.md` to connect V1 implementation progress wit
   - reads `test_size` and `random_state` from training config
   - creates train/test partitions after feature-target split
   - logs train/test row counts and split settings
-- `tests/test_v1_train_test_split.py`
+- `tests/test_v1_c4_train_test_split.py`
   - validates expected split sizes
   - validates reproducibility with fixed random seed
   - validates mismatched feature/target length failure
@@ -78,10 +80,25 @@ Added `docs/versions/v1/commit_log.md` to connect V1 implementation progress wit
 - `app/train.py`
   - detects feature types from `x_train` after train-test split
   - logs numeric and categorical feature counts
-- `tests/test_v1_feature_type_detection.py`
+- `tests/test_v1_c5_feature_type_detection.py`
   - validates mixed, numeric-only, and categorical-only feature detection
   - validates empty feature dataframe failure
   - validates unsupported dtype failure
+
+## V1-C6 Additions
+- `app/pipeline/preprocessing.py`
+  - implemented `build_preprocessing_pipeline`
+  - builds sklearn `ColumnTransformer`
+  - applies `StandardScaler` to numeric features
+  - applies `OneHotEncoder(handle_unknown="ignore")` to categorical features
+  - rejects empty transformer configs
+- `app/train.py`
+  - builds preprocessing pipeline after feature type detection
+  - logs enabled transformer groups
+- `tests/test_v1_c6_preprocessing_pipeline.py`
+  - validates mixed, numeric-only, and categorical-only pipeline construction
+  - validates empty feature config failure
+  - validates unknown categorical values do not break transformation
 
 ## Configs Used
 - `configs/training.yaml` created with placeholder baseline settings.

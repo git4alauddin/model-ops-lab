@@ -7,7 +7,9 @@ from pandas.api.types import (
     is_object_dtype,
     is_string_dtype,
 )
+from sklearn.compose import ColumnTransformer
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 
 class PreprocessingError(ValueError):
@@ -81,9 +83,25 @@ def identify_feature_types(features):
     return numeric_features, categorical_features
 
 
-def build_preprocessing_pipeline():
-    """Return preprocessing pipeline object.
+def build_preprocessing_pipeline(numeric_features, categorical_features):
+    """Build a reusable preprocessing pipeline."""
+    if not numeric_features and not categorical_features:
+        raise PreprocessingError(
+            "At least one numeric or categorical feature is required."
+        )
 
-    Implementation is added in a later chunk.
-    """
-    raise NotImplementedError("Preprocessing pipeline is not implemented yet.")
+    transformers = []
+
+    if numeric_features:
+        transformers.append(("numeric", StandardScaler(), numeric_features))
+
+    if categorical_features:
+        transformers.append(
+            (
+                "categorical",
+                OneHotEncoder(handle_unknown="ignore"),
+                categorical_features,
+            )
+        )
+
+    return ColumnTransformer(transformers=transformers)
