@@ -22,3 +22,6 @@
 - `zero_division=0` keeps classification metrics stable on small or imbalanced test samples.
 - Returning metrics as a dictionary prepares the next persistence step without coupling to file output yet.
 - Binary confusion matrices should pass explicit labels to keep output shape stable across small test splits.
+- Artifacts should be generated reproducibly but not committed as runtime outputs.
+- Saving the full fitted sklearn pipeline preserves preprocessing and model behavior together.
+- Config snapshots and metadata make a training run explainable after the command finishes.

@@ -8,6 +8,10 @@ __pycache__/
 # Local environment file
 .env
 
+# Runtime artifacts
+artifacts/*
+!artifacts/.gitkeep
+
 # OS files
 .DS_Store
 Thumbs.db

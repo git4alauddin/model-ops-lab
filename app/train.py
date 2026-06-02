@@ -1,5 +1,6 @@
 """V1 training entrypoint for config and dataset validation."""
 
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, cast
 
@@ -20,6 +21,12 @@ from app.pipeline.trainer import (
     build_model,
     build_training_pipeline,
     train_model,
+)
+from app.utils.artifacts import (
+    ArtifactError,
+    build_artifact_paths,
+    save_json,
+    save_model,
 )
 from app.utils.logger import get_logger
 
@@ -103,6 +110,27 @@ def main() -> None:
             y_train,
         )
         metrics = evaluate_model(fitted_pipeline, x_test, y_test)
+        artifact_paths = build_artifact_paths(config)
+        metadata = {
+            "generated_at": datetime.now(UTC).isoformat(),
+            "dataset_path": dataset_path,
+            "target_column": target_column,
+            "dropped_columns": drop_columns,
+            "rows": len(dataframe),
+            "columns": len(dataframe.columns),
+            "feature_columns": len(features.columns),
+            "train_rows": len(x_train),
+            "test_rows": len(x_test),
+            "numeric_features": numeric_features,
+            "categorical_features": categorical_features,
+            "model_type": model_config["type"],
+            "training_duration_seconds": training_duration,
+        }
+
+        save_model(fitted_pipeline, artifact_paths["model"])
+        save_json(metrics, artifact_paths["metrics"])
+        save_json(config, artifact_paths["config_snapshot"])
+        save_json(metadata, artifact_paths["metadata"])
 
         logger.info(
             "Dataset loaded successfully. rows=%s cols=%s target=%s",
@@ -165,8 +193,19 @@ def main() -> None:
             metrics["f1"],
             metrics["confusion_matrix"],
         )
+        logger.info(
+            (
+                "Artifacts saved. model=%s metrics=%s config_snapshot=%s "
+                "metadata=%s"
+            ),
+            artifact_paths["model"],
+            artifact_paths["metrics"],
+            artifact_paths["config_snapshot"],
+            artifact_paths["metadata"],
+        )
         logger.info("Training bootstrap completed.")
     except (
+        ArtifactError,
         ConfigError,
         DataError,
         EvaluationError,

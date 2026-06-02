@@ -10,6 +10,7 @@ Chunk V1-C6: preprocessing pipeline construction.
 Chunk V1-C7: baseline model training.
 Chunk V1-C8: sample churn dataset smoke run.
 Chunk V1-C9: evaluation metrics.
+Chunk V1-C10: artifact persistence.
 
 ## Folder Structure
 Established `app/`, `configs/`, `data/`, `artifacts/`, and documentation hierarchy under `docs/`.
@@ -159,6 +160,28 @@ Tests follow `tests/test_v1_cX_<component>.py` naming so each test file maps to 
   - validates confusion matrix shape
   - validates mismatched test input failure
   - validates missing predict method failure
+
+## V1-C10 Additions
+- `app/utils/artifacts.py`
+  - added `ArtifactError`
+  - added `build_artifact_paths`
+  - added `save_json`
+  - added `save_model`
+  - writes artifacts with controlled persistence failures
+- `app/train.py`
+  - saves fitted training pipeline artifact
+  - saves metrics JSON
+  - saves config snapshot JSON
+  - saves training metadata JSON
+  - logs artifact output paths
+- `.gitignore`
+  - ignores generated runtime artifact files
+  - keeps `artifacts/.gitkeep` tracked
+- `tests/test_v1_c10_artifact_persistence.py`
+  - validates JSON persistence
+  - validates model artifact is loadable and usable
+  - validates artifact paths from config
+  - validates controlled JSON persistence failure
 
 ## Configs Used
 - `configs/training.yaml` created with placeholder baseline settings.

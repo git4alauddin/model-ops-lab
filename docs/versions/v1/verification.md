@@ -11,6 +11,7 @@
 - Ran unit tests for baseline model construction, training pipeline composition, and controlled training failure.
 - Ran unit tests and training bootstrap against the synthetic churn smoke dataset.
 - Ran unit tests for evaluation metric generation and failure handling.
+- Ran unit tests for artifact persistence and verified training artifacts are generated.
 
 ## Commands Executed
 - `Get-ChildItem -Recurse -File app,configs,docs,data,artifacts`
@@ -42,7 +43,9 @@
 - Initial c9 run failed because a tiny test split produced a `1x1` confusion matrix.
 - After fixing confusion matrix labels: `36 passed in 1.35s`.
 - `python -m app.train` completed successfully and logged `accuracy=1.000000`, `precision=1.000000`, `recall=1.000000`, `f1=1.000000`, and `confusion_matrix=[[3, 0], [0, 1]]`.
+- After adding artifact persistence tests: `40 passed in 1.74s`.
+- `python -m app.train` generated `artifacts/model.pkl`, `artifacts/metrics.json`, `artifacts/config_snapshot.json`, and `artifacts/training_metadata.json`.
 
 ## Outcome
-Scaffold, V1-C2 error handling path, V1-C3 feature-target split, V1-C4 train-test split, V1-C5 feature type detection, V1-C6 preprocessing pipeline construction, V1-C7 baseline model training, V1-C8 sample dataset smoke run, and V1-C9 evaluation metrics are operational.
+Scaffold, V1-C2 error handling path, V1-C3 feature-target split, V1-C4 train-test split, V1-C5 feature type detection, V1-C6 preprocessing pipeline construction, V1-C7 baseline model training, V1-C8 sample dataset smoke run, V1-C9 evaluation metrics, and V1-C10 artifact persistence are operational.
 Unit tests are passing in the project virtual environment.

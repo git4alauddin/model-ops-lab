@@ -151,7 +151,7 @@ This file records meaningful V1 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully using `data/churn.csv`.
 - Training logs showed `rows=20`, `train_rows=16`, `test_rows=4`, `numeric_features=3`, `categorical_features=4`, and `fitted_steps=2`.
 
-## Pending - v1-c9: add evaluation metrics
+## a2686e2 - v1-c9: add evaluation metrics with focused tests
 
 ### What Changed
 - Implemented evaluation helpers in `app/evaluate.py`.
@@ -173,3 +173,26 @@ This file records meaningful V1 commits and the operational purpose of each chan
 - Fixed evaluation by passing explicit binary labels `[0, 1]` to `confusion_matrix`.
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `36 passed in 1.35s`.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully and logged accuracy, precision, recall, F1, and a stable `2x2` confusion matrix.
+
+## Pending - v1-c10: persist metrics and training artifacts
+
+### What Changed
+- Implemented artifact persistence helpers in `app/utils/artifacts.py`.
+- Added model artifact persistence using `joblib`.
+- Added JSON persistence for metrics, config snapshot, and training metadata.
+- Updated `app/train.py` to persist artifacts after evaluation.
+- Added generated artifact paths to runtime logs.
+- Updated `.gitignore` to ignore generated artifact files while preserving `artifacts/.gitkeep`.
+- Added focused artifact persistence tests.
+- Updated README and V1 documentation.
+
+### What Problem It Solved
+- Makes successful training runs inspectable after the command finishes.
+- Persists the fitted preprocessing-plus-model pipeline for reuse.
+- Captures metrics, config, and metadata needed for reproducibility and debugging.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `40 passed in 1.74s`.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully.
+- Training generated `artifacts/model.pkl`, `artifacts/metrics.json`, `artifacts/config_snapshot.json`, and `artifacts/training_metadata.json`.
+- Generated artifact files are ignored by git while `artifacts/.gitkeep` remains tracked.
