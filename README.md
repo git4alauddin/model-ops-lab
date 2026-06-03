@@ -56,6 +56,20 @@ V3 is complete. The project now has dataset versioning and reproducibility found
 - reproducibility check command verifies dataset checksum
 - focused tests for dataset version metadata behavior
 
+## V4 Status
+
+V4 is in progress. The project is adding experiment tracking and training observability:
+
+- MLflow dependency
+- MLflow tracking configuration
+- experiment tracking helper module
+- MLflow run creation during training
+- core parameter logging
+- core metric logging
+- artifact logging
+- MLflow run ID persistence in training metadata
+- focused tests for experiment tracking helper behavior
+
 ## Setup
 
 ```powershell
@@ -97,6 +111,18 @@ python -m app.validate_data
 python -m app.check_reproducibility
 ```
 
+## Open MLflow UI
+
+```powershell
+mlflow ui --backend-store-uri sqlite:///mlflow.db
+```
+
+Then open:
+
+```text
+http://127.0.0.1:5000
+```
+
 ## Runtime Outputs
 
 Generated runtime files are intentionally ignored by git:
@@ -108,6 +134,8 @@ Generated runtime files are intentionally ignored by git:
 - `reports/validation_report.json`
 - `reports/validation_summary.txt`
 - `logs/modelopslab.log`
+- `mlflow.db`
+- `mlruns/`
 
 The repository keeps the artifact placeholder folder with `.gitkeep`, but trained models, metrics, metadata snapshots, and logs are local run outputs.
 
@@ -119,6 +147,7 @@ modelOpsLab/
     train.py
     validate_data.py
     check_reproducibility.py
+    experiment_tracking.py
     evaluate.py
     config.py
     data.py
@@ -153,6 +182,7 @@ modelOpsLab/
     versions/v1/
     versions/v2/
     versions/v3/
+    versions/v4/
     architecture/
     decisions/
     experiments/

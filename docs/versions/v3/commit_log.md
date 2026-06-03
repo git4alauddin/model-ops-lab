@@ -122,7 +122,7 @@ This file records meaningful V3 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after the validation gate passed.
 
-## Pending - v3-c6: close V3 reproducibility layer
+## f5f1881 - v3-c6: close V3 reproducibility layer
 
 ### What Changed
 - Marked V3 as complete in README.

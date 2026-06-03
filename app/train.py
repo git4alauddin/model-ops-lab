@@ -15,6 +15,12 @@ from app.dataset_registry import (
     resolve_dataset_version_metadata_path,
 )
 from app.evaluate import EvaluationError, evaluate_model
+from app.experiment_tracking import (
+    ExperimentTrackingError,
+    get_run_id,
+    log_training_outputs,
+    start_experiment_run,
+)
 from app.pipeline.preprocessing import (
     build_preprocessing_pipeline,
     identify_feature_types,
@@ -151,52 +157,58 @@ def main() -> None:
         )
         enforce_validation_gate(validation_report)
 
-        dataframe = load_dataset(dataset_path)
-        dataframe = drop_configured_columns(dataframe, drop_columns)
-        features, target = split_features_target(dataframe, target_column)
-        x_train, x_test, y_train, y_test = split_train_test(
-            features,
-            target,
-            test_size,
-            random_state,
-        )
-        numeric_features, categorical_features = identify_feature_types(x_train)
-        preprocessing_pipeline = build_preprocessing_pipeline(
-            numeric_features,
-            categorical_features,
-        )
-        model = build_model(model_config)
-        training_pipeline = build_training_pipeline(preprocessing_pipeline, model)
-        fitted_pipeline, training_duration = train_model(
-            training_pipeline,
-            x_train,
-            y_train,
-        )
-        metrics = evaluate_model(fitted_pipeline, x_test, y_test)
-        artifact_paths = build_artifact_paths(config)
-        metadata = {
-            "generated_at": run_started_at,
-            "dataset_path": dataset_path,
-            "dataset_version": dataset_version_snapshot,
-            "target_column": target_column,
-            "dropped_columns": drop_columns,
-            "rows": len(dataframe),
-            "columns": len(dataframe.columns),
-            "feature_columns": len(features.columns),
-            "train_rows": len(x_train),
-            "test_rows": len(x_test),
-            "numeric_features": numeric_features,
-            "categorical_features": categorical_features,
-            "model_type": model_config["type"],
-            "training_duration_seconds": training_duration,
-        }
+        with start_experiment_run(config, run_name=f"training-{run_started_at}") as run:
+            mlflow_run_id = get_run_id(run)
 
-        save_model(fitted_pipeline, artifact_paths["model"])
-        save_json(metrics, artifact_paths["metrics"])
-        save_json(config, artifact_paths["config_snapshot"])
-        save_json(metadata, artifact_paths["metadata"])
+            dataframe = load_dataset(dataset_path)
+            dataframe = drop_configured_columns(dataframe, drop_columns)
+            features, target = split_features_target(dataframe, target_column)
+            x_train, x_test, y_train, y_test = split_train_test(
+                features,
+                target,
+                test_size,
+                random_state,
+            )
+            numeric_features, categorical_features = identify_feature_types(x_train)
+            preprocessing_pipeline = build_preprocessing_pipeline(
+                numeric_features,
+                categorical_features,
+            )
+            model = build_model(model_config)
+            training_pipeline = build_training_pipeline(preprocessing_pipeline, model)
+            fitted_pipeline, training_duration = train_model(
+                training_pipeline,
+                x_train,
+                y_train,
+            )
+            metrics = evaluate_model(fitted_pipeline, x_test, y_test)
+            artifact_paths = build_artifact_paths(config)
+            metadata = {
+                "generated_at": run_started_at,
+                "mlflow_run_id": mlflow_run_id,
+                "dataset_path": dataset_path,
+                "dataset_version": dataset_version_snapshot,
+                "target_column": target_column,
+                "dropped_columns": drop_columns,
+                "rows": len(dataframe),
+                "columns": len(dataframe.columns),
+                "feature_columns": len(features.columns),
+                "train_rows": len(x_train),
+                "test_rows": len(x_test),
+                "numeric_features": numeric_features,
+                "categorical_features": categorical_features,
+                "model_type": model_config["type"],
+                "training_duration_seconds": training_duration,
+            }
+
+            save_model(fitted_pipeline, artifact_paths["model"])
+            save_json(metrics, artifact_paths["metrics"])
+            save_json(config, artifact_paths["config_snapshot"])
+            save_json(metadata, artifact_paths["metadata"])
+            log_training_outputs(config, metrics, metadata, artifact_paths)
 
         logger.info(_format_log_section("RUNTIME", {"log_file": log_path}))
+        logger.info(_format_log_section("EXPERIMENT", {"mlflow_run_id": mlflow_run_id}))
         logger.info(
             _format_log_section(
                 "DATASET VERSION",
@@ -301,6 +313,7 @@ def main() -> None:
         DataError,
         DatasetRegistryError,
         EvaluationError,
+        ExperimentTrackingError,
         PreprocessingError,
         TrainingError,
         ValidationGateError,

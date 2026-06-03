@@ -27,6 +27,10 @@ logging:
   dir: logs
   file: modelopslab.log
 
+experiment_tracking:
+  experiment_name: customer_churn_baseline
+  tracking_uri: sqlite:///mlflow.db
+
 validation:
   schema_path: schema_versions/customer_churn_v1.yaml
   reports:

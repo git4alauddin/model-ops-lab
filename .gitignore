@@ -20,6 +20,11 @@ logs/
 reports/*
 !reports/.gitkeep
 
+# Local MLflow tracking store
+mlruns/
+mlartifacts/
+mlflow.db*
+
 # OS files
 .DS_Store
 Thumbs.db
