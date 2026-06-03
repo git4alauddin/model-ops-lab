@@ -13,6 +13,7 @@ Add a production-style data validation and data quality layer before training.
 - nullability validation
 - null percentage validation
 - numeric range validation
+- outlier sanity validation
 - allowed-value validation
 - duplicate validation
 - target distribution sanity checks
@@ -27,6 +28,7 @@ Compare present dataframe column dtypes against schema dtype rules.
 Check required fields for null values before range and category checks.
 Check nullable fields for excessive missingness.
 Check numeric values against schema min/max bounds.
+Check suspicious numeric feature outliers.
 Check controlled categorical, boolean, and target values against allowed sets.
 Check duplicate rows and duplicate entity IDs.
 Check target class distribution before training.

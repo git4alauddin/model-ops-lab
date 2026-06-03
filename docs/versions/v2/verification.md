@@ -23,6 +23,11 @@
 - Verified numeric range violations are reported as `ERROR`.
 - Verified below-minimum and above-maximum values are detected.
 - Verified range validation failures make the readiness report status `failed`.
+- Verified outlier sanity validation passes for the current sample churn dataset.
+- Verified suspicious high numeric values are reported as `WARNING`.
+- Verified suspicious low numeric values are reported as `WARNING`.
+- Verified outlier sanity warnings keep the validation report status `passed`.
+- Verified invalid outlier sanity schema thresholds are rejected safely.
 - Verified allowed-value violations are reported as `ERROR`.
 - Verified invalid categorical, boolean-like, and target values are detected.
 - Verified allowed-value validation failures make the readiness report status `failed`.
@@ -60,6 +65,8 @@
 - Null percentage warnings remain non-blocking.
 - Error-level null percentage failures are blocking.
 - Numeric range validation returns no issues for the current sample churn dataset.
+- Outlier sanity validation returns no issues for the current sample churn dataset.
+- Outlier sanity warnings remain non-blocking.
 - Allowed-value validation returns no issues for the current sample churn dataset.
 - Duplicate validation returns no issues for the current sample churn dataset.
 - Validation command generates ignored JSON and text report files.
@@ -112,6 +119,11 @@
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and `issues=[]`.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully and logged validation status before training.
 - Training validation log showed `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
+- After V2-C12 outlier sanity validation: `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v2_c12_outlier_sanity_validation.py` returned `6 passed in 0.43s`.
+- After V2-C12 outlier sanity validation: `.\vir_env\Scripts\python.exe -m pytest -q` returned `110 passed in 1.61s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and `issues=[]`.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully and logged validation status before training.
+- Training validation log showed `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
 
 ## Outcome
 V2-C1 validation foundation is operational.
@@ -126,3 +138,4 @@ V2-C8 validation report persistence is operational.
 V2-C9 training validation gate is operational.
 V2-C10 target distribution sanity checks are operational.
 V2-C11 null percentage quality checks are operational.
+V2-C12 outlier sanity checks are operational.

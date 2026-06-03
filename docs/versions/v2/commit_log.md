@@ -232,7 +232,7 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no validation issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully and logged validation status before training.
 
-## Pending - v2-c11: add null percentage quality checks
+## 14980d2 - v2-c11: add null percentage quality checks
 
 ### What Changed
 - Added `quality_checks.null_percentages` to `schema_versions/customer_churn_v1.yaml`.
@@ -252,5 +252,28 @@ This file records meaningful V2 commits and the operational purpose of each chan
 ### Verification
 - `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v2_c11_null_percentage_validation.py` returned `8 passed in 0.50s`.
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `104 passed in 1.58s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no validation issues.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully and logged validation status before training.
+
+## Pending - v2-c12: add outlier sanity checks
+
+### What Changed
+- Added `quality_checks.outlier_sanity` to `schema_versions/customer_churn_v1.yaml`.
+- Added `validate_outlier_sanity` in `app/validation/checks.py`.
+- Added schema validation for outlier sanity threshold configuration.
+- Updated `app/validate_data.py` to include outlier sanity checks in readiness reports.
+- Added focused outlier sanity validation tests.
+- Updated README and V2 documentation.
+- Corrected the V2-C11 commit log entry from `Pending` to `14980d2`.
+
+### What Problem It Solved
+- Detects numeric values that are technically valid but operationally suspicious.
+- Keeps hard numeric range failures separate from warning-level outlier signals.
+- Makes suspicious numeric spikes visible before model training.
+- Keeps outlier sanity thresholds versioned with the dataset schema.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v2_c12_outlier_sanity_validation.py` returned `6 passed in 0.43s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `110 passed in 1.61s`.
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no validation issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully and logged validation status before training.

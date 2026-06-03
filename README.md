@@ -32,6 +32,7 @@ V2 has started with the data validation foundation:
 - nullability checks
 - null percentage checks
 - numeric range checks
+- outlier sanity checks
 - allowed-value checks
 - duplicate row and duplicate ID checks
 - target distribution sanity checks

@@ -256,6 +256,60 @@ def validate_numeric_ranges(
     return issues
 
 
+def validate_outlier_sanity(
+    dataframe: pd.DataFrame,
+    schema: dict[str, Any],
+) -> list[ValidationIssue]:
+    """Return warnings for numeric values that are valid but suspicious."""
+    outlier_rules = _outlier_sanity_rules(schema)
+    if not outlier_rules:
+        return []
+
+    configured_columns = outlier_rules.get("columns", {})
+    if not isinstance(configured_columns, dict):
+        return []
+
+    issues: list[ValidationIssue] = []
+    for column_name, thresholds in configured_columns.items():
+        if column_name not in dataframe.columns:
+            continue
+
+        if not isinstance(thresholds, dict):
+            continue
+
+        series = dataframe[column_name].dropna()
+        if series.empty or not _series_supports_numeric_ranges(series):
+            continue
+
+        warning_min = thresholds.get("warning_min")
+        warning_max = thresholds.get("warning_max")
+        if warning_min is not None:
+            below_warning_count = int((series < warning_min).sum())
+            if below_warning_count:
+                issues.append(
+                    _build_outlier_sanity_issue(
+                        column_name=column_name,
+                        count=below_warning_count,
+                        direction="below",
+                        threshold=float(warning_min),
+                    )
+                )
+
+        if warning_max is not None:
+            above_warning_count = int((series > warning_max).sum())
+            if above_warning_count:
+                issues.append(
+                    _build_outlier_sanity_issue(
+                        column_name=column_name,
+                        count=above_warning_count,
+                        direction="above",
+                        threshold=float(warning_max),
+                    )
+                )
+
+    return issues
+
+
 def validate_allowed_values(
     dataframe: pd.DataFrame,
     schema: dict[str, Any],
@@ -519,6 +573,7 @@ def _validate_quality_checks(schema: dict[str, Any]) -> None:
         raise ValidationError("Validation schema quality_checks must be a map.")
 
     _validate_null_percentage_quality_check(schema, quality_checks)
+    _validate_outlier_sanity_quality_check(schema, quality_checks)
     _validate_target_distribution_quality_check(schema, quality_checks)
 
 
@@ -628,6 +683,66 @@ def _validate_target_distribution_quality_check(
         )
 
 
+def _validate_outlier_sanity_quality_check(
+    schema: dict[str, Any],
+    quality_checks: dict[str, Any],
+) -> None:
+    outlier_rules = quality_checks.get("outlier_sanity")
+    if outlier_rules is None:
+        return
+
+    if not isinstance(outlier_rules, dict):
+        raise ValidationError(
+            "Validation schema quality_checks.outlier_sanity must be a map."
+        )
+
+    enabled = outlier_rules.get("enabled", True)
+    if not isinstance(enabled, bool):
+        raise ValidationError("outlier_sanity.enabled must be a boolean.")
+
+    if not enabled:
+        return
+
+    configured_columns = outlier_rules.get("columns")
+    if not isinstance(configured_columns, dict) or not configured_columns:
+        raise ValidationError("outlier_sanity.columns must be a non-empty map.")
+
+    schema_columns = _schema_columns(schema)
+    for column_name, thresholds in configured_columns.items():
+        if column_name not in schema_columns:
+            raise ValidationError(
+                f"outlier_sanity column '{column_name}' is not defined in schema."
+            )
+
+        if not isinstance(thresholds, dict):
+            raise ValidationError(
+                f"outlier_sanity rules for column '{column_name}' must be a map."
+            )
+
+        warning_min = _validate_optional_outlier_bound(
+            column_name,
+            thresholds,
+            "warning_min",
+        )
+        warning_max = _validate_optional_outlier_bound(
+            column_name,
+            thresholds,
+            "warning_max",
+        )
+        if warning_min is None and warning_max is None:
+            raise ValidationError(
+                f"outlier_sanity for column '{column_name}' requires "
+                "warning_min or warning_max."
+            )
+
+        if warning_min is not None and warning_max is not None:
+            if warning_min >= warning_max:
+                raise ValidationError(
+                    f"outlier_sanity warning_min for column '{column_name}' "
+                    "must be less than warning_max."
+                )
+
+
 def _validate_null_ratio_bound(
     rules: dict[str, Any],
     key: str,
@@ -642,6 +757,23 @@ def _validate_null_ratio_bound(
         raise ValidationError(f"null_percentages.{key} must be between 0 and 1.")
 
     return ratio
+
+
+def _validate_optional_outlier_bound(
+    column_name: str,
+    thresholds: dict[str, Any],
+    key: str,
+) -> float | None:
+    if key not in thresholds:
+        return None
+
+    value = thresholds[key]
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValidationError(
+            f"outlier_sanity.{key} for column '{column_name}' must be numeric."
+        )
+
+    return float(value)
 
 
 def _validate_ratio_bound(
@@ -675,6 +807,21 @@ def _target_distribution_rules(schema: dict[str, Any]) -> dict[str, Any]:
     return target_rules
 
 
+def _outlier_sanity_rules(schema: dict[str, Any]) -> dict[str, Any]:
+    quality_checks = schema.get("quality_checks")
+    if not isinstance(quality_checks, dict):
+        return {}
+
+    outlier_rules = quality_checks.get("outlier_sanity")
+    if not isinstance(outlier_rules, dict):
+        return {}
+
+    if outlier_rules.get("enabled", True) is False:
+        return {}
+
+    return outlier_rules
+
+
 def _null_percentage_rules(schema: dict[str, Any]) -> dict[str, Any]:
     quality_checks = schema.get("quality_checks")
     if not isinstance(quality_checks, dict):
@@ -705,6 +852,22 @@ def _build_null_percentage_issue(
             f"column '{column_name}' null ratio {null_ratio:.4f} exceeds "
             f"{severity.lower()} threshold {threshold:.4f} "
             f"({null_count}/{row_count} null values)"
+        ),
+    )
+
+
+def _build_outlier_sanity_issue(
+    column_name: str,
+    count: int,
+    direction: str,
+    threshold: float,
+) -> ValidationIssue:
+    return ValidationIssue(
+        severity="WARNING",
+        check="outlier_sanity",
+        message=(
+            f"column '{column_name}' has {count} value(s) {direction} "
+            f"outlier sanity threshold {threshold}"
         ),
     )
 

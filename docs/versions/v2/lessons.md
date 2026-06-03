@@ -23,3 +23,4 @@
 - Target validation must check usability, not only whether target values are syntactically allowed.
 - Test fixtures for data quality checks need enough columns to avoid accidentally triggering unrelated validators.
 - Nullability and null percentage checks solve different problems: one enforces hard schema rules, the other detects operationally unsafe missingness.
+- Numeric range validation should own impossible values, while outlier sanity checks should warn on values that are possible but operationally suspicious.

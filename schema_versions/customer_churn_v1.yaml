@@ -77,6 +77,14 @@ quality_checks:
     default_warning_ratio: 0.1
     default_error_ratio: 0.3
 
+  outlier_sanity:
+    enabled: true
+    columns:
+      monthly_charges:
+        warning_max: 300
+      total_charges:
+        warning_max: 10000
+
   target_distribution:
     enabled: true
     min_class_ratio: 0.2

@@ -12,6 +12,7 @@ Chunk V2-C8: validation report persistence.
 Chunk V2-C9: training validation gate.
 Chunk V2-C10: target distribution sanity checks.
 Chunk V2-C11: null percentage quality checks.
+Chunk V2-C12: outlier sanity checks.
 
 ## V2-C1 Additions
 - `app/validate_data.py`
@@ -398,7 +399,44 @@ python -m app.train
   -> continue training when null percentage validation only warns
 ```
 
+## V2-C12 Additions
+- `schema_versions/customer_churn_v1.yaml`
+  - added `quality_checks.outlier_sanity`
+  - added schema-driven warning thresholds for `monthly_charges` and `total_charges`
+  - keeps outlier sanity rules versioned with the dataset contract
+- `app/validation/checks.py`
+  - added `validate_outlier_sanity`
+  - returns `WARNING` when numeric values cross configured outlier sanity thresholds
+  - keeps suspicious-but-valid numeric values separate from hard numeric range failures
+  - validates outlier threshold configuration during schema loading
+- `app/validate_data.py`
+  - runs outlier sanity validation after numeric range checks
+  - includes outlier warnings in validation reports
+- `tests/test_v2_c12_outlier_sanity_validation.py`
+  - validates clean sample churn numeric values
+  - validates high numeric outlier warnings
+  - validates low numeric outlier warnings
+  - validates disabled outlier sanity checks
+  - validates invalid outlier threshold schema config
+  - validates readiness reports for outlier warnings
+- `README.md`
+  - updated V2 status with outlier sanity checks
+
+## Current V2-C12 Workflow
+```text
+python -m app.validate_data
+  -> run schema, dtype, nullability, and numeric range checks
+  -> inspect configured numeric columns for suspicious values
+  -> return WARNING for values outside outlier sanity thresholds
+  -> continue remaining quality checks
+  -> include outlier warnings in persisted validation reports
+
+python -m app.train
+  -> run validation first
+  -> keep outlier warnings visible
+  -> continue training when outlier sanity only warns
+```
+
 ## Not Yet Implemented
-- outlier sanity checks
 - validation duration and metadata persistence
 - final V2 closure documentation
