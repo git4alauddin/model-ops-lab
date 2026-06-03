@@ -53,6 +53,7 @@ V3 is in progress. The project is adding dataset versioning and reproducibility 
 - training metadata records dataset version information
 - validation reports record dataset version information
 - dataset registry records the dataset SHA256 checksum
+- reproducibility check command verifies dataset checksum
 - focused tests for dataset version metadata behavior
 
 ## Setup
@@ -90,6 +91,12 @@ python -m pytest -q
 python -m app.validate_data
 ```
 
+## Check Reproducibility
+
+```powershell
+python -m app.check_reproducibility
+```
+
 ## Runtime Outputs
 
 Generated runtime files are intentionally ignored by git:
@@ -111,6 +118,7 @@ modelOpsLab/
   app/
     train.py
     validate_data.py
+    check_reproducibility.py
     evaluate.py
     config.py
     data.py

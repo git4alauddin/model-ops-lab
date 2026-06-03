@@ -5,6 +5,7 @@ Chunk V3-C1: dataset registry foundation.
 Chunk V3-C2: record dataset version in training metadata.
 Chunk V3-C3: record dataset version in validation reports.
 Chunk V3-C4: add dataset checksum tracking.
+Chunk V3-C5: add reproducibility check command.
 
 ## V3-C1 Additions
 - `data_versions/customer_churn/v1.yaml`
@@ -135,5 +136,38 @@ Get-FileHash data\churn.csv -Algorithm SHA256
   -> include checksum metadata in training and validation snapshots
 ```
 
+## V3-C5 Additions
+- `app/check_reproducibility.py`
+  - added `ReproducibilityResult`
+  - added `check_reproducibility`
+  - loads `configs/training.yaml`
+  - resolves `dataset_version.metadata_path`
+  - loads dataset version registry metadata
+  - validates the current dataset checksum
+  - returns expected and actual checksums
+  - logs a readable `[REPRODUCIBILITY]` section
+  - exits safely with non-zero status on controlled failures
+- `tests/test_v3_c5_reproducibility_command.py`
+  - validates the current dataset reproducibility success path
+  - validates checksum mismatch failure
+  - validates missing dataset file failure
+  - validates missing registry file failure
+- `README.md`
+  - added `python -m app.check_reproducibility`
+- `docs/versions/v3/`
+  - updated implementation, verification, lessons, issues, and commit log for V3-C5
+
+## Current V3-C5 Workflow
+```text
+python -m app.check_reproducibility
+  -> load configs/training.yaml
+  -> resolve data_versions/customer_churn/v1.yaml
+  -> load dataset registry metadata
+  -> calculate current data/churn.csv checksum
+  -> compare actual checksum with registered checksum
+  -> log status, dataset version, expected checksum, and actual checksum
+  -> fail safely if metadata or checksum validation fails
+```
+
 ## Remaining V3 Gaps
-- No reproducibility check command exists yet.
+None identified after V3-C5.

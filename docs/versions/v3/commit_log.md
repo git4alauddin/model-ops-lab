@@ -71,7 +71,7 @@ This file records meaningful V3 commits and the operational purpose of each chan
 - Generated `reports/validation_report.json` includes the `dataset_version` snapshot for `customer_churn` version `v1`.
 - Generated `reports/validation_summary.txt` includes the dataset version section.
 
-## Pending - v3-c4: add dataset checksum tracking
+## 12aacfa - v3-c4: add dataset checksum tracking
 
 ### What Changed
 - Added SHA256 checksum metadata to `data_versions/customer_churn/v1.yaml`.
@@ -98,3 +98,26 @@ This file records meaningful V3 commits and the operational purpose of each chan
 - Generated `artifacts/training_metadata.json` includes checksum algorithm `sha256` and checksum value `5f4f99466d4ef2703be65c8597a6bd0d784eaaf83960690bdac118ff3cfae623`.
 - Generated `reports/validation_report.json` includes checksum algorithm `sha256` and checksum value `5f4f99466d4ef2703be65c8597a6bd0d784eaaf83960690bdac118ff3cfae623`.
 - Generated `reports/validation_summary.txt` includes checksum algorithm `sha256` and checksum value `5f4f99466d4ef2703be65c8597a6bd0d784eaaf83960690bdac118ff3cfae623`.
+
+## Pending - v3-c5: add reproducibility check command
+
+### What Changed
+- Added `app/check_reproducibility.py`.
+- Added `ReproducibilityResult`.
+- Added `check_reproducibility`.
+- Added readable reproducibility command logs.
+- Added focused V3-C5 reproducibility command tests.
+- Updated README and V3 documentation.
+- Corrected the V3-C4 commit log entry from `Pending` to `12aacfa`.
+
+### What Problem It Solved
+- Gives the project a direct command to verify the local dataset matches registry metadata.
+- Makes checksum verification runnable without starting training.
+- Creates the V3 reproducibility workflow entrypoint.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v3_c5_reproducibility_command.py` returned `4 passed in 0.10s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `139 passed in 1.82s`.
+- `.\vir_env\Scripts\python.exe -m app.check_reproducibility` completed successfully with `status=passed`, `dataset_name=customer_churn`, `version=v1`, and matching expected/actual checksums.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully after the validation gate passed.

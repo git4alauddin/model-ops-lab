@@ -23,15 +23,21 @@
 - Verified training metadata snapshots include checksum metadata.
 - Verified validation report snapshots include checksum metadata.
 - Verified validation text summaries include checksum metadata.
+- Verified reproducibility check passes for the current dataset.
+- Verified reproducibility check fails safely on checksum mismatch.
+- Verified reproducibility check fails safely on missing dataset files.
+- Verified reproducibility check fails safely on missing registry files.
 
 ## Commands Executed
 - `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v3_c1_dataset_registry.py`
 - `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v3_c2_training_dataset_version.py`
 - `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v3_c3_validation_dataset_version.py`
 - `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v3_c4_dataset_checksum.py`
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v3_c5_reproducibility_command.py`
 - `.\vir_env\Scripts\python.exe -m pytest -q`
 - `.\vir_env\Scripts\python.exe -m app.validate_data`
 - `.\vir_env\Scripts\python.exe -m app.train`
+- `.\vir_env\Scripts\python.exe -m app.check_reproducibility`
 - `Get-FileHash data\churn.csv -Algorithm SHA256`
 
 ## Expected Output
@@ -39,6 +45,7 @@
 - V3-C2 training dataset version tests pass.
 - V3-C3 validation dataset version tests pass.
 - V3-C4 dataset checksum tests pass.
+- V3-C5 reproducibility command tests pass.
 - Existing V1 and V2 tests continue passing.
 - Validation still passes with the current churn dataset.
 - Training still runs after the validation gate passes.
@@ -46,11 +53,14 @@
 - Validation report and summary include dataset version information.
 - Training and validation logs include checksum metadata in `[DATASET VERSION]`.
 - Dataset registry checksum matches `data/churn.csv`.
+- Reproducibility command reports `status=passed`.
 
 ## Actual Output
 - `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v3_c1_dataset_registry.py` returned `5 passed in 0.11s`.
 - `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v3_c2_training_dataset_version.py tests\test_v3_c3_validation_dataset_version.py tests\test_v3_c4_dataset_checksum.py` returned `13 passed in 0.49s`.
-- `.\vir_env\Scripts\python.exe -m pytest -q` returned `135 passed in 2.27s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v3_c5_reproducibility_command.py` returned `4 passed in 0.10s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `139 passed in 1.82s`.
+- `.\vir_env\Scripts\python.exe -m app.check_reproducibility` completed successfully with `status=passed`, `dataset_name=customer_churn`, `version=v1`, and matching expected/actual checksums.
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after the validation gate passed.
 - Generated `artifacts/training_metadata.json` includes `dataset_version.dataset_name=customer_churn`, `dataset_version.version=v1`, `dataset_version.path=data/churn.csv`, and `dataset_version.schema_path=schema_versions/customer_churn_v1.yaml`.
@@ -66,3 +76,4 @@ V3-C1 dataset registry foundation is operational.
 V3-C2 training dataset version persistence is operational.
 V3-C3 validation dataset version persistence is operational.
 V3-C4 dataset checksum tracking is operational.
+V3-C5 reproducibility check command is operational.
