@@ -7,3 +7,4 @@
 - Validation reports should carry dataset version metadata because they prove whether a specific dataset version passed quality gates.
 - Dataset version names need checksums because a filename can stay the same while file content changes.
 - Reproducibility needs a dedicated command so checksum verification is easy to run outside training and validation.
+- A version should close with a diagram only after the executable workflow is stable.

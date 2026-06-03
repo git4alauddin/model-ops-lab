@@ -4,7 +4,7 @@
 Make datasets versioned, traceable, and reproducible.
 
 ## Completion Status
-V3 is in progress.
+V3 is complete.
 
 ## Components Introduced
 - dataset version registry folder
@@ -46,3 +46,11 @@ Check that the current local dataset still matches the registered checksum.
 
 ## Current V3 Outcome
 V3-C5 adds a command that verifies the local dataset matches the registered dataset version checksum.
+
+## Final V3 Outcome
+V3 makes dataset identity explicit, traceable, and locally verifiable.
+
+Training metadata and validation reports now record the active dataset version and checksum, while the reproducibility command confirms that `data/churn.csv` still matches the registered dataset version before review or future training work.
+
+## Diagram
+- `docs/diagrams/v3_reproducibility_flow.md`

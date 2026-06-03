@@ -44,7 +44,7 @@ V2 is complete. The project now has a production-style data validation and quali
 
 ## V3 Status
 
-V3 is in progress. The project is adding dataset versioning and reproducibility foundations:
+V3 is complete. The project now has dataset versioning and reproducibility foundations:
 
 - dataset version registry folder
 - first customer churn dataset version metadata file

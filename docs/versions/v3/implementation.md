@@ -6,6 +6,7 @@ Chunk V3-C2: record dataset version in training metadata.
 Chunk V3-C3: record dataset version in validation reports.
 Chunk V3-C4: add dataset checksum tracking.
 Chunk V3-C5: add reproducibility check command.
+Chunk V3-C6: final V3 closure documentation and diagram.
 
 ## V3-C1 Additions
 - `data_versions/customer_churn/v1.yaml`
@@ -171,3 +172,34 @@ python -m app.check_reproducibility
 
 ## Remaining V3 Gaps
 None identified after V3-C5.
+
+## V3-C6 Closure Additions
+- `README.md`
+  - marked V3 as complete
+- `docs/diagrams/v3_reproducibility_flow.md`
+  - added the completed V3 reproducibility flow diagram
+- `docs/versions/v3/overview.md`
+  - added final V3 outcome
+  - linked the V3 reproducibility diagram
+- `docs/versions/v3/implementation.md`
+  - added final closure notes
+- `docs/versions/v3/verification.md`
+  - added final V3 closure verification notes
+- `docs/versions/v3/commit_log.md`
+  - corrected V3-C5 commit entry
+  - added V3-C6 closure entry
+
+## Final V3 Implementation State
+```text
+data_versions/customer_churn/v1.yaml
+  -> records dataset path, schema path, version, and checksum
+
+python -m app.check_reproducibility
+  -> verifies data/churn.csv checksum against the registry
+
+python -m app.validate_data
+  -> records dataset version and checksum in validation reports
+
+python -m app.train
+  -> records dataset version and checksum in training metadata
+```

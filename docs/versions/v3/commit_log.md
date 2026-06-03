@@ -99,7 +99,7 @@ This file records meaningful V3 commits and the operational purpose of each chan
 - Generated `reports/validation_report.json` includes checksum algorithm `sha256` and checksum value `5f4f99466d4ef2703be65c8597a6bd0d784eaaf83960690bdac118ff3cfae623`.
 - Generated `reports/validation_summary.txt` includes checksum algorithm `sha256` and checksum value `5f4f99466d4ef2703be65c8597a6bd0d784eaaf83960690bdac118ff3cfae623`.
 
-## Pending - v3-c5: add reproducibility check command
+## 25f7c13 - v3-c5: add reproducibility check command
 
 ### What Changed
 - Added `app/check_reproducibility.py`.
@@ -118,6 +118,28 @@ This file records meaningful V3 commits and the operational purpose of each chan
 ### Verification
 - `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v3_c5_reproducibility_command.py` returned `4 passed in 0.10s`.
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `139 passed in 1.82s`.
+- `.\vir_env\Scripts\python.exe -m app.check_reproducibility` completed successfully with `status=passed`, `dataset_name=customer_churn`, `version=v1`, and matching expected/actual checksums.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully after the validation gate passed.
+
+## Pending - v3-c6: close V3 reproducibility layer
+
+### What Changed
+- Marked V3 as complete in README.
+- Added final V3 outcome documentation.
+- Added `docs/diagrams/v3_reproducibility_flow.md`.
+- Linked the V3 reproducibility diagram from the V3 overview.
+- Added final V3 implementation state.
+- Added final V3 closure verification notes.
+- Corrected the V3-C5 commit log entry from `Pending` to `25f7c13`.
+
+### What Problem It Solved
+- Establishes a clean V3 stopping point before moving to V4.
+- Makes the dataset versioning and reproducibility workflow explainable from a focused diagram.
+- Preserves final verification evidence for the completed V3 layer.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `139 passed in 2.04s`.
 - `.\vir_env\Scripts\python.exe -m app.check_reproducibility` completed successfully with `status=passed`, `dataset_name=customer_churn`, `version=v1`, and matching expected/actual checksums.
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after the validation gate passed.
