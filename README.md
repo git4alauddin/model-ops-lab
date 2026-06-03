@@ -33,6 +33,7 @@ V2 has started with the data validation foundation:
 - numeric range checks
 - allowed-value checks
 - duplicate row and duplicate ID checks
+- target distribution sanity checks
 - validation report persistence
 - training validation gate
 - focused validation foundation tests

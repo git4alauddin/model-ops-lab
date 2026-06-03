@@ -278,6 +278,69 @@ def validate_duplicate_ids(
     ]
 
 
+def validate_target_distribution(
+    dataframe: pd.DataFrame,
+    schema: dict[str, Any],
+) -> list[ValidationIssue]:
+    """Return issues for unusable or suspicious target class distributions."""
+    target_rules = _target_distribution_rules(schema)
+    if not target_rules:
+        return []
+
+    target_column = schema.get("target_column")
+    if not isinstance(target_column, str) or not target_column:
+        return []
+
+    if target_column not in dataframe.columns:
+        return []
+
+    target_values = dataframe[target_column].dropna()
+    if target_values.empty:
+        return [
+            ValidationIssue(
+                severity="ERROR",
+                check="target_distribution",
+                message=f"target column '{target_column}' contains no non-null values",
+            )
+        ]
+
+    class_counts = target_values.value_counts()
+    if len(class_counts) == 1:
+        only_class = class_counts.index[0]
+        return [
+            ValidationIssue(
+                severity="ERROR",
+                check="target_distribution",
+                message=(
+                    f"target column '{target_column}' contains only one class: "
+                    f"{only_class}"
+                ),
+            )
+        ]
+
+    total_count = int(class_counts.sum())
+    minority_ratio = float(class_counts.min() / total_count)
+    dominant_ratio = float(class_counts.max() / total_count)
+    min_class_ratio = float(target_rules.get("min_class_ratio", 0.0))
+    max_class_ratio = float(target_rules.get("max_class_ratio", 1.0))
+
+    if minority_ratio < min_class_ratio or dominant_ratio > max_class_ratio:
+        return [
+            ValidationIssue(
+                severity="WARNING",
+                check="target_distribution",
+                message=(
+                    f"target column '{target_column}' has suspicious class "
+                    f"distribution: {_format_distribution_counts(class_counts)} "
+                    f"(minority_ratio={minority_ratio:.4f}, "
+                    f"dominant_ratio={dominant_ratio:.4f})"
+                ),
+            )
+        ]
+
+    return []
+
+
 def _validate_schema_contract(schema: dict[str, Any]) -> None:
     required_keys = ["name", "version", "columns"]
     for key in required_keys:
@@ -309,6 +372,7 @@ def _validate_schema_contract(schema: dict[str, Any]) -> None:
         _validate_numeric_bound(column_name, column_rules, "min")
         _validate_numeric_bound(column_name, column_rules, "max")
         _validate_allowed_values(column_name, column_rules)
+    _validate_quality_checks(schema)
 
 
 def _schema_column_names(schema: dict[str, Any]) -> list[str]:
@@ -385,3 +449,80 @@ def _validate_allowed_values(
         raise ValidationError(
             f"allowed_values for column '{column_name}' must be a non-empty list."
         )
+
+
+def _validate_quality_checks(schema: dict[str, Any]) -> None:
+    quality_checks = schema.get("quality_checks")
+    if quality_checks is None:
+        return
+
+    if not isinstance(quality_checks, dict):
+        raise ValidationError("Validation schema quality_checks must be a map.")
+
+    target_rules = quality_checks.get("target_distribution")
+    if target_rules is None:
+        return
+
+    if not isinstance(target_rules, dict):
+        raise ValidationError(
+            "Validation schema quality_checks.target_distribution must be a map."
+        )
+
+    enabled = target_rules.get("enabled", True)
+    if not isinstance(enabled, bool):
+        raise ValidationError("target_distribution.enabled must be a boolean.")
+
+    if not enabled:
+        return
+
+    target_column = schema.get("target_column")
+    if not isinstance(target_column, str) or not target_column:
+        raise ValidationError(
+            "target_distribution requires a non-empty schema target_column."
+        )
+
+    min_ratio = _validate_ratio_bound(target_rules, "min_class_ratio", 0.0)
+    max_ratio = _validate_ratio_bound(target_rules, "max_class_ratio", 1.0)
+    if min_ratio >= max_ratio:
+        raise ValidationError(
+            "target_distribution min_class_ratio must be less than max_class_ratio."
+        )
+
+
+def _validate_ratio_bound(
+    target_rules: dict[str, Any],
+    key: str,
+    default: float,
+) -> float:
+    value = target_rules.get(key, default)
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValidationError(f"target_distribution.{key} must be numeric.")
+
+    ratio = float(value)
+    if ratio < 0 or ratio > 1:
+        raise ValidationError(f"target_distribution.{key} must be between 0 and 1.")
+
+    return ratio
+
+
+def _target_distribution_rules(schema: dict[str, Any]) -> dict[str, Any]:
+    quality_checks = schema.get("quality_checks")
+    if not isinstance(quality_checks, dict):
+        return {}
+
+    target_rules = quality_checks.get("target_distribution")
+    if not isinstance(target_rules, dict):
+        return {}
+
+    if target_rules.get("enabled", True) is False:
+        return {}
+
+    return target_rules
+
+
+def _format_distribution_counts(class_counts: pd.Series) -> str:
+    parts = [
+        f"{value}={int(count)}"
+        for value, count in sorted(class_counts.items(), key=lambda item: str(item[0]))
+    ]
+    return ", ".join(parts)

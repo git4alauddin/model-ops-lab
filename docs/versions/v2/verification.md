@@ -32,6 +32,12 @@
 - Verified training validation gate allows warning-only validation reports.
 - Verified training validation gate blocks failed validation reports.
 - Verified training logs validation status and issue counts before training.
+- Verified target distribution validation passes for the current sample churn dataset.
+- Verified single-class target distributions are reported as `ERROR`.
+- Verified heavily imbalanced target distributions are reported as `WARNING`.
+- Verified warning-only target imbalance keeps the validation report status `passed`.
+- Verified single-class target distribution makes the validation report status `failed`.
+- Verified invalid target distribution schema thresholds are rejected safely.
 
 ## Commands Executed
 - `python -m pytest -q`
@@ -49,6 +55,9 @@
 - Duplicate validation returns no issues for the current sample churn dataset.
 - Validation command generates ignored JSON and text report files.
 - Training command runs validation before training.
+- Target distribution validation returns no issues for the balanced sample churn dataset.
+- Target distribution warnings remain non-blocking.
+- Single-class target distribution failures are blocking.
 
 ## Actual Output
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `50 passed in 1.44s`.
@@ -84,6 +93,11 @@
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully and generated validation reports.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully and logged validation status before training.
 - Training validation log showed `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
+- After V2-C10 target distribution validation: `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v2_c10_target_distribution_validation.py` returned `7 passed in 0.57s`.
+- After V2-C10 target distribution validation: `.\vir_env\Scripts\python.exe -m pytest -q` returned `96 passed in 1.53s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and `issues=[]`.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully and logged validation status before training.
+- Training validation log showed `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
 
 ## Outcome
 V2-C1 validation foundation is operational.
@@ -96,3 +110,4 @@ V2-C6 allowed-value validation is operational.
 V2-C7 duplicate validation is operational.
 V2-C8 validation report persistence is operational.
 V2-C9 training validation gate is operational.
+V2-C10 target distribution sanity checks are operational.

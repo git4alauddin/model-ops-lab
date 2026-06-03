@@ -70,3 +70,9 @@ columns:
       - 0
       - 1
     role: target
+
+quality_checks:
+  target_distribution:
+    enabled: true
+    min_class_ratio: 0.2
+    max_class_ratio: 0.8

@@ -14,6 +14,7 @@ Add a production-style data validation and data quality layer before training.
 - numeric range validation
 - allowed-value validation
 - duplicate validation
+- target distribution sanity checks
 - validation report persistence
 - training validation gate
 - V2 documentation and commit log
@@ -26,6 +27,7 @@ Check required fields for null values before range and category checks.
 Check numeric values against schema min/max bounds.
 Check controlled categorical, boolean, and target values against allowed sets.
 Check duplicate rows and duplicate entity IDs.
+Check target class distribution before training.
 Persist validation reports for auditability and local inspection.
 Block training when validation reports blocking data quality failures.
 

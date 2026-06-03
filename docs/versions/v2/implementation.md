@@ -10,6 +10,7 @@ Chunk V2-C6: allowed-value validation.
 Chunk V2-C7: duplicate validation.
 Chunk V2-C8: validation report persistence.
 Chunk V2-C9: training validation gate.
+Chunk V2-C10: target distribution sanity checks.
 
 ## V2-C1 Additions
 - `app/validate_data.py`
@@ -317,6 +318,47 @@ python -m app.train
   -> if validation status is passed: continue training
 ```
 
+## V2-C10 Additions
+- `schema_versions/customer_churn_v1.yaml`
+  - added `quality_checks.target_distribution`
+  - added schema-driven `min_class_ratio` and `max_class_ratio` thresholds
+  - keeps target distribution rules versioned with the dataset contract
+- `app/validation/checks.py`
+  - added `validate_target_distribution`
+  - returns `ERROR` when the target has no non-null values
+  - returns `ERROR` when the target contains only one class
+  - returns `WARNING` when class distribution violates configured ratio thresholds
+  - validates target distribution threshold configuration during schema loading
+- `app/validate_data.py`
+  - runs target distribution validation after duplicate checks
+  - includes target distribution issues in the validation report
+- `tests/test_v2_c10_target_distribution_validation.py`
+  - validates clean sample churn distribution
+  - validates single-class target failure
+  - validates imbalanced target warning
+  - validates disabled target distribution checks
+  - validates invalid target distribution schema thresholds
+  - validates readiness reports for target distribution warnings and errors
+- `README.md`
+  - updated V2 status with target distribution sanity checks
+
+## Current V2-C10 Workflow
+```text
+python -m app.validate_data
+  -> run schema, dtype, nullability, range, allowed-value, and duplicate checks
+  -> inspect configured target column distribution
+  -> return ERROR for unusable single-class targets
+  -> return WARNING for suspicious target imbalance
+  -> include target distribution issues in persisted validation reports
+
+python -m app.train
+  -> run validation first
+  -> block training when target distribution validation fails
+  -> continue training when target distribution only warns
+```
+
 ## Not Yet Implemented
-- target distribution sanity checks
+- null percentage checks
+- outlier sanity checks
+- validation duration and metadata persistence
 - final V2 closure documentation
