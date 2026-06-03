@@ -50,6 +50,7 @@ V3 is in progress. The project is adding dataset versioning and reproducibility 
 - first customer churn dataset version metadata file
 - dataset registry metadata loader
 - dataset registry metadata validation
+- training metadata records dataset version information
 - focused tests for dataset version metadata behavior
 
 ## Setup
@@ -70,6 +71,7 @@ The default config uses:
 
 - config: `configs/training.yaml`
 - dataset: `data/churn.csv`
+- dataset version: `data_versions/customer_churn/v1.yaml`
 - target column: `churn`
 - dropped column: `customer_id`
 - model: Logistic Regression

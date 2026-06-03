@@ -2,6 +2,7 @@
 
 ## Scope
 Chunk V3-C1: dataset registry foundation.
+Chunk V3-C2: record dataset version in training metadata.
 
 ## V3-C1 Additions
 - `data_versions/customer_churn/v1.yaml`
@@ -34,8 +35,39 @@ data_versions/customer_churn/v1.yaml
   -> return dataset version metadata for later training and validation integration
 ```
 
+## V3-C2 Additions
+- `configs/training.yaml`
+  - added `dataset_version.metadata_path`
+  - points training to `data_versions/customer_churn/v1.yaml`
+- `app/train.py`
+  - added dataset version metadata path resolution
+  - loads dataset version metadata during training
+  - builds a stable dataset version snapshot for training metadata
+  - writes the snapshot into `artifacts/training_metadata.json`
+  - logs the active dataset version in a readable `[DATASET VERSION]` section
+- `tests/test_v3_c2_training_dataset_version.py`
+  - validates configured dataset version metadata path resolution
+  - validates default dataset version metadata path resolution
+  - validates training metadata snapshot fields
+  - validates configured missing metadata files fail safely
+- `docs/versions/v3/`
+  - updated implementation, verification, lessons, issues, and commit log for V3-C2
+- `README.md`
+  - updated V3 status and default config notes
+
+## Current V3-C2 Workflow
+```text
+configs/training.yaml
+  -> read dataset_version.metadata_path
+  -> load data_versions/customer_churn/v1.yaml
+  -> build dataset_version snapshot
+  -> run validation gate
+  -> train baseline model
+  -> persist dataset_version inside artifacts/training_metadata.json
+  -> log active dataset version
+```
+
 ## Remaining V3 Gaps
-- Training metadata does not yet record dataset version.
 - Validation reports do not yet record dataset version.
 - Dataset checksums are not yet tracked.
 - No reproducibility check command exists yet.

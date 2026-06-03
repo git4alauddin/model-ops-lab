@@ -4,6 +4,9 @@ dataset:
   drop_columns:
     - customer_id
 
+dataset_version:
+  metadata_path: data_versions/customer_churn/v1.yaml
+
 training:
   test_size: 0.2
   random_state: 42

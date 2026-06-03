@@ -1,7 +1,7 @@
 # V3 Issues Faced
 
 ## Open
-- Training and validation do not yet consume dataset version metadata.
+- Validation reports do not yet consume dataset version metadata.
 
 ## Resolved
-- No resolved V3 issues yet.
+- Training now consumes dataset version metadata and records it in generated training metadata.
