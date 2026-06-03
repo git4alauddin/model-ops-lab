@@ -303,7 +303,7 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - Generated `reports/validation_report.json` contained `generated_at`, `duration_seconds`, and `issue_counts`.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after report metadata changes.
 
-## Pending - v2-c14: close V2 validation layer
+## 8cd63b4 - v2-c14: close V2 validation layer
 
 ### What Changed
 - Marked V2 as complete in README.

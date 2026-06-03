@@ -42,6 +42,16 @@ V2 is complete. The project now has a production-style data validation and quali
 - formatted validation runtime logs
 - focused tests for each meaningful V2 component
 
+## V3 Status
+
+V3 is in progress. The project is adding dataset versioning and reproducibility foundations:
+
+- dataset version registry folder
+- first customer churn dataset version metadata file
+- dataset registry metadata loader
+- dataset registry metadata validation
+- focused tests for dataset version metadata behavior
+
 ## Setup
 
 ```powershell
@@ -114,6 +124,9 @@ modelOpsLab/
     training.yaml
   schema_versions/
     customer_churn_v1.yaml
+  data_versions/
+    customer_churn/
+      v1.yaml
   data/
     churn.csv
   artifacts/
@@ -121,21 +134,13 @@ modelOpsLab/
   reports/
     .gitkeep
   tests/
-    test_v1_c2_config_validation.py
-    test_v1_c2_dataset_loading.py
-    test_v1_c3_feature_target_split.py
-    test_v1_c4_train_test_split.py
-    test_v1_c5_feature_type_detection.py
-    test_v1_c6_preprocessing_pipeline.py
-    test_v1_c7_baseline_model_training.py
-    test_v1_c8_sample_churn_dataset.py
-    test_v1_c9_evaluation_metrics.py
-    test_v1_c10_artifact_persistence.py
-    test_v1_c11_file_logging.py
-    test_v2_c1_validation_foundation.py
+    test_v1_*.py
+    test_v2_*.py
+    test_v3_*.py
   docs/
     versions/v1/
     versions/v2/
+    versions/v3/
     architecture/
     decisions/
     experiments/

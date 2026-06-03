@@ -1,0 +1,10 @@
+dataset_name: customer_churn
+version: v1
+path: data/churn.csv
+schema_path: schema_versions/customer_churn_v1.yaml
+target_column: churn
+id_column: customer_id
+description: Synthetic customer churn dataset used for the V1 baseline and V2 validation layer.
+status: active
+owner: local
+source_type: local_csv
