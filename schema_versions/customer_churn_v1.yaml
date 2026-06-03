@@ -72,6 +72,11 @@ columns:
     role: target
 
 quality_checks:
+  null_percentages:
+    enabled: true
+    default_warning_ratio: 0.1
+    default_error_ratio: 0.3
+
   target_distribution:
     enabled: true
     min_class_ratio: 0.2

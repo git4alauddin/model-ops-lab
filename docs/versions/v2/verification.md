@@ -14,6 +14,12 @@
 - Verified non-nullable column null values are reported as `ERROR`.
 - Verified nullable columns can contain null values.
 - Verified nullability validation failures make the readiness report status `failed`.
+- Verified null percentage validation passes for the current sample churn dataset.
+- Verified moderate nullable-column missingness is reported as `WARNING`.
+- Verified high nullable-column missingness is reported as `ERROR`.
+- Verified warning-only null percentage issues keep the validation report status `passed`.
+- Verified error-level null percentage issues make the validation report status `failed`.
+- Verified invalid null percentage schema thresholds are rejected safely.
 - Verified numeric range violations are reported as `ERROR`.
 - Verified below-minimum and above-maximum values are detected.
 - Verified range validation failures make the readiness report status `failed`.
@@ -50,6 +56,9 @@
 - Structural validation returns no issues for the current sample churn dataset.
 - Datatype validation returns no issues for the current sample churn dataset.
 - Nullability validation returns no issues for the current sample churn dataset.
+- Null percentage validation returns no issues for the current sample churn dataset.
+- Null percentage warnings remain non-blocking.
+- Error-level null percentage failures are blocking.
 - Numeric range validation returns no issues for the current sample churn dataset.
 - Allowed-value validation returns no issues for the current sample churn dataset.
 - Duplicate validation returns no issues for the current sample churn dataset.
@@ -98,6 +107,11 @@
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and `issues=[]`.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully and logged validation status before training.
 - Training validation log showed `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
+- After V2-C11 null percentage validation: `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v2_c11_null_percentage_validation.py` returned `8 passed in 0.50s`.
+- After V2-C11 null percentage validation: `.\vir_env\Scripts\python.exe -m pytest -q` returned `104 passed in 1.58s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and `issues=[]`.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully and logged validation status before training.
+- Training validation log showed `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
 
 ## Outcome
 V2-C1 validation foundation is operational.
@@ -111,3 +125,4 @@ V2-C7 duplicate validation is operational.
 V2-C8 validation report persistence is operational.
 V2-C9 training validation gate is operational.
 V2-C10 target distribution sanity checks are operational.
+V2-C11 null percentage quality checks are operational.

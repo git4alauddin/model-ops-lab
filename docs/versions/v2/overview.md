@@ -11,6 +11,7 @@ Add a production-style data validation and data quality layer before training.
 - structural schema validation
 - datatype validation
 - nullability validation
+- null percentage validation
 - numeric range validation
 - allowed-value validation
 - duplicate validation
@@ -24,6 +25,7 @@ Validate dataset readiness before adding deeper schema and quality checks.
 Compare dataset columns against the versioned schema before training.
 Compare present dataframe column dtypes against schema dtype rules.
 Check required fields for null values before range and category checks.
+Check nullable fields for excessive missingness.
 Check numeric values against schema min/max bounds.
 Check controlled categorical, boolean, and target values against allowed sets.
 Check duplicate rows and duplicate entity IDs.

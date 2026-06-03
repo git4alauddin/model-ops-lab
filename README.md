@@ -30,6 +30,7 @@ V2 has started with the data validation foundation:
 - required and unexpected column checks
 - datatype checks
 - nullability checks
+- null percentage checks
 - numeric range checks
 - allowed-value checks
 - duplicate row and duplicate ID checks

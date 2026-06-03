@@ -147,6 +147,65 @@ def validate_nullable_columns(
     return issues
 
 
+def validate_null_percentages(
+    dataframe: pd.DataFrame,
+    schema: dict[str, Any],
+) -> list[ValidationIssue]:
+    """Return issues for nullable columns with excessive missingness."""
+    null_rules = _null_percentage_rules(schema)
+    if not null_rules or dataframe.empty:
+        return []
+
+    default_warning_ratio = float(null_rules.get("default_warning_ratio", 0.1))
+    default_error_ratio = float(null_rules.get("default_error_ratio", 0.3))
+    column_overrides = null_rules.get("columns", {})
+    if not isinstance(column_overrides, dict):
+        column_overrides = {}
+
+    issues: list[ValidationIssue] = []
+    row_count = len(dataframe)
+    for column_name, column_rules in _schema_columns(schema).items():
+        if column_name not in dataframe.columns:
+            continue
+
+        if not bool(column_rules["nullable"]) and column_name not in column_overrides:
+            continue
+
+        thresholds = column_overrides.get(column_name, {})
+        if not isinstance(thresholds, dict):
+            thresholds = {}
+
+        warning_ratio = float(thresholds.get("warning_ratio", default_warning_ratio))
+        error_ratio = float(thresholds.get("error_ratio", default_error_ratio))
+        null_count = int(dataframe[column_name].isna().sum())
+        null_ratio = float(null_count / row_count)
+
+        if null_ratio > error_ratio:
+            issues.append(
+                _build_null_percentage_issue(
+                    severity="ERROR",
+                    column_name=column_name,
+                    null_count=null_count,
+                    row_count=row_count,
+                    null_ratio=null_ratio,
+                    threshold=error_ratio,
+                )
+            )
+        elif null_ratio > warning_ratio:
+            issues.append(
+                _build_null_percentage_issue(
+                    severity="WARNING",
+                    column_name=column_name,
+                    null_count=null_count,
+                    row_count=row_count,
+                    null_ratio=null_ratio,
+                    threshold=warning_ratio,
+                )
+            )
+
+    return issues
+
+
 def validate_numeric_ranges(
     dataframe: pd.DataFrame,
     schema: dict[str, Any],
@@ -459,6 +518,86 @@ def _validate_quality_checks(schema: dict[str, Any]) -> None:
     if not isinstance(quality_checks, dict):
         raise ValidationError("Validation schema quality_checks must be a map.")
 
+    _validate_null_percentage_quality_check(schema, quality_checks)
+    _validate_target_distribution_quality_check(schema, quality_checks)
+
+
+def _validate_null_percentage_quality_check(
+    schema: dict[str, Any],
+    quality_checks: dict[str, Any],
+) -> None:
+    null_rules = quality_checks.get("null_percentages")
+    if null_rules is None:
+        return
+
+    if not isinstance(null_rules, dict):
+        raise ValidationError(
+            "Validation schema quality_checks.null_percentages must be a map."
+        )
+
+    enabled = null_rules.get("enabled", True)
+    if not isinstance(enabled, bool):
+        raise ValidationError("null_percentages.enabled must be a boolean.")
+
+    if not enabled:
+        return
+
+    default_warning_ratio = _validate_null_ratio_bound(
+        null_rules,
+        "default_warning_ratio",
+        0.1,
+    )
+    default_error_ratio = _validate_null_ratio_bound(
+        null_rules,
+        "default_error_ratio",
+        0.3,
+    )
+    if default_warning_ratio >= default_error_ratio:
+        raise ValidationError(
+            "null_percentages default_warning_ratio must be less than "
+            "default_error_ratio."
+        )
+
+    column_overrides = null_rules.get("columns")
+    if column_overrides is None:
+        return
+
+    if not isinstance(column_overrides, dict):
+        raise ValidationError("null_percentages.columns must be a map.")
+
+    schema_columns = _schema_columns(schema)
+    for column_name, thresholds in column_overrides.items():
+        if column_name not in schema_columns:
+            raise ValidationError(
+                f"null_percentages column '{column_name}' is not defined in schema."
+            )
+
+        if not isinstance(thresholds, dict):
+            raise ValidationError(
+                f"null_percentages rules for column '{column_name}' must be a map."
+            )
+
+        warning_ratio = _validate_null_ratio_bound(
+            thresholds,
+            "warning_ratio",
+            default_warning_ratio,
+        )
+        error_ratio = _validate_null_ratio_bound(
+            thresholds,
+            "error_ratio",
+            default_error_ratio,
+        )
+        if warning_ratio >= error_ratio:
+            raise ValidationError(
+                f"null_percentages warning_ratio for column '{column_name}' "
+                "must be less than error_ratio."
+            )
+
+
+def _validate_target_distribution_quality_check(
+    schema: dict[str, Any],
+    quality_checks: dict[str, Any],
+) -> None:
     target_rules = quality_checks.get("target_distribution")
     if target_rules is None:
         return
@@ -487,6 +626,22 @@ def _validate_quality_checks(schema: dict[str, Any]) -> None:
         raise ValidationError(
             "target_distribution min_class_ratio must be less than max_class_ratio."
         )
+
+
+def _validate_null_ratio_bound(
+    rules: dict[str, Any],
+    key: str,
+    default: float,
+) -> float:
+    value = rules.get(key, default)
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValidationError(f"null_percentages.{key} must be numeric.")
+
+    ratio = float(value)
+    if ratio < 0 or ratio > 1:
+        raise ValidationError(f"null_percentages.{key} must be between 0 and 1.")
+
+    return ratio
 
 
 def _validate_ratio_bound(
@@ -518,6 +673,40 @@ def _target_distribution_rules(schema: dict[str, Any]) -> dict[str, Any]:
         return {}
 
     return target_rules
+
+
+def _null_percentage_rules(schema: dict[str, Any]) -> dict[str, Any]:
+    quality_checks = schema.get("quality_checks")
+    if not isinstance(quality_checks, dict):
+        return {}
+
+    null_rules = quality_checks.get("null_percentages")
+    if not isinstance(null_rules, dict):
+        return {}
+
+    if null_rules.get("enabled", True) is False:
+        return {}
+
+    return null_rules
+
+
+def _build_null_percentage_issue(
+    severity: str,
+    column_name: str,
+    null_count: int,
+    row_count: int,
+    null_ratio: float,
+    threshold: float,
+) -> ValidationIssue:
+    return ValidationIssue(
+        severity=severity,
+        check="null_percentages",
+        message=(
+            f"column '{column_name}' null ratio {null_ratio:.4f} exceeds "
+            f"{severity.lower()} threshold {threshold:.4f} "
+            f"({null_count}/{row_count} null values)"
+        ),
+    )
 
 
 def _format_distribution_counts(class_counts: pd.Series) -> str:

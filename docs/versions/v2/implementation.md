@@ -11,6 +11,7 @@ Chunk V2-C7: duplicate validation.
 Chunk V2-C8: validation report persistence.
 Chunk V2-C9: training validation gate.
 Chunk V2-C10: target distribution sanity checks.
+Chunk V2-C11: null percentage quality checks.
 
 ## V2-C1 Additions
 - `app/validate_data.py`
@@ -357,8 +358,47 @@ python -m app.train
   -> continue training when target distribution only warns
 ```
 
+## V2-C11 Additions
+- `schema_versions/customer_churn_v1.yaml`
+  - added `quality_checks.null_percentages`
+  - added schema-driven default warning and error thresholds
+  - keeps missingness rules versioned with the dataset contract
+- `app/validation/checks.py`
+  - added `validate_null_percentages`
+  - returns `WARNING` when nullable column null ratio exceeds the warning threshold
+  - returns `ERROR` when nullable column null ratio exceeds the error threshold
+  - skips non-nullable columns unless a column override is explicitly configured
+  - validates null percentage threshold configuration during schema loading
+- `app/validate_data.py`
+  - runs null percentage validation after strict nullability checks
+  - includes null percentage issues in validation reports
+- `tests/test_v2_c11_null_percentage_validation.py`
+  - validates clean sample churn missingness
+  - validates warning-level missingness
+  - validates error-level missingness
+  - validates disabled null percentage checks
+  - validates invalid null percentage schema thresholds
+  - validates readiness reports for null percentage warnings and errors
+- `README.md`
+  - updated V2 status with null percentage checks
+
+## Current V2-C11 Workflow
+```text
+python -m app.validate_data
+  -> run schema, dtype, and strict nullability checks
+  -> inspect nullable column null percentages
+  -> return WARNING for suspicious missingness
+  -> return ERROR for unsafe missingness
+  -> continue remaining quality checks
+  -> include null percentage issues in persisted validation reports
+
+python -m app.train
+  -> run validation first
+  -> block training when null percentage validation fails
+  -> continue training when null percentage validation only warns
+```
+
 ## Not Yet Implemented
-- null percentage checks
 - outlier sanity checks
 - validation duration and metadata persistence
 - final V2 closure documentation

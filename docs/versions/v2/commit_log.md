@@ -207,7 +207,7 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully and logged validation status before training.
 - Training validation log showed `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
 
-## Pending - v2-c10: add target distribution sanity checks
+## fb5c5a6 - v2-c10: add target distribution sanity checks
 
 ### What Changed
 - Added `quality_checks.target_distribution` to `schema_versions/customer_churn_v1.yaml`.
@@ -229,5 +229,28 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - Updated readiness fixtures to include unique `customer_id` values so the tests isolate target distribution behavior.
 - `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v2_c10_target_distribution_validation.py` returned `7 passed in 0.57s`.
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `96 passed in 1.53s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no validation issues.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully and logged validation status before training.
+
+## Pending - v2-c11: add null percentage quality checks
+
+### What Changed
+- Added `quality_checks.null_percentages` to `schema_versions/customer_churn_v1.yaml`.
+- Added `validate_null_percentages` in `app/validation/checks.py`.
+- Added schema validation for null percentage threshold configuration.
+- Updated `app/validate_data.py` to include null percentage checks in readiness reports.
+- Added focused null percentage validation tests.
+- Updated README and V2 documentation.
+
+### What Problem It Solved
+- Detects nullable columns with operationally unsafe missingness.
+- Keeps strict non-nullability failures separate from percentage-based data quality failures.
+- Allows warning-level missingness to stay visible without blocking training.
+- Blocks training when missingness crosses configured error thresholds.
+- Keeps missingness thresholds versioned with the dataset schema.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v2_c11_null_percentage_validation.py` returned `8 passed in 0.50s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `104 passed in 1.58s`.
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no validation issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully and logged validation status before training.
