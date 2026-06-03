@@ -21,7 +21,7 @@ V1 is the baseline ML pipeline foundation. It now supports an end-to-end local t
 
 ## V2 Status
 
-V2 has started with the data validation foundation:
+V2 is complete. The project now has a production-style data validation and quality layer:
 
 - validation command scaffold
 - validation package
@@ -39,7 +39,8 @@ V2 has started with the data validation foundation:
 - validation report persistence
 - validation metadata persistence
 - training validation gate
-- focused validation foundation tests
+- formatted validation runtime logs
+- focused tests for each meaningful V2 component
 
 ## Setup
 

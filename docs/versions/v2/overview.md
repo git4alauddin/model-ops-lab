@@ -3,6 +3,9 @@
 ## Version Goal
 Add a production-style data validation and data quality layer before training.
 
+## Completion Status
+V2 is complete.
+
 ## Components Introduced
 - validation command entrypoint
 - validation package
@@ -20,6 +23,7 @@ Add a production-style data validation and data quality layer before training.
 - validation report persistence
 - validation metadata persistence
 - training validation gate
+- formatted validation runtime logs
 - V2 documentation and commit log
 
 ## Workflow Introduced
@@ -36,14 +40,25 @@ Check target class distribution before training.
 Persist validation reports for auditability and local inspection.
 Persist validation runtime metadata for traceability.
 Block training when validation reports blocking data quality failures.
+Expose readable validation logs for local debugging.
 
 ## Engineering Objectives
 - separate validation from training logic
 - make dataset contracts version-controlled
-- prepare for deterministic validation reports
+- persist deterministic validation reports
 - fail early on data problems
+- keep validation behavior reusable from training
 
 ## Operational Objectives
 - make data assumptions explicit
-- create a foundation for validation logging and reports
-- prepare for training pipeline integration in later chunks
+- create readable validation logs and reports
+- integrate validation into the training workflow
+- make validation outcomes reproducible and inspectable
+
+## Final V2 Outcome
+V2 turns the project from a training-only workflow into a validation-first workflow.
+
+The validation layer now catches schema drift, datatype mismatches, required-field nulls, excessive missingness, hard numeric range violations, suspicious numeric outliers, invalid controlled values, duplicate records, duplicate IDs, and unusable target distributions before training.
+
+## Diagram
+- `docs/diagrams/v2_validation_flow.md`

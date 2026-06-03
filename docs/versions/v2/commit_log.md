@@ -278,7 +278,7 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no validation issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully and logged validation status before training.
 
-## Pending - v2-c13: add validation metadata persistence
+## 5955ab9 - v2-c13: add validation metadata persistence
 
 ### What Changed
 - Added `generated_at`, `duration_seconds`, and `issue_counts` to validation reports.
@@ -302,3 +302,28 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully and logged validation duration.
 - Generated `reports/validation_report.json` contained `generated_at`, `duration_seconds`, and `issue_counts`.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after report metadata changes.
+
+## Pending - v2-c14: close V2 validation layer
+
+### What Changed
+- Marked V2 as complete in README.
+- Added V2 completion status and final outcome documentation.
+- Added final V2 implementation state.
+- Added second-pass closure tests for INFO and CRITICAL severity behavior.
+- Added a second-pass closure test for safe corrupted dataset rejection.
+- Removed the remaining V2 "Not Yet Implemented" item.
+- Added final V2 closure verification notes.
+- Updated V2 lessons and open issue status.
+- Corrected the V2-C13 commit log entry from `Pending` to `5955ab9`.
+
+### What Problem It Solved
+- Establishes a clean V2 stopping point before moving to V3.
+- Makes the completed validation layer explainable from documentation alone.
+- Makes checklist closure evidence explicit for severity behavior and corrupted dataset handling.
+- Preserves operational evidence before starting data versioning work.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v2_c14_validation_closure.py` returned `3 passed in 1.22s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `117 passed in 1.67s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully after running validation first.

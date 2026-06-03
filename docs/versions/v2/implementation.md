@@ -14,6 +14,7 @@ Chunk V2-C10: target distribution sanity checks.
 Chunk V2-C11: null percentage quality checks.
 Chunk V2-C12: outlier sanity checks.
 Chunk V2-C13: validation metadata persistence.
+Chunk V2-C14: final V2 closure tests and documentation.
 
 ## V2-C1 Additions
 - `app/validate_data.py`
@@ -472,5 +473,49 @@ python -m app.train
   -> validation report metadata remains available for traceability
 ```
 
-## Not Yet Implemented
-- final V2 closure documentation
+## V2-C14 Closure Additions
+- `tests/test_v2_c14_validation_closure.py`
+  - validates INFO severity is counted without blocking validation
+  - validates CRITICAL severity fails the report
+  - validates CRITICAL reports block the training validation gate
+  - validates corrupted CSV input is rejected safely through the validation workflow
+- `README.md`
+  - marked V2 as complete
+  - summarized the completed validation and data quality layer
+- `docs/versions/v2/overview.md`
+  - added V2 completion status
+  - added final V2 outcome
+- `docs/versions/v2/implementation.md`
+  - removed the remaining "Not Yet Implemented" section
+  - added final implementation closure notes
+- `docs/versions/v2/verification.md`
+  - added final V2 verification results
+  - confirmed validation and training commands still work
+- `docs/versions/v2/lessons.md`
+  - added final V2 implementation lesson
+- `docs/versions/v2/commit_log.md`
+  - corrected V2-C13 commit entry
+  - added V2-C14 closure entry
+
+## Final V2 Implementation State
+```text
+python -m app.validate_data
+  -> load configs/training.yaml
+  -> load data/churn.csv
+  -> load schema_versions/customer_churn_v1.yaml
+  -> reject unreadable or corrupted CSV input safely
+  -> run schema, dtype, nullability, null percentage, numeric range,
+     outlier sanity, allowed-value, duplicate, and target distribution checks
+  -> build validation report with status, issue counts, timestamp, and duration
+  -> persist reports/validation_report.json
+  -> persist reports/validation_summary.txt
+  -> log readable validation sections
+
+python -m app.train
+  -> run validation first
+  -> stop training when validation status is failed, including CRITICAL failures
+  -> continue training when validation status is passed
+```
+
+## Remaining V2 Gaps
+None.

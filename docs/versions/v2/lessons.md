@@ -25,3 +25,5 @@
 - Nullability and null percentage checks solve different problems: one enforces hard schema rules, the other detects operationally unsafe missingness.
 - Numeric range validation should own impossible values, while outlier sanity checks should warn on values that are possible but operationally suspicious.
 - Validation reports need runtime metadata so a future engineer can tell when validation ran, how long it took, and what severity counts were produced.
+- V2 became useful when validation moved from isolated checks into a reproducible command, persisted report, readable log, and training gate.
+- Version closure should verify implementation against the checklist and direct test evidence, not only against code presence.

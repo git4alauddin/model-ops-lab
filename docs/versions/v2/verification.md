@@ -42,12 +42,16 @@
 - Verified validation reports include `generated_at`.
 - Verified validation reports include `duration_seconds`.
 - Verified validation reports include issue severity counts.
+- Verified INFO severity is counted without blocking validation.
+- Verified CRITICAL severity fails validation reports.
 - Verified validation summary includes runtime metadata.
 - Verified validation logs include validation duration.
 - Verified training validation gate allows clean validation reports.
 - Verified training validation gate allows warning-only validation reports.
 - Verified training validation gate blocks failed validation reports.
+- Verified training validation gate blocks CRITICAL validation reports.
 - Verified training logs validation status and issue counts before training.
+- Verified corrupted CSV input is rejected safely with a controlled `DataError`.
 - Verified target distribution validation passes for the current sample churn dataset.
 - Verified single-class target distributions are reported as `ERROR`.
 - Verified heavily imbalanced target distributions are reported as `WARNING`.
@@ -135,6 +139,11 @@
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully and logged `duration_seconds` in the formatted `[VALIDATION]` section.
 - Generated `reports/validation_report.json` contained `generated_at`, `duration_seconds`, and `issue_counts`.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after report metadata changes.
+- V2 second-pass closure tests: `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v2_c14_validation_closure.py` returned `3 passed in 1.22s`.
+- Second-pass closure tests verified INFO non-blocking behavior, CRITICAL blocking behavior, and safe corrupted dataset rejection.
+- Final V2 closure verification: `.\vir_env\Scripts\python.exe -m pytest -q` returned `117 passed in 1.67s`.
+- Final V2 closure validation command: `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
+- Final V2 closure training command: `.\vir_env\Scripts\python.exe -m app.train` completed successfully after running validation first.
 
 ## Outcome
 V2-C1 validation foundation is operational.
@@ -151,3 +160,5 @@ V2-C10 target distribution sanity checks are operational.
 V2-C11 null percentage quality checks are operational.
 V2-C12 outlier sanity checks are operational.
 V2-C13 validation metadata persistence is operational.
+V2-C14 closure tests are operational.
+V2 is complete.
