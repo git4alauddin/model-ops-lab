@@ -1,6 +1,7 @@
 """Validation report structures."""
 
 from dataclasses import asdict, dataclass, field
+from datetime import UTC, datetime
 import json
 from pathlib import Path
 from typing import Any
@@ -29,6 +30,9 @@ class ValidationReport:
     schema_version: str
     rows: int
     columns: int
+    generated_at: str
+    duration_seconds: float
+    issue_counts: dict[str, int]
     issues: list[ValidationIssue] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
@@ -43,6 +47,8 @@ def build_validation_report(
     rows: int,
     columns: int,
     issues: list[ValidationIssue] | None = None,
+    generated_at: str | None = None,
+    duration_seconds: float = 0.0,
 ) -> ValidationReport:
     """Build a validation report with status derived from issue severity."""
     report_issues = issues or []
@@ -60,6 +66,9 @@ def build_validation_report(
         schema_version=schema_version,
         rows=rows,
         columns=columns,
+        generated_at=generated_at or datetime.now(UTC).isoformat(),
+        duration_seconds=duration_seconds,
+        issue_counts=_count_issue_severities(report_issues),
         issues=report_issues,
     )
 
@@ -103,20 +112,21 @@ def save_validation_report(report: ValidationReport, path: str | Path) -> None:
 
 def build_validation_summary(report: ValidationReport) -> str:
     """Build a human-readable validation summary."""
-    severity_counts = _count_issue_severities(report.issues)
     lines = [
         "Validation Summary",
         f"status: {report.status}",
         f"dataset_path: {report.dataset_path}",
         f"schema_path: {report.schema_path}",
         f"schema_version: {report.schema_version}",
+        f"generated_at: {report.generated_at}",
+        f"duration_seconds: {report.duration_seconds:.6f}",
         f"rows: {report.rows}",
         f"columns: {report.columns}",
         f"issues_total: {len(report.issues)}",
-        f"info_count: {severity_counts['INFO']}",
-        f"warning_count: {severity_counts['WARNING']}",
-        f"error_count: {severity_counts['ERROR']}",
-        f"critical_count: {severity_counts['CRITICAL']}",
+        f"info_count: {report.issue_counts['INFO']}",
+        f"warning_count: {report.issue_counts['WARNING']}",
+        f"error_count: {report.issue_counts['ERROR']}",
+        f"critical_count: {report.issue_counts['CRITICAL']}",
     ]
 
     if report.issues:

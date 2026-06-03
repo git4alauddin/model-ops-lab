@@ -2,6 +2,7 @@
 
 from datetime import UTC, datetime
 from pathlib import Path
+from time import perf_counter
 from typing import Any, cast
 
 from app.config import ConfigError, load_config
@@ -40,6 +41,8 @@ def validate_dataset_readiness(
     schema_path: str | Path = DEFAULT_SCHEMA_PATH,
 ) -> ValidationReport:
     """Load validation inputs and return the initial dataset readiness report."""
+    validation_started_at = datetime.now(UTC).isoformat()
+    started_at = perf_counter()
     resolved_config_path = Path(config_path)
     resolved_schema_path = Path(schema_path)
     config = load_config(resolved_config_path)
@@ -68,6 +71,8 @@ def validate_dataset_readiness(
         rows=len(dataframe),
         columns=len(dataframe.columns),
         issues=issues,
+        generated_at=validation_started_at,
+        duration_seconds=perf_counter() - started_at,
     )
 
 
@@ -81,10 +86,7 @@ def _resolve_project_path(config_path: Path, configured_path: str) -> Path:
 
 
 def _count_validation_issues(report: ValidationReport) -> dict[str, int]:
-    counts = {"INFO": 0, "WARNING": 0, "ERROR": 0, "CRITICAL": 0}
-    for issue in report.issues:
-        counts[issue.severity] = counts.get(issue.severity, 0) + 1
-    return counts
+    return report.issue_counts
 
 
 def _format_log_section(title: str, values: dict[str, Any]) -> str:
@@ -131,6 +133,7 @@ def main() -> None:
                     "warnings": issue_counts["WARNING"],
                     "errors": issue_counts["ERROR"],
                     "critical": issue_counts["CRITICAL"],
+                    "duration_seconds": f"{report.duration_seconds:.6f}",
                 },
             )
         )

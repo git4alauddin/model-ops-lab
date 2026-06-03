@@ -39,6 +39,11 @@
 - Verified validation text summary persistence.
 - Verified validation report paths are config-driven.
 - Verified warning/error counts are written to the text summary.
+- Verified validation reports include `generated_at`.
+- Verified validation reports include `duration_seconds`.
+- Verified validation reports include issue severity counts.
+- Verified validation summary includes runtime metadata.
+- Verified validation logs include validation duration.
 - Verified training validation gate allows clean validation reports.
 - Verified training validation gate allows warning-only validation reports.
 - Verified training validation gate blocks failed validation reports.
@@ -70,6 +75,7 @@
 - Allowed-value validation returns no issues for the current sample churn dataset.
 - Duplicate validation returns no issues for the current sample churn dataset.
 - Validation command generates ignored JSON and text report files.
+- Validation command persists runtime metadata in generated reports.
 - Training command runs validation before training.
 - Target distribution validation returns no issues for the balanced sample churn dataset.
 - Target distribution warnings remain non-blocking.
@@ -124,6 +130,11 @@
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and `issues=[]`.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully and logged validation status before training.
 - Training validation log showed `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
+- After V2-C13 validation metadata persistence: `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v2_c13_validation_metadata.py` returned `4 passed in 0.04s`.
+- After V2-C13 validation metadata persistence: `.\vir_env\Scripts\python.exe -m pytest -q` returned `114 passed in 1.69s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully and logged `duration_seconds` in the formatted `[VALIDATION]` section.
+- Generated `reports/validation_report.json` contained `generated_at`, `duration_seconds`, and `issue_counts`.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully after report metadata changes.
 
 ## Outcome
 V2-C1 validation foundation is operational.
@@ -139,3 +150,4 @@ V2-C9 training validation gate is operational.
 V2-C10 target distribution sanity checks are operational.
 V2-C11 null percentage quality checks are operational.
 V2-C12 outlier sanity checks are operational.
+V2-C13 validation metadata persistence is operational.

@@ -13,6 +13,7 @@ Chunk V2-C9: training validation gate.
 Chunk V2-C10: target distribution sanity checks.
 Chunk V2-C11: null percentage quality checks.
 Chunk V2-C12: outlier sanity checks.
+Chunk V2-C13: validation metadata persistence.
 
 ## V2-C1 Additions
 - `app/validate_data.py`
@@ -437,6 +438,39 @@ python -m app.train
   -> continue training when outlier sanity only warns
 ```
 
+## V2-C13 Additions
+- `app/validation/reports.py`
+  - added `generated_at` to `ValidationReport`
+  - added `duration_seconds` to `ValidationReport`
+  - added `issue_counts` to `ValidationReport`
+  - persists runtime metadata in validation report JSON
+  - includes runtime metadata in validation summary text
+- `app/validate_data.py`
+  - measures validation duration with a monotonic timer
+  - passes `generated_at` and `duration_seconds` into the report builder
+  - logs validation duration in the formatted `[VALIDATION]` section
+- `tests/test_v2_c13_validation_metadata.py`
+  - validates report runtime metadata fields
+  - validates issue severity counts
+  - validates persisted JSON metadata
+  - validates summary metadata output
+- `README.md`
+  - updated V2 status with validation metadata persistence
+
+## Current V2-C13 Workflow
+```text
+python -m app.validate_data
+  -> record validation start timestamp
+  -> start validation duration timer
+  -> run validation checks
+  -> compute issue counts
+  -> persist validation report with generated_at, duration_seconds, and issue_counts
+  -> log duration in formatted validation logs
+
+python -m app.train
+  -> validation gate still uses report.status
+  -> validation report metadata remains available for traceability
+```
+
 ## Not Yet Implemented
-- validation duration and metadata persistence
 - final V2 closure documentation

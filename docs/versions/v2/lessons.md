@@ -24,3 +24,4 @@
 - Test fixtures for data quality checks need enough columns to avoid accidentally triggering unrelated validators.
 - Nullability and null percentage checks solve different problems: one enforces hard schema rules, the other detects operationally unsafe missingness.
 - Numeric range validation should own impossible values, while outlier sanity checks should warn on values that are possible but operationally suspicious.
+- Validation reports need runtime metadata so a future engineer can tell when validation ran, how long it took, and what severity counts were produced.

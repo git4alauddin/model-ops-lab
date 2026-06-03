@@ -255,7 +255,7 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no validation issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully and logged validation status before training.
 
-## Pending - v2-c12: add outlier sanity checks
+## 16b205d - v2-c12: add outlier sanity checks
 
 ### What Changed
 - Added `quality_checks.outlier_sanity` to `schema_versions/customer_churn_v1.yaml`.
@@ -277,3 +277,28 @@ This file records meaningful V2 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `110 passed in 1.61s`.
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status='passed'`, `rows=20`, `columns=9`, and no validation issues.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully and logged validation status before training.
+
+## Pending - v2-c13: add validation metadata persistence
+
+### What Changed
+- Added `generated_at`, `duration_seconds`, and `issue_counts` to validation reports.
+- Updated validation report JSON persistence to include runtime metadata.
+- Updated validation summary text output to include runtime metadata.
+- Updated `app.validate_data` to measure validation duration with a monotonic timer.
+- Updated formatted validation logs to include `duration_seconds`.
+- Added focused validation metadata tests.
+- Updated README and V2 documentation.
+- Corrected the V2-C12 commit log entry from `Pending` to `16b205d`.
+
+### What Problem It Solved
+- Makes validation reports more traceable after the command finishes.
+- Records when validation ran and how long it took.
+- Persists issue severity counts for quick inspection and future automation.
+- Improves auditability without changing validation pass/fail behavior.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v2_c13_validation_metadata.py` returned `4 passed in 0.04s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `114 passed in 1.69s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully and logged validation duration.
+- Generated `reports/validation_report.json` contained `generated_at`, `duration_seconds`, and `issue_counts`.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully after report metadata changes.

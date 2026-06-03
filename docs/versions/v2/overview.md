@@ -18,6 +18,7 @@ Add a production-style data validation and data quality layer before training.
 - duplicate validation
 - target distribution sanity checks
 - validation report persistence
+- validation metadata persistence
 - training validation gate
 - V2 documentation and commit log
 
@@ -33,6 +34,7 @@ Check controlled categorical, boolean, and target values against allowed sets.
 Check duplicate rows and duplicate entity IDs.
 Check target class distribution before training.
 Persist validation reports for auditability and local inspection.
+Persist validation runtime metadata for traceability.
 Block training when validation reports blocking data quality failures.
 
 ## Engineering Objectives
