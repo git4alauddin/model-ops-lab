@@ -1,5 +1,6 @@
 """V2 validation entrypoint for dataset readiness checks."""
 
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, cast
 
@@ -79,6 +80,28 @@ def _resolve_project_path(config_path: Path, configured_path: str) -> Path:
     return project_root / path
 
 
+def _count_validation_issues(report: ValidationReport) -> dict[str, int]:
+    counts = {"INFO": 0, "WARNING": 0, "ERROR": 0, "CRITICAL": 0}
+    for issue in report.issues:
+        counts[issue.severity] = counts.get(issue.severity, 0) + 1
+    return counts
+
+
+def _format_log_section(title: str, values: dict[str, Any]) -> str:
+    """Format a readable key-value section for runtime logs."""
+    key_width = max(len(key) for key in values)
+    lines = [f"[{title}]"]
+    lines.extend(f"{key:<{key_width}} : {value}" for key, value in values.items())
+    return "\n".join(lines)
+
+
+def _format_issue_summary(report: ValidationReport) -> str:
+    lines = ["[ISSUES]"]
+    for issue in report.issues:
+        lines.append(f"- {issue.severity} | {issue.check} | {issue.message}")
+    return "\n".join(lines)
+
+
 def main() -> None:
     """Run the V2 validation scaffold from the command line."""
     logger = get_logger(LOGGER_NAME)
@@ -87,12 +110,61 @@ def main() -> None:
         config = load_config(DEFAULT_CONFIG_PATH)
         log_path = build_log_path(config)
         logger = get_logger(LOGGER_NAME, log_path)
+        run_started_at = datetime.now(UTC).isoformat()
+        logger.info(
+            "===== RUN STARTED %s | workflow=validation =====",
+            run_started_at,
+        )
         report = validate_dataset_readiness(DEFAULT_CONFIG_PATH, DEFAULT_SCHEMA_PATH)
         report_paths = build_report_paths(config)
         save_validation_report(report, report_paths["json"])
         save_validation_summary(report, report_paths["summary"])
-        logger.info("Validation scaffold completed: %s", report.to_dict())
-        logger.info("Validation report saved: %s", report_paths)
+        issue_counts = _count_validation_issues(report)
+        logger.info(_format_log_section("RUNTIME", {"log_file": log_path}))
+        logger.info(
+            _format_log_section(
+                "VALIDATION",
+                {
+                    "status": report.status,
+                    "issues": len(report.issues),
+                    "info": issue_counts["INFO"],
+                    "warnings": issue_counts["WARNING"],
+                    "errors": issue_counts["ERROR"],
+                    "critical": issue_counts["CRITICAL"],
+                },
+            )
+        )
+        logger.info(
+            _format_log_section(
+                "DATASET",
+                {
+                    "path": report.dataset_path,
+                    "rows": report.rows,
+                    "columns": report.columns,
+                },
+            )
+        )
+        logger.info(
+            _format_log_section(
+                "SCHEMA",
+                {
+                    "path": report.schema_path,
+                    "version": report.schema_version,
+                },
+            )
+        )
+        logger.info(
+            _format_log_section(
+                "REPORTS",
+                {
+                    "json": report_paths["json"],
+                    "summary": report_paths["summary"],
+                },
+            )
+        )
+        if report.issues:
+            logger.info(_format_issue_summary(report))
+        logger.info("Validation scaffold completed.")
     except (ConfigError, DataError, ValidationError, ValidationReportError) as exc:
         logger.exception("Validation scaffold failed: %s", exc)
         raise SystemExit(1) from exc
