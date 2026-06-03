@@ -33,6 +33,7 @@ class ValidationReport:
     generated_at: str
     duration_seconds: float
     issue_counts: dict[str, int]
+    dataset_version: dict[str, Any] | None = None
     issues: list[ValidationIssue] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
@@ -49,6 +50,7 @@ def build_validation_report(
     issues: list[ValidationIssue] | None = None,
     generated_at: str | None = None,
     duration_seconds: float = 0.0,
+    dataset_version: dict[str, Any] | None = None,
 ) -> ValidationReport:
     """Build a validation report with status derived from issue severity."""
     report_issues = issues or []
@@ -69,6 +71,7 @@ def build_validation_report(
         generated_at=generated_at or datetime.now(UTC).isoformat(),
         duration_seconds=duration_seconds,
         issue_counts=_count_issue_severities(report_issues),
+        dataset_version=dataset_version,
         issues=report_issues,
     )
 
@@ -128,6 +131,18 @@ def build_validation_summary(report: ValidationReport) -> str:
         f"error_count: {report.issue_counts['ERROR']}",
         f"critical_count: {report.issue_counts['CRITICAL']}",
     ]
+
+    if report.dataset_version:
+        lines.extend(
+            [
+                "dataset_version:",
+                f"- metadata_path: {report.dataset_version['metadata_path']}",
+                f"- dataset_name: {report.dataset_version['dataset_name']}",
+                f"- version: {report.dataset_version['version']}",
+                f"- path: {report.dataset_version['path']}",
+                f"- schema_path: {report.dataset_version['schema_path']}",
+            ]
+        )
 
     if report.issues:
         lines.append("issues:")

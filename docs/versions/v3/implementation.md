@@ -3,6 +3,7 @@
 ## Scope
 Chunk V3-C1: dataset registry foundation.
 Chunk V3-C2: record dataset version in training metadata.
+Chunk V3-C3: record dataset version in validation reports.
 
 ## V3-C1 Additions
 - `data_versions/customer_churn/v1.yaml`
@@ -67,7 +68,36 @@ configs/training.yaml
   -> log active dataset version
 ```
 
+## V3-C3 Additions
+- `app/validation/reports.py`
+  - added optional `dataset_version` field to `ValidationReport`
+  - persists dataset version snapshots in JSON validation reports
+  - includes dataset version details in text validation summaries
+- `app/validate_data.py`
+  - loads dataset version metadata during validation
+  - adds dataset version snapshot to readiness reports
+  - logs active dataset version in a readable `[DATASET VERSION]` section
+- `tests/test_v3_c3_validation_dataset_version.py`
+  - validates validation report dataset version snapshots
+  - validates JSON report dataset version persistence
+  - validates text summary dataset version output
+  - validates readiness reports populate dataset version metadata
+- `docs/versions/v3/`
+  - updated implementation, verification, lessons, issues, and commit log for V3-C3
+- `README.md`
+  - updated V3 status
+
+## Current V3-C3 Workflow
+```text
+python -m app.validate_data
+  -> read dataset_version.metadata_path
+  -> load data_versions/customer_churn/v1.yaml
+  -> run validation checks
+  -> persist dataset_version inside reports/validation_report.json
+  -> write dataset_version inside reports/validation_summary.txt
+  -> log active dataset version
+```
+
 ## Remaining V3 Gaps
-- Validation reports do not yet record dataset version.
 - Dataset checksums are not yet tracked.
 - No reproducibility check command exists yet.

@@ -7,6 +7,12 @@ from typing import Any, cast
 
 from app.config import ConfigError, load_config
 from app.data import DataError, load_dataset
+from app.dataset_registry import (
+    build_dataset_version_snapshot,
+    DatasetRegistryError,
+    load_dataset_version_metadata,
+    resolve_dataset_version_metadata_path,
+)
 from app.utils.logger import build_log_path, get_logger
 from app.validation.checks import (
     ValidationError,
@@ -47,6 +53,14 @@ def validate_dataset_readiness(
     resolved_schema_path = Path(schema_path)
     config = load_config(resolved_config_path)
     schema = load_validation_schema(resolved_schema_path)
+    dataset_version_metadata_path = resolve_dataset_version_metadata_path(config)
+    dataset_version_metadata = load_dataset_version_metadata(
+        dataset_version_metadata_path
+    )
+    dataset_version_snapshot = build_dataset_version_snapshot(
+        dataset_version_metadata_path,
+        dataset_version_metadata,
+    )
     dataset_config = cast(dict[str, Any], config["dataset"])
     dataset_path = _resolve_project_path(
         resolved_config_path,
@@ -73,6 +87,7 @@ def validate_dataset_readiness(
         issues=issues,
         generated_at=validation_started_at,
         duration_seconds=perf_counter() - started_at,
+        dataset_version=dataset_version_snapshot,
     )
 
 
@@ -147,6 +162,19 @@ def main() -> None:
                 },
             )
         )
+        if report.dataset_version:
+            logger.info(
+                _format_log_section(
+                    "DATASET VERSION",
+                    {
+                        "metadata_path": report.dataset_version["metadata_path"],
+                        "dataset_name": report.dataset_version["dataset_name"],
+                        "version": report.dataset_version["version"],
+                        "path": report.dataset_version["path"],
+                        "schema_path": report.dataset_version["schema_path"],
+                    },
+                )
+            )
         logger.info(
             _format_log_section(
                 "SCHEMA",
@@ -168,7 +196,13 @@ def main() -> None:
         if report.issues:
             logger.info(_format_issue_summary(report))
         logger.info("Validation scaffold completed.")
-    except (ConfigError, DataError, ValidationError, ValidationReportError) as exc:
+    except (
+        ConfigError,
+        DataError,
+        DatasetRegistryError,
+        ValidationError,
+        ValidationReportError,
+    ) as exc:
         logger.exception("Validation scaffold failed: %s", exc)
         raise SystemExit(1) from exc
 

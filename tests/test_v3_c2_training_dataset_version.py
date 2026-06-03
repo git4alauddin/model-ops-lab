@@ -2,9 +2,10 @@
 
 from pathlib import Path
 
-from app.dataset_registry import DatasetRegistryError, load_dataset_version_metadata
-from app.train import (
+from app.dataset_registry import (
+    DatasetRegistryError,
     build_dataset_version_snapshot,
+    load_dataset_version_metadata,
     resolve_dataset_version_metadata_path,
 )
 

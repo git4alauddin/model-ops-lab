@@ -11,6 +11,8 @@ class DatasetRegistryError(ValueError):
     """Raised when dataset version metadata is missing or invalid."""
 
 
+DEFAULT_DATASET_VERSION_METADATA_PATH = Path("data_versions/customer_churn/v1.yaml")
+
 REQUIRED_DATASET_VERSION_KEYS: tuple[str, ...] = (
     "dataset_name",
     "version",
@@ -67,3 +69,33 @@ def validate_dataset_version_metadata(metadata: dict[str, Any]) -> None:
         raise DatasetRegistryError("schema_path must be a string.")
     if not isinstance(metadata["target_column"], str):
         raise DatasetRegistryError("target_column must be a string.")
+
+
+def resolve_dataset_version_metadata_path(config: dict[str, Any]) -> Path:
+    """Return the dataset version metadata path from config or the project default."""
+    dataset_version_config = config.get("dataset_version")
+    if not isinstance(dataset_version_config, dict):
+        return DEFAULT_DATASET_VERSION_METADATA_PATH
+
+    metadata_path = dataset_version_config.get("metadata_path")
+    if not metadata_path:
+        return DEFAULT_DATASET_VERSION_METADATA_PATH
+
+    return Path(str(metadata_path))
+
+
+def build_dataset_version_snapshot(
+    metadata_path: str | Path,
+    metadata: dict[str, Any],
+) -> dict[str, Any]:
+    """Build the dataset version subset persisted with runtime metadata."""
+    return {
+        "metadata_path": str(metadata_path),
+        "dataset_name": metadata["dataset_name"],
+        "version": metadata["version"],
+        "path": metadata["path"],
+        "schema_path": metadata["schema_path"],
+        "target_column": metadata["target_column"],
+        "id_column": metadata.get("id_column"),
+        "source_type": metadata.get("source_type"),
+    }

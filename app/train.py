@@ -9,8 +9,10 @@ import pandas as pd
 from app.config import ConfigError, load_config
 from app.data import DataError, load_dataset
 from app.dataset_registry import (
+    build_dataset_version_snapshot,
     DatasetRegistryError,
     load_dataset_version_metadata,
+    resolve_dataset_version_metadata_path,
 )
 from app.evaluate import EvaluationError, evaluate_model
 from app.pipeline.preprocessing import (
@@ -37,7 +39,6 @@ from app.validate_data import DEFAULT_SCHEMA_PATH, validate_dataset_readiness
 from app.validation.reports import ValidationReport
 
 LOGGER_NAME = "modelopslab.training"
-DEFAULT_DATASET_VERSION_METADATA_PATH = Path("data_versions/customer_churn/v1.yaml")
 
 
 class ValidationGateError(ValueError):
@@ -88,36 +89,6 @@ def resolve_validation_schema_path(config: dict[str, Any]) -> Path:
         return DEFAULT_SCHEMA_PATH
 
     return Path(cast(str, schema_path))
-
-
-def resolve_dataset_version_metadata_path(config: dict[str, Any]) -> Path:
-    """Return the dataset version metadata path from config or the project default."""
-    dataset_version_config = config.get("dataset_version")
-    if not isinstance(dataset_version_config, dict):
-        return DEFAULT_DATASET_VERSION_METADATA_PATH
-
-    metadata_path = dataset_version_config.get("metadata_path")
-    if not metadata_path:
-        return DEFAULT_DATASET_VERSION_METADATA_PATH
-
-    return Path(cast(str, metadata_path))
-
-
-def build_dataset_version_snapshot(
-    metadata_path: str | Path,
-    metadata: dict[str, Any],
-) -> dict[str, Any]:
-    """Build the dataset version subset persisted with training metadata."""
-    return {
-        "metadata_path": str(metadata_path),
-        "dataset_name": metadata["dataset_name"],
-        "version": metadata["version"],
-        "path": metadata["path"],
-        "schema_path": metadata["schema_path"],
-        "target_column": metadata["target_column"],
-        "id_column": metadata.get("id_column"),
-        "source_type": metadata.get("source_type"),
-    }
 
 
 def _format_log_section(title: str, values: dict[str, Any]) -> str:

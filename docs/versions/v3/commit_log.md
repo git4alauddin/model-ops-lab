@@ -23,7 +23,7 @@ This file records meaningful V3 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after the validation gate passed.
 
-## Pending - v3-c2: record dataset version in training metadata
+## c3753cd - v3-c2: record dataset version in training metadata
 
 ### What Changed
 - Added `dataset_version.metadata_path` to `configs/training.yaml`.
@@ -45,3 +45,28 @@ This file records meaningful V3 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after the validation gate passed.
 - Generated `artifacts/training_metadata.json` includes the `dataset_version` snapshot for `customer_churn` version `v1`.
+
+## Pending - v3-c3: record dataset version in validation reports
+
+### What Changed
+- Added dataset version snapshots to validation reports.
+- Persisted dataset version metadata in `reports/validation_report.json`.
+- Included dataset version metadata in `reports/validation_summary.txt`.
+- Added a readable `[DATASET VERSION]` validation log section.
+- Added focused V3-C3 validation dataset version tests.
+- Updated README and V3 documentation.
+- Corrected the V3-C2 commit log entry from `Pending` to `c3753cd`.
+
+### What Problem It Solved
+- Makes validation outputs traceable to the exact dataset registry entry they checked.
+- Aligns validation report traceability with training metadata traceability.
+- Prepares V3 for checksum and reproducibility checks.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v3_c2_training_dataset_version.py` returned `4 passed in 0.05s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v3_c3_validation_dataset_version.py` returned `4 passed in 0.47s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `130 passed in 3.22s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully after the validation gate passed.
+- Generated `reports/validation_report.json` includes the `dataset_version` snapshot for `customer_churn` version `v1`.
+- Generated `reports/validation_summary.txt` includes the dataset version section.

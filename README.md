@@ -51,6 +51,7 @@ V3 is in progress. The project is adding dataset versioning and reproducibility 
 - dataset registry metadata loader
 - dataset registry metadata validation
 - training metadata records dataset version information
+- validation reports record dataset version information
 - focused tests for dataset version metadata behavior
 
 ## Setup
