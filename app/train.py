@@ -206,6 +206,12 @@ def main() -> None:
                     "version": dataset_version_snapshot["version"],
                     "path": dataset_version_snapshot["path"],
                     "schema_path": dataset_version_snapshot["schema_path"],
+                    "checksum_algorithm": (
+                        dataset_version_snapshot.get("checksum", {}).get("algorithm")
+                    ),
+                    "checksum_value": (
+                        dataset_version_snapshot.get("checksum", {}).get("value")
+                    ),
                 },
             )
         )

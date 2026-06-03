@@ -46,7 +46,7 @@ This file records meaningful V3 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after the validation gate passed.
 - Generated `artifacts/training_metadata.json` includes the `dataset_version` snapshot for `customer_churn` version `v1`.
 
-## Pending - v3-c3: record dataset version in validation reports
+## e6cbcd4 - v3-c3: record dataset version in validation reports
 
 ### What Changed
 - Added dataset version snapshots to validation reports.
@@ -70,3 +70,31 @@ This file records meaningful V3 commits and the operational purpose of each chan
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after the validation gate passed.
 - Generated `reports/validation_report.json` includes the `dataset_version` snapshot for `customer_churn` version `v1`.
 - Generated `reports/validation_summary.txt` includes the dataset version section.
+
+## Pending - v3-c4: add dataset checksum tracking
+
+### What Changed
+- Added SHA256 checksum metadata to `data_versions/customer_churn/v1.yaml`.
+- Added dataset checksum calculation in `app/dataset_registry.py`.
+- Added dataset checksum validation in `app/dataset_registry.py`.
+- Added checksum metadata to dataset version runtime snapshots.
+- Exposed checksum metadata in training logs, validation logs, and validation summaries.
+- Added focused V3-C4 checksum tests.
+- Updated V3-C2 and V3-C3 tests to assert checksum metadata is carried forward.
+- Updated README and V3 documentation.
+- Corrected the V3-C3 commit log entry from `Pending` to `e6cbcd4`.
+
+### What Problem It Solved
+- Makes dataset content identity explicit, not only dataset version name.
+- Detects when `data/churn.csv` no longer matches the registry metadata.
+- Prepares V3 for a reproducibility check command.
+
+### Verification
+- `Get-FileHash data\churn.csv -Algorithm SHA256` returned `5F4F99466D4EF2703BE65C8597A6BD0D784EAAF83960690BDAC118FF3CFAE623`.
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v3_c2_training_dataset_version.py tests\test_v3_c3_validation_dataset_version.py tests\test_v3_c4_dataset_checksum.py` returned `13 passed in 0.49s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `135 passed in 2.27s`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully after the validation gate passed.
+- Generated `artifacts/training_metadata.json` includes checksum algorithm `sha256` and checksum value `5f4f99466d4ef2703be65c8597a6bd0d784eaaf83960690bdac118ff3cfae623`.
+- Generated `reports/validation_report.json` includes checksum algorithm `sha256` and checksum value `5f4f99466d4ef2703be65c8597a6bd0d784eaaf83960690bdac118ff3cfae623`.
+- Generated `reports/validation_summary.txt` includes checksum algorithm `sha256` and checksum value `5f4f99466d4ef2703be65c8597a6bd0d784eaaf83960690bdac118ff3cfae623`.

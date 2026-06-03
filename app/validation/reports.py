@@ -143,6 +143,14 @@ def build_validation_summary(report: ValidationReport) -> str:
                 f"- schema_path: {report.dataset_version['schema_path']}",
             ]
         )
+        checksum = report.dataset_version.get("checksum")
+        if isinstance(checksum, dict):
+            lines.extend(
+                [
+                    f"- checksum_algorithm: {checksum.get('algorithm')}",
+                    f"- checksum_value: {checksum.get('value')}",
+                ]
+            )
 
     if report.issues:
         lines.append("issues:")

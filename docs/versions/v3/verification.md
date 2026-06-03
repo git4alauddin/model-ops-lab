@@ -15,37 +15,54 @@
 - Verified persisted validation report JSON includes dataset version metadata.
 - Verified validation text summaries include dataset version metadata.
 - Verified validation readiness reports populate dataset version metadata from config.
+- Verified `data/churn.csv` SHA256 checksum calculation is deterministic.
+- Verified current dataset checksum metadata passes validation.
+- Verified checksum mismatches fail safely.
+- Verified missing dataset files fail safely during checksum validation.
+- Verified unsupported checksum algorithms fail safely.
+- Verified training metadata snapshots include checksum metadata.
+- Verified validation report snapshots include checksum metadata.
+- Verified validation text summaries include checksum metadata.
 
 ## Commands Executed
 - `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v3_c1_dataset_registry.py`
 - `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v3_c2_training_dataset_version.py`
 - `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v3_c3_validation_dataset_version.py`
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v3_c4_dataset_checksum.py`
 - `.\vir_env\Scripts\python.exe -m pytest -q`
 - `.\vir_env\Scripts\python.exe -m app.validate_data`
 - `.\vir_env\Scripts\python.exe -m app.train`
+- `Get-FileHash data\churn.csv -Algorithm SHA256`
 
 ## Expected Output
 - V3-C1 dataset registry tests pass.
 - V3-C2 training dataset version tests pass.
 - V3-C3 validation dataset version tests pass.
+- V3-C4 dataset checksum tests pass.
 - Existing V1 and V2 tests continue passing.
 - Validation still passes with the current churn dataset.
 - Training still runs after the validation gate passes.
 - Training metadata includes dataset version information.
 - Validation report and summary include dataset version information.
+- Training and validation logs include checksum metadata in `[DATASET VERSION]`.
+- Dataset registry checksum matches `data/churn.csv`.
 
 ## Actual Output
 - `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v3_c1_dataset_registry.py` returned `5 passed in 0.11s`.
-- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v3_c2_training_dataset_version.py` returned `4 passed in 0.05s`.
-- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v3_c3_validation_dataset_version.py` returned `4 passed in 0.47s`.
-- `.\vir_env\Scripts\python.exe -m pytest -q` returned `130 passed in 3.22s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v3_c2_training_dataset_version.py tests\test_v3_c3_validation_dataset_version.py tests\test_v3_c4_dataset_checksum.py` returned `13 passed in 0.49s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `135 passed in 2.27s`.
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed successfully with `status=passed`, `issues=0`, `warnings=0`, `errors=0`, and `critical=0`.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully after the validation gate passed.
 - Generated `artifacts/training_metadata.json` includes `dataset_version.dataset_name=customer_churn`, `dataset_version.version=v1`, `dataset_version.path=data/churn.csv`, and `dataset_version.schema_path=schema_versions/customer_churn_v1.yaml`.
 - Generated `reports/validation_report.json` includes `dataset_version.dataset_name=customer_churn`, `dataset_version.version=v1`, `dataset_version.path=data/churn.csv`, and `dataset_version.schema_path=schema_versions/customer_churn_v1.yaml`.
 - Generated `reports/validation_summary.txt` includes the dataset version section.
+- `Get-FileHash data\churn.csv -Algorithm SHA256` returned `5F4F99466D4EF2703BE65C8597A6BD0D784EAAF83960690BDAC118FF3CFAE623`.
+- Generated `artifacts/training_metadata.json` includes checksum algorithm `sha256` and checksum value `5f4f99466d4ef2703be65c8597a6bd0d784eaaf83960690bdac118ff3cfae623`.
+- Generated `reports/validation_report.json` includes checksum algorithm `sha256` and checksum value `5f4f99466d4ef2703be65c8597a6bd0d784eaaf83960690bdac118ff3cfae623`.
+- Generated `reports/validation_summary.txt` includes checksum algorithm `sha256` and checksum value `5f4f99466d4ef2703be65c8597a6bd0d784eaaf83960690bdac118ff3cfae623`.
 
 ## Outcome
 V3-C1 dataset registry foundation is operational.
 V3-C2 training dataset version persistence is operational.
 V3-C3 validation dataset version persistence is operational.
+V3-C4 dataset checksum tracking is operational.

@@ -172,6 +172,14 @@ def main() -> None:
                         "version": report.dataset_version["version"],
                         "path": report.dataset_version["path"],
                         "schema_path": report.dataset_version["schema_path"],
+                        "checksum_algorithm": (
+                            report.dataset_version.get("checksum", {}).get(
+                                "algorithm"
+                            )
+                        ),
+                        "checksum_value": (
+                            report.dataset_version.get("checksum", {}).get("value")
+                        ),
                     },
                 )
             )

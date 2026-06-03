@@ -23,6 +23,10 @@ def _dataset_version_snapshot() -> dict[str, str]:
         "target_column": "churn",
         "id_column": "customer_id",
         "source_type": "local_csv",
+        "checksum": {
+            "algorithm": "sha256",
+            "value": "5f4f99466d4ef2703be65c8597a6bd0d784eaaf83960690bdac118ff3cfae623",
+        },
     }
 
 
@@ -60,6 +64,7 @@ def test_save_validation_report_persists_dataset_version(tmp_path):
     assert data["dataset_version"]["schema_path"] == (
         "schema_versions/customer_churn_v1.yaml"
     )
+    assert data["dataset_version"]["checksum"]["algorithm"] == "sha256"
 
 
 def test_validation_summary_includes_dataset_version():
@@ -77,6 +82,7 @@ def test_validation_summary_includes_dataset_version():
     assert "dataset_version:" in summary
     assert "dataset_name: customer_churn" in summary
     assert "version: v1" in summary
+    assert "checksum_algorithm: sha256" in summary
 
 
 def test_validate_dataset_readiness_populates_dataset_version():
@@ -89,3 +95,4 @@ def test_validate_dataset_readiness_populates_dataset_version():
     assert report.dataset_version is not None
     assert report.dataset_version["dataset_name"] == "customer_churn"
     assert report.dataset_version["version"] == "v1"
+    assert report.dataset_version["checksum"]["algorithm"] == "sha256"

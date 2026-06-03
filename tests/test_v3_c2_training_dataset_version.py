@@ -40,6 +40,10 @@ def test_build_dataset_version_snapshot_for_training_metadata():
     assert snapshot["target_column"] == "churn"
     assert snapshot["id_column"] == "customer_id"
     assert snapshot["source_type"] == "local_csv"
+    assert snapshot["checksum"]["algorithm"] == "sha256"
+    assert snapshot["checksum"]["value"] == (
+        "5f4f99466d4ef2703be65c8597a6bd0d784eaaf83960690bdac118ff3cfae623"
+    )
 
 
 def test_configured_missing_dataset_version_metadata_fails_safely(tmp_path):

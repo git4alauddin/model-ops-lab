@@ -52,6 +52,7 @@ V3 is in progress. The project is adding dataset versioning and reproducibility 
 - dataset registry metadata validation
 - training metadata records dataset version information
 - validation reports record dataset version information
+- dataset registry records the dataset SHA256 checksum
 - focused tests for dataset version metadata behavior
 
 ## Setup

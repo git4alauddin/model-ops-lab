@@ -8,3 +8,6 @@ description: Synthetic customer churn dataset used for the V1 baseline and V2 va
 status: active
 owner: local
 source_type: local_csv
+checksum:
+  algorithm: sha256
+  value: 5f4f99466d4ef2703be65c8597a6bd0d784eaaf83960690bdac118ff3cfae623
