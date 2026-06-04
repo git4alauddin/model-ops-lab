@@ -2,7 +2,7 @@
 
 This file records meaningful V4 commits and the operational purpose of each change.
 
-## Pending - v4-c3: log confusion matrix as MLflow artifact
+## fc66039 - v4-c3: log confusion matrix as MLflow artifact
 
 ### What Changed
 - Added `artifacts.confusion_matrix_file` to training config.
