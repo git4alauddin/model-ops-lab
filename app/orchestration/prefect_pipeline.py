@@ -7,8 +7,15 @@ from prefect import flow, task
 
 from app.validate_data import DEFAULT_CONFIG_PATH
 
+PIPELINE_TASK_RETRIES = 2
+PIPELINE_TASK_RETRY_DELAY_SECONDS = 5
 
-@task(name="run-training-pipeline")
+
+@task(
+    name="run-training-pipeline",
+    retries=PIPELINE_TASK_RETRIES,
+    retry_delay_seconds=PIPELINE_TASK_RETRY_DELAY_SECONDS,
+)
 def run_training_pipeline_task(
     config_path: str | Path = DEFAULT_CONFIG_PATH,
 ) -> dict[str, Any]:

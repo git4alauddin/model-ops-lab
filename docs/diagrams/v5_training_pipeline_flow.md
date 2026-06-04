@@ -8,10 +8,10 @@ It is intentionally limited to the implemented V5 behavior: local Prefect orches
 flowchart TD
     prefect_cmd["python -m app.run_prefect_pipeline"]
     prefect_flow["Prefect flow<br/>modelopslab-training-pipeline"]
-    prefect_task["Prefect task<br/>run-training-pipeline"]
+    prefect_task["Prefect task<br/>run-training-pipeline<br/>retries=2"]
     pipeline_cmd["python -m app.run_training_pipeline"]
     config["configs/training.yaml"]
-    metadata_start["Initialize pipeline metadata<br/>pipeline_version=v5-c6<br/>status=running"]
+    metadata_start["Initialize pipeline metadata<br/>pipeline_version=v5-c7<br/>status=running"]
     validation["Validation stage<br/>validate_dataset_readiness"]
     validation_gate{"Validation passed?"}
     validation_failed["Mark validation failed<br/>failed_stage=validation"]

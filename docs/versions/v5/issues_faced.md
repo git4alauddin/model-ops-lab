@@ -116,3 +116,20 @@ Prefect now orchestrates the existing pipeline while the core behavior remains t
 
 ### Prevention Strategy
 Keep orchestration tools as wrappers around stable application behavior until there is a clear need to split individual tasks.
+
+## V5-C7 Retry Policy Needed Guardrails
+
+### Symptom
+Prefect was available as a local wrapper, but task retries were not configured.
+
+### Root Cause
+V5-C6 introduced orchestration first and intentionally avoided retry behavior during the initial Prefect integration.
+
+### Fix Applied
+Added a conservative retry policy to the Prefect pipeline task: two retries with a five-second delay.
+
+### Why The Fix Worked
+Transient task failures can be retried by Prefect while the underlying pipeline code remains unchanged.
+
+### Prevention Strategy
+Keep retry policy small and explicit until the pipeline has more granular task modules and stronger failure classification.

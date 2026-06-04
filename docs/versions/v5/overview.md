@@ -15,6 +15,7 @@ Implemented chunks:
 - V5-C4: single validation ownership for the training pipeline.
 - V5-C5: training pipeline flow diagram.
 - V5-C6: local Prefect orchestration wrapper.
+- V5-C7: Prefect task retry policy.
 
 ## Components Introduced
 - V5 documentation scaffold
@@ -30,6 +31,7 @@ Implemented chunks:
 - Prefect dependency
 - local Prefect flow and task wrapper
 - Prefect pipeline command
+- Prefect retry policy for the pipeline task
 
 ## Workflow To Introduce
 V5 will move toward this workflow:
@@ -58,6 +60,6 @@ pipeline command
 - create a foundation for future retraining automation
 
 ## Current V5 Outcome
-V5 has the architecture direction, output structure, metadata contract, plain Python pipeline command, and local Prefect wrapper. The pipeline owns validation once and then runs experiments without duplicate validation. Prefect scheduling and deployments are intentionally not added yet.
+V5 has the architecture direction, output structure, metadata contract, plain Python pipeline command, local Prefect wrapper, and Prefect task retry policy. The pipeline owns validation once and then runs experiments without duplicate validation. Prefect scheduling and deployments are intentionally not added yet.
 
 For the V5 training pipeline diagram, see `docs/diagrams/v5_training_pipeline_flow.md`.

@@ -132,6 +132,23 @@ Implemented chunks:
 - `docs/versions/v5/commit_log.md`
   - finalizes the V5-C5 commit hash as `1f12a25`
 
+## V5-C7 Additions
+- `app/orchestration/prefect_pipeline.py`
+  - adds `PIPELINE_TASK_RETRIES = 2`
+  - adds `PIPELINE_TASK_RETRY_DELAY_SECONDS = 5`
+  - configures retry behavior on `run_training_pipeline_task`
+- `app/pipeline_run_metadata.py`
+  - bumps pipeline metadata version to `v5-c7`
+- `tests/test_v5_c7_prefect_retry_policy.py`
+  - proves the Prefect task exposes the retry policy
+  - proves the task still delegates to `run_training_pipeline`
+- `README.md`
+  - documents the Prefect retry policy at a high level
+- `docs/diagrams/v5_training_pipeline_flow.md`
+  - shows the retry-enabled Prefect task
+- `docs/versions/v5/commit_log.md`
+  - finalizes the V5-C6 commit hash as `6d9997f`
+
 ## Orchestration Boundary
 V5 should not rewrite the working V1-V4 behavior in one step.
 
@@ -205,5 +222,4 @@ app.run_prefect_pipeline = local Prefect wrapper around app.run_training_pipelin
 
 ## Remaining V5 Gaps
 - Stage task modules are not added yet.
-- Retry behavior is not implemented yet.
 - Prefect scheduling and deployment configuration are not implemented yet.

@@ -2,7 +2,31 @@
 
 This file records meaningful V5 commits and the operational purpose of each change.
 
-## Pending - v5-c6: add Prefect orchestration wrapper
+## Pending - v5-c7: add Prefect retry policy
+
+### What Changed
+- Added `PIPELINE_TASK_RETRIES = 2`.
+- Added `PIPELINE_TASK_RETRY_DELAY_SECONDS = 5`.
+- Configured `run_training_pipeline_task` with Prefect retries.
+- Bumped pipeline metadata version to `v5-c7`.
+- Added focused retry policy tests.
+- Updated README, V5 diagram, and V5 docs.
+- Finalized the V5-C6 commit hash as `6d9997f`.
+
+### What Problem It Solved
+- Adds controlled retry behavior to the local Prefect task.
+- Keeps retry policy explicit and conservative.
+- Preserves the existing plain Python pipeline behavior.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v5_c6_prefect_orchestration.py tests\test_v5_c7_prefect_retry_policy.py` returned `6 passed in 3.67s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v5_c2_pipeline_run_metadata.py tests\test_v5_c3_training_pipeline_entrypoint.py tests\test_v5_c4_pipeline_validation_ownership.py tests\test_v5_c6_prefect_orchestration.py tests\test_v5_c7_prefect_retry_policy.py` returned `23 passed in 4.00s`.
+- `.\vir_env\Scripts\python.exe -m app.run_prefect_pipeline` completed successfully and created pipeline run `pipeline_20260604T190037406517Z_bb1af1de`.
+- Generated V5-C7 pipeline metadata had `pipeline_version=v5-c7`, `status=passed`, `stage_statuses.validation=passed`, `stage_statuses.experiments=passed`, `mlflow_run_ids=3`, and `champion_run_id=64a4bbb3123f4a309a2f528f19b418dc`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `183 passed in 5.45s`.
+- `Select-String -Path logs\modelopslab.log -Pattern "ERROR|Traceback|pipeline_test_"` returned no matches after the V5-C7 verification run.
+
+## 6d9997f - v5-c6: add Prefect orchestration wrapper
 
 ### What Changed
 - Added `prefect>=3.0.0` to `requirements.txt`.

@@ -88,6 +88,7 @@ V5 is in progress. The project is adding training pipeline automation and orches
 - plain Python training pipeline command
 - single validation ownership in the V5 pipeline command
 - local Prefect orchestration wrapper
+- Prefect task retry policy for transient pipeline task failures
 - explicit guardrail that V5 should wrap stable V1-V4 behavior before replacing it
 
 ## Setup
@@ -132,6 +133,8 @@ python -m app.run_prefect_pipeline
 ```
 
 This runs the same V5 training pipeline through a local Prefect flow. It is local orchestration only; scheduled deployments are not added yet.
+
+The Prefect task uses a small retry policy for transient task failures.
 
 ## Run Multi-Model Experiments
 
