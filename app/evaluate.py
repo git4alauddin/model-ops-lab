@@ -1,5 +1,7 @@
 """Evaluation helpers for V1."""
 
+from time import perf_counter
+
 from sklearn.metrics import (
     accuracy_score,
     confusion_matrix,
@@ -33,3 +35,10 @@ def evaluate_model(fitted_pipeline, x_test, y_test) -> dict:
         "f1": float(f1_score(y_test, y_pred, zero_division=0)),
         "confusion_matrix": confusion_matrix(y_test, y_pred, labels=[0, 1]).tolist(),
     }
+
+
+def evaluate_model_with_duration(fitted_pipeline, x_test, y_test) -> tuple[dict, float]:
+    """Evaluate a fitted pipeline and return metrics with evaluation duration."""
+    started_at = perf_counter()
+    metrics = evaluate_model(fitted_pipeline, x_test, y_test)
+    return metrics, perf_counter() - started_at

@@ -4,6 +4,7 @@ from contextlib import contextmanager
 
 from app.experiment_tracking import (
     build_experiment_tracking_config,
+    build_mlflow_metrics,
     build_mlflow_params,
     ExperimentTrackingError,
     get_run_id,
@@ -45,7 +46,7 @@ def test_build_mlflow_params_includes_dataset_version_context():
 
     params = build_mlflow_params(config, metadata)
 
-    assert params["pipeline_version"] == "v4-c1"
+    assert params["pipeline_version"] == "v4-c2"
     assert params["model_type"] == "logistic_regression"
     assert params["test_size"] == 0.2
     assert params["random_state"] == 42
@@ -88,7 +89,9 @@ def test_log_training_outputs_logs_params_metrics_and_artifacts(tmp_path):
                 "algorithm": "sha256",
                 "value": "abc123",
             },
-        }
+        },
+        "training_duration_seconds": 0.4,
+        "evaluation_duration_seconds": 0.2,
     }
     artifact_paths = {
         "metrics": tmp_path / "metrics.json",
@@ -104,7 +107,11 @@ def test_log_training_outputs_logs_params_metrics_and_artifacts(tmp_path):
     )
 
     assert fake_mlflow.logged_params["dataset_version"] == "v1"
-    assert fake_mlflow.logged_metrics == {"accuracy": 1.0}
+    assert fake_mlflow.logged_metrics == {
+        "accuracy": 1.0,
+        "training_duration_seconds": 0.4,
+        "evaluation_duration_seconds": 0.2,
+    }
     assert fake_mlflow.logged_artifacts == [
         str(artifact_paths["metrics"]),
         str(artifact_paths["metadata"]),
@@ -120,6 +127,62 @@ def test_invalid_experiment_tracking_config_fails_safely():
         assert "experiment_name" in str(exc)
     else:
         raise AssertionError("Expected ExperimentTrackingError for invalid config.")
+
+
+def test_build_mlflow_metrics_includes_training_and_evaluation_duration():
+    metrics = {"accuracy": 1.0, "confusion_matrix": [[1, 0], [0, 1]]}
+    metadata = {
+        "training_duration_seconds": 0.5,
+        "evaluation_duration_seconds": 0.25,
+    }
+
+    mlflow_metrics = build_mlflow_metrics(metrics, metadata)
+
+    assert mlflow_metrics == {
+        "accuracy": 1.0,
+        "training_duration_seconds": 0.5,
+        "evaluation_duration_seconds": 0.25,
+    }
+
+
+def test_start_experiment_run_tags_failed_run_on_body_error():
+    fake_mlflow = FakeMlflow()
+    config = {
+        "experiment_tracking": {
+            "experiment_name": "customer_churn_baseline",
+            "tracking_uri": "sqlite:///mlflow.db",
+        }
+    }
+
+    try:
+        with start_experiment_run(config, "failing-run", fake_mlflow):
+            raise RuntimeError("simulated training failure")
+    except RuntimeError:
+        pass
+    else:
+        raise AssertionError("Expected RuntimeError from failing run body.")
+
+    assert fake_mlflow.logged_tags["run_outcome"] == "failed"
+    assert fake_mlflow.logged_tags["failure_type"] == "RuntimeError"
+    assert fake_mlflow.logged_tags["failure_message"] == "simulated training failure"
+
+
+def test_start_experiment_run_preserves_body_error_when_failure_tagging_fails():
+    fake_mlflow = FailingTagMlflow()
+    config = {
+        "experiment_tracking": {
+            "experiment_name": "customer_churn_baseline",
+            "tracking_uri": "sqlite:///mlflow.db",
+        }
+    }
+
+    try:
+        with start_experiment_run(config, "failing-run", fake_mlflow):
+            raise RuntimeError("original training failure")
+    except RuntimeError as exc:
+        assert str(exc) == "original training failure"
+    else:
+        raise AssertionError("Expected original RuntimeError from failing run body.")
 
 
 class FakeRunInfo:
@@ -138,6 +201,7 @@ class FakeMlflow:
         self.logged_params = {}
         self.logged_metrics = {}
         self.logged_artifacts = []
+        self.logged_tags = {}
 
     def set_tracking_uri(self, tracking_uri: str) -> None:
         self.tracking_uri = tracking_uri
@@ -158,3 +222,11 @@ class FakeMlflow:
 
     def log_artifact(self, artifact_path: str) -> None:
         self.logged_artifacts.append(artifact_path)
+
+    def set_tag(self, key: str, value: str) -> None:
+        self.logged_tags[key] = value
+
+
+class FailingTagMlflow(FakeMlflow):
+    def set_tag(self, key: str, value: str) -> None:
+        raise RuntimeError("tag write failed")

@@ -14,7 +14,7 @@ from app.dataset_registry import (
     load_dataset_version_metadata,
     resolve_dataset_version_metadata_path,
 )
-from app.evaluate import EvaluationError, evaluate_model
+from app.evaluate import EvaluationError, evaluate_model_with_duration
 from app.experiment_tracking import (
     ExperimentTrackingError,
     get_run_id,
@@ -181,7 +181,11 @@ def main() -> None:
                 x_train,
                 y_train,
             )
-            metrics = evaluate_model(fitted_pipeline, x_test, y_test)
+            metrics, evaluation_duration = evaluate_model_with_duration(
+                fitted_pipeline,
+                x_test,
+                y_test,
+            )
             artifact_paths = build_artifact_paths(config)
             metadata = {
                 "generated_at": run_started_at,
@@ -199,6 +203,7 @@ def main() -> None:
                 "categorical_features": categorical_features,
                 "model_type": model_config["type"],
                 "training_duration_seconds": training_duration,
+                "evaluation_duration_seconds": evaluation_duration,
             }
 
             save_model(fitted_pipeline, artifact_paths["model"])
@@ -292,6 +297,7 @@ def main() -> None:
                     "recall": f"{metrics['recall']:.6f}",
                     "f1": f"{metrics['f1']:.6f}",
                     "confusion_matrix": metrics["confusion_matrix"],
+                    "duration_seconds": f"{evaluation_duration:.6f}",
                 },
             )
         )

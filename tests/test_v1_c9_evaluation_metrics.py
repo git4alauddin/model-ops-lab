@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-from app.evaluate import EvaluationError, evaluate_model
+from app.evaluate import EvaluationError, evaluate_model, evaluate_model_with_duration
 from app.pipeline.preprocessing import (
     build_preprocessing_pipeline,
     identify_feature_types,
@@ -82,6 +82,15 @@ def test_evaluate_model_confusion_matrix_shape():
 
     assert len(metrics["confusion_matrix"]) == 2
     assert len(metrics["confusion_matrix"][0]) == 2
+
+
+def test_evaluate_model_with_duration_returns_metrics_and_duration():
+    fitted_pipeline, x_test, y_test = _train_small_pipeline()
+
+    metrics, duration = evaluate_model_with_duration(fitted_pipeline, x_test, y_test)
+
+    assert "accuracy" in metrics
+    assert duration >= 0
 
 
 def test_evaluate_model_mismatched_lengths():

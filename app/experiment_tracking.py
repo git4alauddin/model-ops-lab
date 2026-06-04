@@ -1,7 +1,9 @@
 """MLflow experiment tracking helpers for V4."""
 
 from contextlib import contextmanager
+from importlib import import_module
 from pathlib import Path
+import sys
 from typing import Any, Iterator
 
 
@@ -11,7 +13,7 @@ class ExperimentTrackingError(ValueError):
 
 DEFAULT_EXPERIMENT_NAME = "modelopslab"
 DEFAULT_TRACKING_URI = "sqlite:///mlflow.db"
-PIPELINE_VERSION = "v4-c1"
+PIPELINE_VERSION = "v4-c2"
 
 
 def build_experiment_tracking_config(config: dict[str, Any]) -> dict[str, str]:
@@ -72,10 +74,27 @@ def start_experiment_run(
     try:
         mlflow.set_tracking_uri(tracking_config["tracking_uri"])
         mlflow.set_experiment(tracking_config["experiment_name"])
-        with mlflow.start_run(run_name=run_name) as run:
-            yield run
+    except Exception as exc:
+        raise ExperimentTrackingError("Failed to configure MLflow tracking.") from exc
+
+    run_context = mlflow.start_run(run_name=run_name)
+    try:
+        run = run_context.__enter__()
     except Exception as exc:
         raise ExperimentTrackingError("Failed to start MLflow run.") from exc
+
+    exc_info = (None, None, None)
+    try:
+        yield run
+    except Exception as exc:
+        exc_info = sys.exc_info()
+        try:
+            _log_failed_run_tags(mlflow, exc)
+        except Exception:
+            pass
+        raise
+    finally:
+        run_context.__exit__(*exc_info)
 
 
 def get_run_id(run: Any) -> str:
@@ -96,7 +115,7 @@ def log_training_outputs(
     """Log training params, metrics, and artifacts to the active MLflow run."""
     mlflow = mlflow_module or _load_mlflow()
     params = build_mlflow_params(config, training_metadata)
-    metric_values = _filter_numeric_metrics(metrics)
+    metric_values = build_mlflow_metrics(metrics, training_metadata)
 
     try:
         mlflow.log_params(params)
@@ -107,9 +126,49 @@ def log_training_outputs(
         raise ExperimentTrackingError("Failed to log MLflow training outputs.") from exc
 
 
+def build_mlflow_metrics(
+    metrics: dict[str, Any],
+    training_metadata: dict[str, Any],
+) -> dict[str, float]:
+    """Build flat MLflow metrics from evaluation metrics and training metadata."""
+    metric_values = _filter_numeric_metrics(metrics)
+    metric_values["training_duration_seconds"] = float(
+        training_metadata["training_duration_seconds"]
+    )
+    metric_values["evaluation_duration_seconds"] = float(
+        training_metadata["evaluation_duration_seconds"]
+    )
+    return metric_values
+
+
+def log_failed_run(
+    error: Exception,
+    mlflow_module: Any | None = None,
+) -> None:
+    """Log failure details to the active MLflow run."""
+    mlflow = mlflow_module or _load_mlflow()
+    try:
+        _log_failed_run_tags(mlflow, error)
+    except Exception as exc:
+        raise ExperimentTrackingError("Failed to log MLflow failure details.") from exc
+
+
+def _log_failed_run_tags(mlflow: Any, error: Exception) -> None:
+    mlflow.set_tag("run_outcome", "failed")
+    mlflow.set_tag("failure_type", error.__class__.__name__)
+    mlflow.set_tag("failure_message", str(error))
+
+
 def _filter_numeric_metrics(metrics: dict[str, Any]) -> dict[str, float]:
     return {
         key: float(value)
         for key, value in metrics.items()
         if isinstance(value, (int, float)) and not isinstance(value, bool)
     }
+
+
+def _load_mlflow() -> Any:
+    try:
+        return import_module("mlflow")
+    except ImportError as exc:
+        raise ExperimentTrackingError("MLflow is not installed.") from exc

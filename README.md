@@ -66,8 +66,10 @@ V4 is in progress. The project is adding experiment tracking and training observ
 - MLflow run creation during training
 - core parameter logging
 - core metric logging
+- training and evaluation duration metric logging
 - artifact logging
 - MLflow run ID persistence in training metadata
+- failed-run tagging for in-run training errors
 - focused tests for experiment tracking helper behavior
 
 ## Setup

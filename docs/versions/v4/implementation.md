@@ -1,7 +1,11 @@
 # V4 Implementation
 
 ## Scope
-Chunk V4-C1: MLflow tracking foundation.
+V4 adds experiment tracking and training observability on top of the V1-V3 pipeline.
+
+Implemented chunks:
+- V4-C1: MLflow tracking foundation.
+- V4-C2: failed-run tracking and evaluation duration.
 
 ## V4-C1 Additions
 - `requirements.txt`
@@ -39,23 +43,54 @@ Chunk V4-C1: MLflow tracking foundation.
 - `docs/versions/v4/`
   - added V4 overview, implementation notes, verification notes, lessons, issues, and commit log
 
-## Current V4-C1 Workflow
+## V4-C2 Additions
+- `app/evaluate.py`
+  - added `evaluate_model_with_duration`
+  - returns normal evaluation metrics plus elapsed evaluation time
+- `app/experiment_tracking.py`
+  - added `build_mlflow_metrics`
+  - logs `training_duration_seconds`
+  - logs `evaluation_duration_seconds`
+  - tags failed in-run errors with `run_outcome=failed`
+  - tags failed in-run errors with `failure_type`
+  - tags failed in-run errors with `failure_message`
+  - preserves the original exception from the training body instead of replacing it with a run-start error
+- `app/train.py`
+  - uses timed evaluation
+  - persists `evaluation_duration_seconds` in training metadata
+  - writes evaluation duration in the `[EVALUATION]` log section
+  - logs evaluation duration to MLflow as a metric
+- `tests/test_v1_c9_evaluation_metrics.py`
+  - validates timed evaluation returns metrics and a duration
+- `tests/test_v4_c1_mlflow_tracking_foundation.py`
+  - validates MLflow duration metric construction
+  - validates failed body errors are tagged on the active run
+
+## Current V4 Workflow
 ```text
 python -m app.train
   -> run validation gate
   -> start MLflow run
   -> train baseline model
-  -> evaluate held-out test set
+  -> evaluate held-out test set with duration timing
   -> persist local artifacts
   -> log MLflow params
-  -> log MLflow metrics
+  -> log MLflow metrics, including training and evaluation duration
   -> log MLflow artifacts
-  -> persist mlflow_run_id in training metadata
+  -> persist mlflow_run_id and evaluation duration in training metadata
+```
+
+If an error happens after the MLflow run starts:
+
+```text
+active MLflow run
+  -> tag run_outcome=failed
+  -> tag failure_type=<exception class>
+  -> tag failure_message=<exception message>
+  -> re-raise the original exception
 ```
 
 ## Remaining V4 Gaps
-- Failed-run tracking is not explicit yet.
-- Evaluation duration is not logged yet.
 - Confusion matrix is not logged as a dedicated MLflow artifact yet.
 - Multiple experiment comparison docs are not added yet.
 - Best-run selection rule is not added yet.
