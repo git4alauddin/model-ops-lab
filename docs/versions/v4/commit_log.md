@@ -2,7 +2,44 @@
 
 This file records meaningful V4 commits and the operational purpose of each change.
 
-## Pending - v4-c5: add best-run selection rule
+## Pending - v4-c6: add multi-model champion selection
+
+### What Changed
+- Added Decision Tree and Random Forest model support.
+- Added configurable experiment candidates in `configs/training.yaml`.
+- Added `app.run_experiments` for multi-model candidate sweeps.
+- Added `app.champion_selection` for deterministic champion selection.
+- Added one shared train/test split with a fresh preprocessing pipeline per candidate.
+- Added candidate-specific artifact directories under `artifacts/experiments/<candidate_name>/`.
+- Added `reports/champion_run.json` as the champion selection report.
+- Added MLflow candidate tags.
+- Added MLflow champion tagging.
+- Added cleanup for older `champion=true` tags before selecting a new champion.
+- Bumped tracked pipeline version to `v4-c6`.
+- Added focused tests for model candidates, champion selection, candidate config parsing, run tagging, and champion tag cleanup.
+- Updated V4 docs, experiment guides, and README.
+
+### What Problem It Solved
+- Makes V4 real experiment management instead of repeated runs of one model family.
+- Produces comparable MLflow candidate runs.
+- Selects and explains a champion run using the documented selection rule.
+- Prevents stale champion tags from making multiple runs look active.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v1_c7_baseline_model_training.py` returned `7 passed in 1.74s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v4_c1_mlflow_tracking_foundation.py` returned `10 passed in 0.46s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v4_c6_champion_selection.py` returned `4 passed in 0.02s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v4_c6_experiment_candidates.py` returned `4 passed in 1.43s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `160 passed in 2.16s`.
+- `.\vir_env\Scripts\python.exe -m app.run_experiments` created three candidate MLflow runs and wrote `reports/champion_run.json`.
+- Latest champion run ID was `39b6d1a8b63b46c58709b06d6e711cb2`.
+- Latest champion model type was `decision_tree`.
+- MLflow query showed exactly `1` active `champion=true` run after champion cleanup.
+- `.\vir_env\Scripts\python.exe -m app.train` still completed successfully and created MLflow run `1f1001937f324071b0533ee05d1d58de`.
+- `.\vir_env\Scripts\python.exe -m app.validate_data` completed with `status=passed` and `issues=0`.
+- `.\vir_env\Scripts\python.exe -m app.check_reproducibility` completed with `status=passed`.
+
+## 7fa5001 - v4-c5: add best-run selection rule
 
 ### What Changed
 - Added `docs/experiments/best_run_selection_rule.md`.

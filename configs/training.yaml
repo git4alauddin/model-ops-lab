@@ -16,6 +16,29 @@ model:
   params:
     max_iter: 200
 
+experiment_candidates:
+  - name: logistic_regression_baseline
+    model:
+      type: logistic_regression
+      params:
+        max_iter: 200
+  - name: decision_tree_baseline
+    model:
+      type: decision_tree
+      params:
+        max_depth: 4
+        random_state: 42
+  - name: random_forest_baseline
+    model:
+      type: random_forest
+      params:
+        n_estimators: 50
+        random_state: 42
+
+champion_selection:
+  report_path: reports/champion_run.json
+  primary_metric: f1
+
 artifacts:
   dir: artifacts
   model_file: model.pkl

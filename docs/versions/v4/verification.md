@@ -11,64 +11,56 @@
 - Verified dedicated confusion matrix artifact is logged to MLflow.
 - Verified failed errors inside an active MLflow run are tagged with failure details.
 - Verified timed evaluation returns normal metrics and a non-negative duration.
-- Verified training creates a real MLflow run.
-- Verified training metadata includes `mlflow_run_id`.
-- Verified training metadata includes `evaluation_duration_seconds`.
-- Verified local `artifacts/confusion_matrix.json` is written.
-- Verified latest MLflow run contains `confusion_matrix.json` in artifact listing.
-- Verified MLflow comparison guide exists under `docs/experiments`.
-- Verified best-run selection rule exists under `docs/experiments`.
-- Verified experiment docs index links to the comparison guide and best-run rule.
-- Verified comparison guide points to the best-run selection rule.
-- Verified validation and reproducibility commands still pass after V4 tracking changes.
+- Verified Decision Tree and Random Forest model construction.
+- Verified experiment candidate config parsing and per-candidate artifact directories.
+- Verified champion selection prefers highest F1 and applies tie-breakers.
+- Verified different dataset checksum candidates are rejected.
+- Verified MLflow run tags can be set on existing runs.
+- Verified previous champion tags are cleared before a new champion is selected.
+- Verified single-model `app.train` still works.
+- Verified multi-model `app.run_experiments` creates candidate runs and a champion report.
+- Verified local `reports/champion_run.json` is written.
+- Verified MLflow shows exactly one active `champion=true` run after the latest candidate sweep.
+- Verified validation and reproducibility commands still pass after V4 changes.
 
 ## Commands Executed
-- `.\vir_env\Scripts\python.exe -m pip install -r requirements.txt`
-- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v1_c10_artifact_persistence.py`
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v1_c7_baseline_model_training.py`
 - `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v4_c1_mlflow_tracking_foundation.py`
-- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v1_c9_evaluation_metrics.py`
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v4_c6_champion_selection.py`
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v4_c6_experiment_candidates.py`
 - `.\vir_env\Scripts\python.exe -m pytest -q`
+- `.\vir_env\Scripts\python.exe -m app.run_experiments`
 - `.\vir_env\Scripts\python.exe -m app.train`
 - `.\vir_env\Scripts\python.exe -m app.validate_data`
 - `.\vir_env\Scripts\python.exe -m app.check_reproducibility`
 - `.\vir_env\Scripts\python.exe -c "import mlflow; ..."`
-- `Get-Content docs\experiments\mlflow_comparison_guide.md`
-- `Get-Content docs\experiments\best_run_selection_rule.md`
-- `Get-Content docs\experiments\README.md`
+- `Get-Content reports\champion_run.json`
 
 ## Expected Output
-- V4 focused tests pass.
-- Existing V1, V2, and V3 tests continue passing.
-- Training completes after validation.
-- MLflow creates a finished run.
-- Training metadata stores the MLflow run ID.
-- Training metadata stores evaluation duration.
-- Local `artifacts/confusion_matrix.json` is created.
-- MLflow run contains parameters, metrics, duration metrics, and the confusion matrix artifact.
-- MLflow comparison guide documents UI comparison workflow and manual checklist.
-- Best-run rule documents eligibility, metric priority, tie-breakers, rejection rules, and decision record format.
-- Failed in-run errors are visible as MLflow tags.
+- Focused V4 and trainer tests pass.
+- Full test suite passes.
+- Single-model training still creates a finished MLflow run.
+- Multi-model experiment command creates one MLflow run per candidate.
+- Candidate runs include `candidate_name` tags.
+- Exactly one latest active run is tagged `champion=true`.
+- Champion report records champion run, eligible runs, metrics, dataset checksum, and selection rule.
+- Validation and reproducibility still pass.
 
 ## Actual Output
-- `.\vir_env\Scripts\python.exe -m pip install -r requirements.txt` installed `mlflow 3.13.0` during V4-C1 setup.
-- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v1_c10_artifact_persistence.py` returned `4 passed in 1.34s`.
-- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v4_c1_mlflow_tracking_foundation.py` returned `8 passed in 0.05s`.
-- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v1_c9_evaluation_metrics.py` returned `6 passed in 1.37s` during V4-C2 verification.
-- `.\vir_env\Scripts\python.exe -m pytest -q` returned `148 passed in 2.05s`.
-- First real V4-C1 training run with `file:./mlruns` failed because MLflow 3 blocks the filesystem tracking backend by default.
-- Switched local tracking to `sqlite:///mlflow.db`.
-- During V4-C2 runtime verification, the first training run exposed a missing `_load_mlflow()` helper.
-- Restored `_load_mlflow()` with a safe `ExperimentTrackingError` for missing MLflow installations.
-- `.\vir_env\Scripts\python.exe -m app.train` completed successfully and created MLflow run `4d269974b64147cda439311170bf8d35`.
-- Generated `artifacts/training_metadata.json` includes `mlflow_run_id` and `evaluation_duration_seconds`.
-- Generated `artifacts/confusion_matrix.json` contains `labels=[0, 1]` and `matrix=[[3, 0], [0, 1]]`.
-- Latest MLflow run query showed `status=FINISHED`, `metrics.accuracy=1.0`, `metrics.f1=1.0`, and `params.pipeline_version=v4-c3`.
-- Latest MLflow artifact listing showed `config_snapshot.json`, `confusion_matrix.json`, `metrics.json`, `model.pkl`, and `training_metadata.json`.
-- `docs/experiments/mlflow_comparison_guide.md` documents MLflow UI comparison steps, params, metrics, artifacts, duration tradeoffs, SQL usage, and a manual comparison checklist.
-- `docs/experiments/best_run_selection_rule.md` documents eligible runs, same-data checks, F1-first ranking, tie-breakers, rejection rules, and decision record format.
-- `docs/experiments/README.md` indexes both experiment guides.
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v1_c7_baseline_model_training.py` returned `7 passed in 1.74s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v4_c1_mlflow_tracking_foundation.py` returned `10 passed in 0.46s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v4_c6_champion_selection.py` returned `4 passed in 0.02s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v4_c6_experiment_candidates.py` returned `4 passed in 1.43s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `160 passed in 2.16s`.
+- `.\vir_env\Scripts\python.exe -m app.run_experiments` completed successfully.
+- Latest candidate run IDs were `94b658840cbc447b85eeb31086d89378`, `39b6d1a8b63b46c58709b06d6e711cb2`, and `fa64772b235f4fc68540e1efc9d65401`.
+- Latest champion run ID was `39b6d1a8b63b46c58709b06d6e711cb2`.
+- Latest champion model type was `decision_tree`.
+- Latest champion report selected the run by F1-first rule with tie-breakers and same dataset checksum.
+- MLflow query showed exactly `1` active `champion=true` run after champion cleanup.
+- `.\vir_env\Scripts\python.exe -m app.train` completed successfully and created MLflow run `1f1001937f324071b0533ee05d1d58de`.
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed with `status=passed` and `issues=0`.
 - `.\vir_env\Scripts\python.exe -m app.check_reproducibility` completed with `status=passed`.
 
 ## Outcome
-V4 experiment tracking and observability scope is complete.
+V4 now supports real multi-model experiment comparison and champion selection, not just manual single-model tracking.

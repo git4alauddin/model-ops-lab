@@ -13,7 +13,7 @@ class ExperimentTrackingError(ValueError):
 
 DEFAULT_EXPERIMENT_NAME = "modelopslab"
 DEFAULT_TRACKING_URI = "sqlite:///mlflow.db"
-PIPELINE_VERSION = "v4-c3"
+PIPELINE_VERSION = "v4-c6"
 
 
 def build_experiment_tracking_config(config: dict[str, Any]) -> dict[str, str]:
@@ -151,6 +151,49 @@ def log_failed_run(
         _log_failed_run_tags(mlflow, error)
     except Exception as exc:
         raise ExperimentTrackingError("Failed to log MLflow failure details.") from exc
+
+
+def set_run_tags(
+    config: dict[str, Any],
+    run_id: str,
+    tags: dict[str, str],
+    mlflow_module: Any | None = None,
+) -> None:
+    """Set tags on an existing MLflow run."""
+    mlflow = mlflow_module or _load_mlflow()
+    tracking_config = build_experiment_tracking_config(config)
+    try:
+        mlflow.set_tracking_uri(tracking_config["tracking_uri"])
+        client = mlflow.MlflowClient()
+        for key, value in tags.items():
+            client.set_tag(run_id, key, value)
+    except Exception as exc:
+        raise ExperimentTrackingError("Failed to set MLflow run tags.") from exc
+
+
+def clear_champion_tags(
+    config: dict[str, Any],
+    mlflow_module: Any | None = None,
+) -> int:
+    """Clear existing champion tags in the configured MLflow experiment."""
+    mlflow = mlflow_module or _load_mlflow()
+    tracking_config = build_experiment_tracking_config(config)
+    try:
+        mlflow.set_tracking_uri(tracking_config["tracking_uri"])
+        runs = mlflow.search_runs(
+            experiment_names=[tracking_config["experiment_name"]],
+        )
+        client = mlflow.MlflowClient()
+        cleared_count = 0
+        if "tags.champion" not in runs.columns:
+            return cleared_count
+        champion_runs = runs[runs["tags.champion"] == "true"]
+        for _, run in champion_runs.iterrows():
+            client.set_tag(str(run["run_id"]), "champion", "false")
+            cleared_count += 1
+        return cleared_count
+    except Exception as exc:
+        raise ExperimentTrackingError("Failed to clear MLflow champion tags.") from exc
 
 
 def _log_failed_run_tags(mlflow: Any, error: Exception) -> None:

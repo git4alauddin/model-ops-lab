@@ -1,7 +1,7 @@
 # V4 Issues Faced
 
 ## Open
-None. V4 experiment tracking and observability scope is complete.
+None. V4 experiment tracking, observability, multi-model comparison, and champion selection scope is complete.
 
 ## Resolved
 
@@ -104,3 +104,43 @@ Run selection now follows a consistent documented policy instead of ad hoc metri
 
 ### Prevention Strategy
 Define model-selection criteria before adding automated selection or registry promotion.
+
+## V4-C6 Single-Model Tracking Was Not Enough
+
+### Symptom
+V4 had MLflow tracking and a selection rule, but only one model family was actually being trained by default.
+
+### Root Cause
+The project tracked repeated Logistic Regression runs instead of a real candidate set.
+
+### Investigation Process
+Reviewed the V4 output and confirmed that experiment tracking was technically correct but did not yet demonstrate realistic model comparison.
+
+### Fix Applied
+Added configurable experiment candidates for Logistic Regression, Decision Tree, and Random Forest. Added `app.run_experiments` to train each candidate as a separate MLflow run and select a champion.
+
+### Why The Fix Worked
+The project now produces multiple comparable MLflow runs and a concrete champion report instead of relying only on manual comparison documentation.
+
+### Prevention Strategy
+Experiment tracking should include real challenger candidates before moving into orchestration or registry work.
+
+## V4-C6 Old Champion Tags Could Remain Active
+
+### Symptom
+After repeated experiment sweeps, older runs could still retain `champion=true`, causing multiple champion runs in MLflow.
+
+### Root Cause
+The first champion-tag implementation marked the selected run but did not clear previous champion tags.
+
+### Investigation Process
+Queried MLflow run tags after repeated `app.run_experiments` executions and saw an older run still tagged as champion.
+
+### Fix Applied
+Added `clear_champion_tags` and called it before tagging the current champion. The runner now tags current batch candidates as `champion=false` before marking the selected run as `champion=true`.
+
+### Why The Fix Worked
+The latest MLflow query showed exactly one active `champion=true` run after cleanup.
+
+### Prevention Strategy
+Stateful tags that represent a current global status must be cleared before assigning a new owner.

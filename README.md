@@ -66,13 +66,15 @@ V4 is complete. The project now has experiment tracking and training observabili
 - MLflow run creation during training
 - core parameter logging
 - core metric logging
+- multi-model experiment candidate runs
 - training and evaluation duration metric logging
 - artifact logging
 - dedicated confusion matrix artifact logging
 - MLflow run ID persistence in training metadata
 - failed-run tagging for in-run training errors
 - manual MLflow run comparison guide
-- manual best-run selection rule
+- champion run selection report
+- MLflow champion tagging
 - focused tests for experiment tracking helper behavior
 
 ## Setup
@@ -97,6 +99,18 @@ The default config uses:
 - target column: `churn`
 - dropped column: `customer_id`
 - model: Logistic Regression
+
+## Run Multi-Model Experiments
+
+```powershell
+python -m app.run_experiments
+```
+
+This trains the configured candidates, creates one MLflow run per candidate, selects a champion, tags the champion run in MLflow, and writes:
+
+```text
+reports/champion_run.json
+```
 
 ## Run Tests
 
@@ -142,6 +156,7 @@ Generated runtime files are intentionally ignored by git:
 - `artifacts/training_metadata.json`
 - `reports/validation_report.json`
 - `reports/validation_summary.txt`
+- `reports/champion_run.json`
 - `logs/modelopslab.log`
 - `mlflow.db`
 - `mlruns/`

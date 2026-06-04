@@ -1,8 +1,10 @@
 """Tests for V1 baseline model training."""
 
 import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
+from sklearn.tree import DecisionTreeClassifier
 
 from app.pipeline.preprocessing import (
     build_preprocessing_pipeline,
@@ -28,9 +30,35 @@ def test_build_model_logistic_regression():
     assert model.max_iter == 200
 
 
+def test_build_model_decision_tree():
+    model = build_model(
+        {
+            "type": "decision_tree",
+            "params": {"max_depth": 4, "random_state": 42},
+        }
+    )
+
+    assert isinstance(model, DecisionTreeClassifier)
+    assert model.max_depth == 4
+    assert model.random_state == 42
+
+
+def test_build_model_random_forest():
+    model = build_model(
+        {
+            "type": "random_forest",
+            "params": {"n_estimators": 10, "random_state": 42},
+        }
+    )
+
+    assert isinstance(model, RandomForestClassifier)
+    assert model.n_estimators == 10
+    assert model.random_state == 42
+
+
 def test_build_model_unsupported_type():
     try:
-        build_model({"type": "random_forest", "params": {}})
+        build_model({"type": "svm", "params": {}})
     except TrainingError as exc:
         assert "Unsupported model type" in str(exc)
     else:

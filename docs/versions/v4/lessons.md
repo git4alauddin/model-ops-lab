@@ -6,7 +6,10 @@
 - Runtime duration values are useful MLflow metrics because they support comparison beyond model quality.
 - Failed-run details should be logged as tags because failure metadata describes the run, not model performance.
 - A context manager that wraps training must preserve the original body exception; otherwise debugging points at the tracking layer instead of the real failure.
-- Fake MLflow tests validate tracking calls quickly, but real `python -m app.train` verification is still needed to cover dependency loading and backend behavior.
+- Fake MLflow tests validate tracking calls quickly, but real runtime commands are still needed to cover dependency loading and backend behavior.
 - Important evaluation outputs should be logged as dedicated artifacts when they are useful to inspect directly in the MLflow UI.
 - Run comparison should check params, metrics, artifacts, and dataset checksum together; metrics alone can hide setup differences.
 - Best-run selection needs eligibility checks and tie-breakers; choosing by one metric without context is not rigorous enough.
+- Experiment tracking becomes much more meaningful when there are real challenger models, not only repeated runs of one baseline.
+- Champion tags are stateful; old champion tags must be cleared before assigning a new champion.
+- Candidate models should share the same split for fair comparison, but each candidate needs a fresh preprocessing pipeline to avoid fitted-state leakage.

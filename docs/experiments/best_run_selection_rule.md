@@ -15,7 +15,17 @@ model quality third
 runtime and simplicity last
 ```
 
-This is currently a manual rule. It can become automated later.
+This rule is implemented by the multi-model experiment runner:
+
+```powershell
+python -m app.run_experiments
+```
+
+The runner applies this rule to the configured candidates and writes:
+
+```text
+reports/champion_run.json
+```
 
 ## Eligible Runs
 
@@ -144,7 +154,7 @@ metrics look inconsistent with confusion matrix
 
 ## Manual Selection Checklist
 
-Use this checklist in MLflow UI:
+Use this checklist when reviewing the automated result in MLflow UI:
 
 ```text
 1. Open customer_churn_baseline experiment.
@@ -177,7 +187,7 @@ reason:
 rejected_alternatives:
 ```
 
-This can later become a formal experiment report or model registry entry.
+The current automated report is written to `reports/champion_run.json`. Later V6 can use the selected champion as the input to model registry registration or promotion.
 
 ## Current Project Context
 

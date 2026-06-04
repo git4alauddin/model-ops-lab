@@ -3,8 +3,10 @@
 from time import perf_counter
 
 from sklearn.exceptions import NotFittedError
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
+from sklearn.tree import DecisionTreeClassifier
 
 
 class TrainingError(ValueError):
@@ -16,13 +18,19 @@ def build_model(model_config: dict):
     model_type = model_config.get("type")
     model_params = model_config.get("params", {})
 
-    if model_type != "logistic_regression":
+    model_classes = {
+        "logistic_regression": LogisticRegression,
+        "decision_tree": DecisionTreeClassifier,
+        "random_forest": RandomForestClassifier,
+    }
+    model_class = model_classes.get(model_type)
+    if model_class is None:
         raise TrainingError(f"Unsupported model type: {model_type}")
 
     try:
-        return LogisticRegression(**model_params)
+        return model_class(**model_params)
     except TypeError as exc:
-        raise TrainingError("Invalid logistic_regression parameters.") from exc
+        raise TrainingError(f"Invalid {model_type} parameters.") from exc
 
 
 def build_training_pipeline(preprocessing_pipeline, model) -> Pipeline:

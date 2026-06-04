@@ -2,13 +2,17 @@
 
 from contextlib import contextmanager
 
+import pandas as pd
+
 from app.experiment_tracking import (
     build_experiment_tracking_config,
     build_mlflow_metrics,
     build_mlflow_params,
+    clear_champion_tags,
     ExperimentTrackingError,
     get_run_id,
     log_training_outputs,
+    set_run_tags,
     start_experiment_run,
 )
 
@@ -46,7 +50,7 @@ def test_build_mlflow_params_includes_dataset_version_context():
 
     params = build_mlflow_params(config, metadata)
 
-    assert params["pipeline_version"] == "v4-c3"
+    assert params["pipeline_version"] == "v4-c6"
     assert params["model_type"] == "logistic_regression"
     assert params["test_size"] == 0.2
     assert params["random_state"] == 42
@@ -187,6 +191,50 @@ def test_start_experiment_run_preserves_body_error_when_failure_tagging_fails():
         raise AssertionError("Expected original RuntimeError from failing run body.")
 
 
+def test_set_run_tags_updates_existing_run():
+    fake_mlflow = FakeMlflow()
+    config = {
+        "experiment_tracking": {
+            "experiment_name": "customer_churn_baseline",
+            "tracking_uri": "sqlite:///mlflow.db",
+        }
+    }
+
+    set_run_tags(
+        config,
+        "run-123",
+        {"champion": "true", "champion_reason": "highest_f1"},
+        fake_mlflow,
+    )
+
+    assert fake_mlflow.tracking_uri == "sqlite:///mlflow.db"
+    assert fake_mlflow.client.logged_tags == [
+        ("run-123", "champion", "true"),
+        ("run-123", "champion_reason", "highest_f1"),
+    ]
+
+
+def test_clear_champion_tags_marks_existing_champions_false():
+    fake_mlflow = FakeMlflow()
+    fake_mlflow.search_runs_result = pd.DataFrame(
+        [
+            {"run_id": "run-old", "tags.champion": "true"},
+            {"run_id": "run-other", "tags.champion": "false"},
+        ]
+    )
+    config = {
+        "experiment_tracking": {
+            "experiment_name": "customer_churn_baseline",
+            "tracking_uri": "sqlite:///mlflow.db",
+        }
+    }
+
+    cleared_count = clear_champion_tags(config, fake_mlflow)
+
+    assert cleared_count == 1
+    assert fake_mlflow.client.logged_tags == [("run-old", "champion", "false")]
+
+
 class FakeRunInfo:
     run_id = "run-123"
 
@@ -204,6 +252,8 @@ class FakeMlflow:
         self.logged_metrics = {}
         self.logged_artifacts = []
         self.logged_tags = {}
+        self.client = FakeMlflowClient()
+        self.search_runs_result = pd.DataFrame()
 
     def set_tracking_uri(self, tracking_uri: str) -> None:
         self.tracking_uri = tracking_uri
@@ -228,7 +278,22 @@ class FakeMlflow:
     def set_tag(self, key: str, value: str) -> None:
         self.logged_tags[key] = value
 
+    def MlflowClient(self):
+        return self.client
+
+    def search_runs(self, experiment_names: list[str]):
+        self.searched_experiment_names = experiment_names
+        return self.search_runs_result
+
 
 class FailingTagMlflow(FakeMlflow):
     def set_tag(self, key: str, value: str) -> None:
         raise RuntimeError("tag write failed")
+
+
+class FakeMlflowClient:
+    def __init__(self) -> None:
+        self.logged_tags = []
+
+    def set_tag(self, run_id: str, key: str, value: str) -> None:
+        self.logged_tags.append((run_id, key, value))

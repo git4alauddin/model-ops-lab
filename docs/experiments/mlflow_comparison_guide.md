@@ -14,7 +14,7 @@ Which artifacts explain the result?
 Was a slower run actually worth it?
 ```
 
-MLflow does not decide the best model automatically for us yet. For now, this guide describes manual comparison.
+MLflow does not decide the best model automatically by itself. In this project, `app.run_experiments` applies our selection rule and writes a champion report after running configured candidates.
 
 For the formal manual selection rule, see:
 
@@ -50,6 +50,12 @@ Each row is one training run created by:
 
 ```powershell
 python -m app.train
+```
+
+For multi-model candidate runs, use:
+
+```powershell
+python -m app.run_experiments
 ```
 
 ## Compare Multiple Runs
@@ -221,6 +227,14 @@ different dataset versions
 different preprocessing choices
 ```
 
+Current configured model candidates:
+
+```text
+logistic_regression_baseline
+decision_tree_baseline
+random_forest_baseline
+```
+
 ## Mental Model
 
 Use this mental model when comparing runs:
@@ -235,4 +249,8 @@ Dataset version/checksum tells whether the data was the same.
 
 A good comparison always checks setup, result, and artifacts together.
 
-After comparing runs, apply `best_run_selection_rule.md` before calling one run the best run.
+After comparing runs, apply `best_run_selection_rule.md` before calling one run the best run. The automated candidate sweep writes the latest applied decision to:
+
+```text
+reports/champion_run.json
+```
