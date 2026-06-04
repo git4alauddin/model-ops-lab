@@ -12,6 +12,9 @@
 - Verified V5-C4 validation ownership behavior.
 - Verified expected failure-path tests no longer pollute `logs/modelopslab.log`.
 - Verified V5 training pipeline flow diagram exists and is linked from README.
+- Verified Prefect is installed in the project environment.
+- Verified the local Prefect wrapper delegates to the training pipeline.
+- Verified the local Prefect command completes successfully.
 
 ## Commands Executed
 - `Get-ChildItem docs\versions\v5`
@@ -27,6 +30,9 @@
 - `Select-String -Path logs\modelopslab.log -Pattern "ERROR|Traceback|pipeline_test_"`
 - `Get-Content docs\diagrams\v5_training_pipeline_flow.md`
 - `Select-String -Path README.md -Pattern "v5_training_pipeline_flow"`
+- `.\vir_env\Scripts\python.exe -c "import prefect; print(prefect.__version__)"`
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v5_c6_prefect_orchestration.py`
+- `.\vir_env\Scripts\python.exe -m app.run_prefect_pipeline`
 - `git diff --check`
 
 ## Expected Output
@@ -42,6 +48,8 @@
 - The V5 pipeline validates once and skips duplicate experiment-level validation.
 - The project runtime log stays free of expected test failure traces.
 - The V5 diagram documents the current plain Python pipeline flow.
+- Prefect is importable.
+- The local Prefect flow can run without adding a scheduled deployment.
 
 ## Actual Output
 - `Get-ChildItem docs\versions\v5` showed overview, implementation, verification, issues, lessons, and commit log files.
@@ -63,7 +71,12 @@
 - `Select-String -Path logs\modelopslab.log -Pattern "ERROR|Traceback|pipeline_test_"` returned no matches after the clean pipeline run.
 - `Get-Content docs\diagrams\v5_training_pipeline_flow.md` confirmed the V5 diagram exists.
 - `Select-String -Path README.md -Pattern "v5_training_pipeline_flow"` confirmed README links the diagram.
+- `.\vir_env\Scripts\python.exe -c "import prefect; print(prefect.__version__)"` returned `3.7.3`.
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v5_c2_pipeline_run_metadata.py tests\test_v5_c3_training_pipeline_entrypoint.py tests\test_v5_c4_pipeline_validation_ownership.py tests\test_v5_c6_prefect_orchestration.py` returned `21 passed in 3.88s`.
+- `.\vir_env\Scripts\python.exe -m app.run_prefect_pipeline` completed successfully and created pipeline run `pipeline_20260604T183142304402Z_84df64f1`.
+- Generated V5-C6 pipeline metadata had `pipeline_version=v5-c6`, `status=passed`, `stage_statuses.validation=passed`, `stage_statuses.experiments=passed`, `mlflow_run_ids=3`, and `champion_run_id=9e2615eea1f9449db118b4e5dc4efbe0`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `181 passed in 4.95s`.
 - `git diff --check` passed with only normal Windows CRLF warnings.
 
 ## Outcome
-V5-C1 establishes orchestration planning and documentation foundations. V5-C2 adds the pipeline run metadata contract and persistence helper. V5-C3 adds the first executable plain Python pipeline command. V5-C4 removes duplicate validation from the pipeline path while keeping standalone experiment validation intact.
+V5-C1 establishes orchestration planning and documentation foundations. V5-C2 adds the pipeline run metadata contract and persistence helper. V5-C3 adds the first executable plain Python pipeline command. V5-C4 removes duplicate validation from the pipeline path while keeping standalone experiment validation intact. V5-C5 adds the training pipeline flow diagram. V5-C6 adds the local Prefect orchestration wrapper.

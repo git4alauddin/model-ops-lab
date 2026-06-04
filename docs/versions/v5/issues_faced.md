@@ -1,9 +1,8 @@
 # V5 Issues Faced
 
 ## Open
-- Prefect dependency is not added yet.
 - Stage task modules are not added yet.
-- Prefect orchestration is not added yet.
+- Prefect scheduling and deployment configuration are not added yet.
 
 ## Resolved
 
@@ -100,3 +99,20 @@ Expected failure traces remain inside pytest temporary paths instead of the proj
 
 ### Prevention Strategy
 Failure-path tests should use temporary runtime output locations unless the test is explicitly verifying production log output.
+
+## V5-C6 Prefect Wrapper Should Not Replace Pipeline Logic
+
+### Symptom
+Prefect needed to be introduced without moving validation, experiment execution, champion selection, and metadata persistence into a new untested structure.
+
+### Root Cause
+The plain Python pipeline was already proven. Rebuilding the same behavior directly inside Prefect would create duplicate orchestration logic.
+
+### Fix Applied
+Added a local Prefect flow and task that delegate to `run_training_pipeline`.
+
+### Why The Fix Worked
+Prefect now orchestrates the existing pipeline while the core behavior remains testable and runnable without Prefect.
+
+### Prevention Strategy
+Keep orchestration tools as wrappers around stable application behavior until there is a clear need to split individual tasks.

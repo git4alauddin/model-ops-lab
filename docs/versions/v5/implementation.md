@@ -110,6 +110,28 @@ Implemented chunks:
 - `docs/versions/v5/commit_log.md`
   - finalizes the V5-C4 commit hash as `b166db6`
 
+## V5-C6 Additions
+- `requirements.txt`
+  - adds `prefect>=3.0.0`
+- `app/orchestration/prefect_pipeline.py`
+  - adds `training_pipeline_flow`
+  - adds `run_training_pipeline_task`
+  - wraps the existing plain Python pipeline in local Prefect orchestration
+- `app/run_prefect_pipeline.py`
+  - adds `python -m app.run_prefect_pipeline`
+  - runs the local Prefect flow
+  - preserves `python -m app.run_training_pipeline`
+- `app/pipeline_run_metadata.py`
+  - bumps pipeline metadata version to `v5-c6`
+- `tests/test_v5_c6_prefect_orchestration.py`
+  - covers task delegation to the plain pipeline
+  - covers flow delegation to the task
+  - covers command wrapper success and failure behavior
+- `docs/diagrams/v5_training_pipeline_flow.md`
+  - updates the diagram to show the local Prefect wrapper
+- `docs/versions/v5/commit_log.md`
+  - finalizes the V5-C5 commit hash as `1f12a25`
+
 ## Orchestration Boundary
 V5 should not rewrite the working V1-V4 behavior in one step.
 
@@ -119,6 +141,7 @@ Current stable commands remain:
 python -m app.train
 python -m app.run_experiments
 python -m app.run_training_pipeline
+python -m app.run_prefect_pipeline
 ```
 
 V5 orchestration will wrap or extract stage behavior carefully instead of duplicating everything blindly.
@@ -130,13 +153,15 @@ Future V5 chunks should introduce:
 app/tasks/validation_task.py
 app/tasks/training_task.py
 app/tasks/experiment_task.py
-app/orchestration/prefect_config.py
+Prefect deployment configuration
 ```
 
 Expected pipeline flow:
 
 ```text
 training pipeline
+  -> Prefect flow
+  -> Prefect task
   -> validation task
   -> experiment task
   -> champion report read
@@ -175,10 +200,10 @@ The first orchestration implementation should preserve these facts:
 app.train = one configured model
 app.run_experiments = configured candidate sweep + champion selection
 app.run_training_pipeline = controlled workflow wrapper around proven behavior
+app.run_prefect_pipeline = local Prefect wrapper around app.run_training_pipeline
 ```
 
 ## Remaining V5 Gaps
-- Prefect dependency is not added yet.
 - Stage task modules are not added yet.
 - Retry behavior is not implemented yet.
-- Pipeline diagram is not added yet.
+- Prefect scheduling and deployment configuration are not implemented yet.

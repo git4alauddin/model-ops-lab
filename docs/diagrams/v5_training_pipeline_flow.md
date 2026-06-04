@@ -1,14 +1,17 @@
 # V5 Training Pipeline Flow
 
-This diagram shows the current V5 plain Python training pipeline.
+This diagram shows the current V5 training pipeline.
 
-It is intentionally limited to the implemented V5 behavior: pipeline metadata, single validation ownership, reusable experiment workflow, MLflow candidate runs, champion selection, and failure-stage recording.
+It is intentionally limited to the implemented V5 behavior: local Prefect orchestration, pipeline metadata, single validation ownership, reusable experiment workflow, MLflow candidate runs, champion selection, and failure-stage recording.
 
 ```mermaid
 flowchart TD
+    prefect_cmd["python -m app.run_prefect_pipeline"]
+    prefect_flow["Prefect flow<br/>modelopslab-training-pipeline"]
+    prefect_task["Prefect task<br/>run-training-pipeline"]
     pipeline_cmd["python -m app.run_training_pipeline"]
     config["configs/training.yaml"]
-    metadata_start["Initialize pipeline metadata<br/>pipeline_version=v5-c4<br/>status=running"]
+    metadata_start["Initialize pipeline metadata<br/>pipeline_version=v5-c6<br/>status=running"]
     validation["Validation stage<br/>validate_dataset_readiness"]
     validation_gate{"Validation passed?"}
     validation_failed["Mark validation failed<br/>failed_stage=validation"]
@@ -32,6 +35,10 @@ flowchart TD
     pipeline_output["pipeline_runs/<pipeline_run_id>.json"]
 
     experiment_failed{"Experiment stage failed?"}
+
+    prefect_cmd --> prefect_flow
+    prefect_flow --> prefect_task
+    prefect_task --> pipeline_cmd
 
     pipeline_cmd --> config
     pipeline_cmd --> metadata_start
@@ -76,12 +83,14 @@ flowchart TD
 
 V5 introduces a pipeline-level view of training.
 
-The pipeline command owns validation once, then calls the reusable experiment workflow with validation disabled for that inner workflow. Candidate models still create MLflow runs, the champion selection logic still writes `reports/champion_run.json`, and the pipeline writes a separate run record under `pipeline_runs/`.
+The Prefect command wraps the existing plain Python pipeline in a local Prefect flow and task. The pipeline command owns validation once, then calls the reusable experiment workflow with validation disabled for that inner workflow. Candidate models still create MLflow runs, the champion selection logic still writes `reports/champion_run.json`, and the pipeline writes a separate run record under `pipeline_runs/`.
 
 Pipeline metadata is not model metadata and it is not MLflow metadata. It records workflow-level state: stage status, failed stage, dataset version, MLflow run IDs, and champion run ID.
 
 ## Current Boundary
 
-Prefect is not active yet.
+Prefect is active as a local wrapper.
 
-The current V5 pipeline is a plain Python orchestration layer. Prefect can later wrap this proven flow instead of becoming the first place where pipeline logic is assembled.
+Scheduled Prefect deployments are not active yet.
+
+The current V5 pipeline can still run without Prefect through `python -m app.run_training_pipeline`. The Prefect command adds local flow/task orchestration around that proven behavior.

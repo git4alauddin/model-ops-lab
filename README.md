@@ -87,6 +87,7 @@ V5 is in progress. The project is adding training pipeline automation and orches
 - pipeline run metadata contract and JSON persistence helper
 - plain Python training pipeline command
 - single validation ownership in the V5 pipeline command
+- local Prefect orchestration wrapper
 - explicit guardrail that V5 should wrap stable V1-V4 behavior before replacing it
 
 ## Setup
@@ -123,6 +124,14 @@ This is the V5 plain Python orchestration command. It runs validation once, exec
 ```text
 pipeline_runs/
 ```
+
+## Run Prefect Training Pipeline
+
+```powershell
+python -m app.run_prefect_pipeline
+```
+
+This runs the same V5 training pipeline through a local Prefect flow. It is local orchestration only; scheduled deployments are not added yet.
 
 ## Run Multi-Model Experiments
 
@@ -197,6 +206,7 @@ modelOpsLab/
   app/
     train.py
     run_training_pipeline.py
+    run_prefect_pipeline.py
     run_experiments.py
     validate_data.py
     check_reproducibility.py
@@ -210,6 +220,8 @@ modelOpsLab/
     pipeline/
       preprocessing.py
       trainer.py
+    orchestration/
+      prefect_pipeline.py
     utils/
       artifacts.py
       logger.py

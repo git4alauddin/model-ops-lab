@@ -2,7 +2,34 @@
 
 This file records meaningful V5 commits and the operational purpose of each change.
 
-## Pending - v5-c5: add training pipeline flow diagram
+## Pending - v5-c6: add Prefect orchestration wrapper
+
+### What Changed
+- Added `prefect>=3.0.0` to `requirements.txt`.
+- Added `app/orchestration/prefect_pipeline.py`.
+- Added local Prefect flow `modelopslab-training-pipeline`.
+- Added local Prefect task `run-training-pipeline`.
+- Added `python -m app.run_prefect_pipeline`.
+- Bumped pipeline metadata version to `v5-c6`.
+- Updated V5 training pipeline diagram to include the local Prefect wrapper.
+- Added focused Prefect orchestration tests.
+- Updated README and V5 docs.
+- Finalized the V5-C5 commit hash as `1f12a25`.
+
+### What Problem It Solved
+- Moves Prefect from an ADR decision into an executable local orchestration wrapper.
+- Preserves the proven plain Python pipeline command.
+- Avoids introducing scheduling or deployment complexity before the local flow is stable.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -c "import prefect; print(prefect.__version__)"` returned `3.7.3`.
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v5_c2_pipeline_run_metadata.py tests\test_v5_c3_training_pipeline_entrypoint.py tests\test_v5_c4_pipeline_validation_ownership.py tests\test_v5_c6_prefect_orchestration.py` returned `21 passed in 3.88s`.
+- `.\vir_env\Scripts\python.exe -m app.run_prefect_pipeline` completed successfully and created pipeline run `pipeline_20260604T183142304402Z_84df64f1`.
+- Generated V5-C6 pipeline metadata had `pipeline_version=v5-c6`, `status=passed`, `stage_statuses.validation=passed`, `stage_statuses.experiments=passed`, `mlflow_run_ids=3`, and `champion_run_id=9e2615eea1f9449db118b4e5dc4efbe0`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `181 passed in 4.95s`.
+- `git diff --check` passed with only normal Windows CRLF warnings.
+
+## 1f12a25 - v5-c5: add training pipeline flow diagram
 
 ### What Changed
 - Added `docs/diagrams/v5_training_pipeline_flow.md`.

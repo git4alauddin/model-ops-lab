@@ -11,3 +11,5 @@
 - Returning structured reports from reusable workflow functions is cleaner than forcing callers to re-read runtime files.
 - Failure-path tests should not write expected exceptions to the main project runtime log unless log behavior is the target of the test.
 - Version diagrams should show current implemented behavior only; future tools like Prefect belong in later diagrams after they exist.
+- Prefect should wrap proven pipeline behavior first; task-level decomposition can come after the wrapper is stable.
+- Local Prefect runs may start a temporary server for orchestration without requiring a scheduled deployment.
