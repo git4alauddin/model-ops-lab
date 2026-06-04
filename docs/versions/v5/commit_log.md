@@ -2,7 +2,34 @@
 
 This file records meaningful V5 commits and the operational purpose of each change.
 
-## Pending - v5-c8: expose Prefect failure context
+## Pending - v5-c9: extract pipeline stage helpers
+
+### What Changed
+- Added `app/tasks/validation_task.py`.
+- Added `app/tasks/experiment_task.py`.
+- Added `app/tasks/__init__.py`.
+- Delegated validation execution from `run_training_pipeline()` to `run_validation_stage()`.
+- Delegated experiment execution from `run_training_pipeline()` to `run_experiment_stage()`.
+- Kept pipeline metadata and stage status ownership inside `run_training_pipeline()`.
+- Bumped pipeline metadata version to `v5-c9`.
+- Added focused stage helper tests.
+- Updated README, V5 diagram, and V5 docs.
+- Finalized the V5-C8 commit hash as `61eeb5a`.
+
+### What Problem It Solved
+- Creates clearer pipeline stage boundaries.
+- Prepares future Prefect task decomposition without changing runtime behavior.
+- Keeps the existing plain Python and Prefect pipeline commands stable.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v5_c3_training_pipeline_entrypoint.py tests\test_v5_c4_pipeline_validation_ownership.py tests\test_v5_c6_prefect_orchestration.py tests\test_v5_c7_prefect_retry_policy.py tests\test_v5_c8_prefect_failure_visibility.py tests\test_v5_c9_pipeline_stage_tasks.py` returned `23 passed in 3.52s`.
+- `.\vir_env\Scripts\python.exe -m app.run_prefect_pipeline` completed successfully and created pipeline run `pipeline_20260604T192411531526Z_764769dc`.
+- Generated V5-C9 pipeline metadata had `pipeline_version=v5-c9`, `status=passed`, `stage_statuses.validation=passed`, `stage_statuses.experiments=passed`, `mlflow_run_ids=3`, and `champion_run_id=bb579b6839af402980d57e91580346b3`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `191 passed in 4.39s`.
+- `Select-String -Path logs\modelopslab.log -Pattern "ERROR|Traceback|pipeline_test_"` returned no matches after the V5-C9 verification run.
+- `git diff --check` passed with only normal Windows CRLF warnings.
+
+## 61eeb5a - v5-c8: expose Prefect failure context
 
 ### What Changed
 - Attached failed pipeline metadata to `TrainingPipelineError`.

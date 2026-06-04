@@ -90,6 +90,7 @@ V5 is in progress. The project is adding training pipeline automation and orches
 - local Prefect orchestration wrapper
 - Prefect task retry policy for transient pipeline task failures
 - Prefect failure context that exposes failed pipeline run ID and stage
+- extracted validation and experiment stage helpers
 - explicit guardrail that V5 should wrap stable V1-V4 behavior before replacing it
 
 ## Setup
@@ -226,6 +227,9 @@ modelOpsLab/
       trainer.py
     orchestration/
       prefect_pipeline.py
+    tasks/
+      validation_task.py
+      experiment_task.py
     utils/
       artifacts.py
       logger.py

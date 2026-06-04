@@ -17,6 +17,7 @@ Implemented chunks:
 - V5-C6: local Prefect orchestration wrapper.
 - V5-C7: Prefect task retry policy.
 - V5-C8: Prefect failure context visibility.
+- V5-C9: pipeline stage task helpers.
 
 ## Components Introduced
 - V5 documentation scaffold
@@ -34,6 +35,7 @@ Implemented chunks:
 - Prefect pipeline command
 - Prefect retry policy for the pipeline task
 - failure context propagation from pipeline metadata into Prefect command errors
+- validation and experiment stage helper modules
 
 ## Workflow To Introduce
 V5 will move toward this workflow:
@@ -63,6 +65,6 @@ pipeline command
 - create a foundation for future retraining automation
 
 ## Current V5 Outcome
-V5 has the architecture direction, output structure, metadata contract, plain Python pipeline command, local Prefect wrapper, Prefect task retry policy, and Prefect failure context visibility. The pipeline owns validation once and then runs experiments without duplicate validation. Prefect scheduling and deployments are intentionally not added yet.
+V5 has the architecture direction, output structure, metadata contract, plain Python pipeline command, local Prefect wrapper, Prefect task retry policy, Prefect failure context visibility, and extracted validation/experiment stage helpers. The pipeline owns validation once and then runs experiments without duplicate validation. Prefect scheduling and deployments are intentionally not added yet.
 
 For the V5 training pipeline diagram, see `docs/diagrams/v5_training_pipeline_flow.md`.

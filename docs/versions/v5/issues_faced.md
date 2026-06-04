@@ -1,7 +1,6 @@
 # V5 Issues Faced
 
 ## Open
-- Stage task modules are not added yet.
 - Prefect scheduling and deployment configuration are not added yet.
 
 ## Resolved
@@ -150,3 +149,20 @@ The pipeline metadata file remains the source of truth, while the command-level 
 
 ### Prevention Strategy
 When wrapping lower-level workflow errors, preserve structured failure context instead of replacing it with only a generic message.
+
+## V5-C9 Stage Boundaries Needed Without Behavior Change
+
+### Symptom
+The training pipeline worked, but validation and experiment execution were still embedded directly inside `run_training_pipeline()`.
+
+### Root Cause
+Earlier V5 chunks intentionally prioritized a stable plain pipeline and Prefect wrapper before extracting stage-level boundaries.
+
+### Fix Applied
+Added small validation and experiment stage helper modules, then made `run_training_pipeline()` delegate execution to those helpers while keeping metadata ownership in the pipeline command.
+
+### Why The Fix Worked
+The pipeline behavior stays the same, but the stage responsibilities are now easier to test and easier to map to future Prefect task decomposition.
+
+### Prevention Strategy
+Extract orchestration boundaries incrementally after behavior is proven, not while the base pipeline is still unstable.

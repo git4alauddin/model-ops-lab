@@ -13,7 +13,15 @@ from app.pipeline_run_metadata import (
     update_stage_status,
 )
 from app.run_experiments import run_experiment_workflow
-from app.train import enforce_validation_gate, resolve_validation_schema_path
+from app.tasks.experiment_task import (
+    ExperimentStageError,
+    extract_champion_run_id,
+    extract_mlflow_run_ids,
+    run_experiment_stage,
+    validate_champion_report as validate_task_champion_report,
+)
+from app.tasks.validation_task import run_validation_stage
+from app.train import resolve_validation_schema_path
 from app.utils.logger import build_log_path, get_logger
 from app.validate_data import DEFAULT_CONFIG_PATH, validate_dataset_readiness
 from app.validation.reports import ValidationReport
@@ -36,6 +44,14 @@ class TrainingPipelineError(ValueError):
         self.metadata = metadata
         self.pipeline_run_id = _metadata_value(metadata, "pipeline_run_id")
         self.failed_stage = _metadata_value(metadata, "failed_stage")
+
+
+def validate_champion_report(champion_report: dict[str, Any]) -> dict[str, Any]:
+    """Validate and return a champion report for existing pipeline callers."""
+    try:
+        return validate_task_champion_report(champion_report)
+    except ExperimentStageError as exc:
+        raise TrainingPipelineError(str(exc)) from exc
 
 
 def run_training_pipeline(
@@ -70,21 +86,21 @@ def run_training_pipeline(
         current_stage = VALIDATION_STAGE
         metadata = update_stage_status(metadata, current_stage, "running")
         save_pipeline_run_metadata(metadata, output_dir)
-        validation_report = validation_runner(
-            resolved_config_path,
-            validation_schema_path,
+        validation_report = run_validation_stage(
+            config_path=resolved_config_path,
+            schema_path=validation_schema_path,
+            validation_runner=validation_runner,
         )
         metadata["dataset_version"] = validation_report.dataset_version
-        enforce_validation_gate(validation_report)
         metadata = update_stage_status(metadata, current_stage, "passed")
         save_pipeline_run_metadata(metadata, output_dir)
 
         current_stage = EXPERIMENTS_STAGE
         metadata = update_stage_status(metadata, current_stage, "running")
         save_pipeline_run_metadata(metadata, output_dir)
-        champion_report = _run_experiments(
-            experiment_runner,
-            resolved_config_path,
+        champion_report = run_experiment_stage(
+            config_path=resolved_config_path,
+            experiment_runner=experiment_runner,
         )
         metadata = update_stage_status(metadata, current_stage, "passed")
         metadata = complete_pipeline_run(
@@ -115,22 +131,6 @@ def run_training_pipeline(
         ) from exc
 
 
-def extract_champion_run_id(champion_report: dict[str, Any]) -> str:
-    """Return the champion MLflow run ID from a champion report."""
-    champion = champion_report["champion"]
-    return str(champion["run_id"])
-
-
-def extract_mlflow_run_ids(champion_report: dict[str, Any]) -> list[str]:
-    """Return unique MLflow run IDs from eligible runs and the champion."""
-    run_ids = []
-    for run in champion_report.get("eligible_runs", []):
-        if isinstance(run, dict) and isinstance(run.get("run_id"), str):
-            run_ids.append(run["run_id"])
-    run_ids.append(extract_champion_run_id(champion_report))
-    return list(dict.fromkeys(run_ids))
-
-
 def main() -> None:
     """Run the V5 plain Python training pipeline from the command line."""
     try:
@@ -139,43 +139,6 @@ def main() -> None:
         logger = get_logger(LOGGER_NAME)
         logger.error("Training pipeline command failed: %s", exc)
         raise SystemExit(1) from exc
-
-
-def _run_experiments(
-    experiment_runner: Callable[..., dict[str, Any]],
-    config_path: Path,
-) -> dict[str, Any]:
-    try:
-        champion_report = experiment_runner(
-            config_path,
-            validate_before_run=False,
-        )
-    except SystemExit as exc:
-        if exc.code in (None, 0):
-            raise TrainingPipelineError(
-                "Experiment runner exited without a champion report."
-            ) from exc
-        raise TrainingPipelineError(
-            f"Experiment runner exited with code {exc.code}."
-        ) from exc
-    return validate_champion_report(champion_report)
-
-
-def validate_champion_report(champion_report: dict[str, Any]) -> dict[str, Any]:
-    """Validate and return a champion report dictionary."""
-    if not isinstance(champion_report, dict):
-        raise TrainingPipelineError("Experiment runner must return a champion report.")
-
-    champion = champion_report.get("champion")
-    if not isinstance(champion, dict) or not isinstance(champion.get("run_id"), str):
-        raise TrainingPipelineError("Champion report requires champion.run_id.")
-
-    eligible_runs = champion_report.get("eligible_runs")
-    if not isinstance(eligible_runs, list):
-        raise TrainingPipelineError("Champion report requires eligible_runs.")
-
-    return champion_report
-
 
 def _mark_pipeline_failed(
     metadata: dict[str, Any],

@@ -15,3 +15,4 @@
 - Local Prefect runs may start a temporary server for orchestration without requiring a scheduled deployment.
 - Retry policies should be conservative at first; broad retries can hide persistent bugs if the pipeline is not task-granular yet.
 - Wrapping pipeline errors should preserve structured context such as `pipeline_run_id` and `failed_stage`; otherwise the metadata exists but is hard to find during debugging.
+- Stage helper modules are useful before full Prefect task decomposition because they clarify boundaries while preserving the proven pipeline command.

@@ -2,7 +2,7 @@
 
 This diagram shows the current V5 training pipeline.
 
-It is intentionally limited to the implemented V5 behavior: local Prefect orchestration, pipeline metadata, single validation ownership, reusable experiment workflow, MLflow candidate runs, champion selection, and failure-stage recording.
+It is intentionally limited to the implemented V5 behavior: local Prefect orchestration, pipeline metadata, extracted stage helpers, single validation ownership, reusable experiment workflow, MLflow candidate runs, champion selection, and failure-stage recording.
 
 ```mermaid
 flowchart TD
@@ -11,11 +11,13 @@ flowchart TD
     prefect_task["Prefect task<br/>run-training-pipeline<br/>retries=2"]
     pipeline_cmd["python -m app.run_training_pipeline"]
     config["configs/training.yaml"]
-    metadata_start["Initialize pipeline metadata<br/>pipeline_version=v5-c8<br/>status=running"]
-    validation["Validation stage<br/>validate_dataset_readiness"]
+    metadata_start["Initialize pipeline metadata<br/>pipeline_version=v5-c9<br/>status=running"]
+    validation["Validation stage helper<br/>app.tasks.validation_task"]
+    validation_runner["validate_dataset_readiness"]
     validation_gate{"Validation passed?"}
     validation_failed["Mark validation failed<br/>failed_stage=validation"]
 
+    experiment_task["Experiment stage helper<br/>app.tasks.experiment_task"]
     experiment_workflow["run_experiment_workflow<br/>validate_before_run=false"]
     candidates["Configured candidates"]
     logreg["logistic_regression_baseline"]
@@ -45,12 +47,14 @@ flowchart TD
     pipeline_cmd --> metadata_start
     metadata_start --> pipeline_output
     config --> validation
-    validation --> validation_gate
+    validation --> validation_runner
+    validation_runner --> validation_gate
 
     validation_gate -- no --> validation_failed
     validation_failed --> pipeline_output
 
-    validation_gate -- yes --> experiment_workflow
+    validation_gate -- yes --> experiment_task
+    experiment_task --> experiment_workflow
     experiment_workflow --> candidates
     candidates --> logreg
     candidates --> tree
@@ -86,7 +90,7 @@ flowchart TD
 
 V5 introduces a pipeline-level view of training.
 
-The Prefect command wraps the existing plain Python pipeline in a local Prefect flow and task. The pipeline command owns validation once, then calls the reusable experiment workflow with validation disabled for that inner workflow. Candidate models still create MLflow runs, the champion selection logic still writes `reports/champion_run.json`, and the pipeline writes a separate run record under `pipeline_runs/`.
+The Prefect command wraps the existing plain Python pipeline in a local Prefect flow and task. The pipeline command still owns orchestration and metadata, but validation and experiment execution now live behind small stage helper modules. The pipeline owns validation once, then calls the reusable experiment workflow with validation disabled for that inner workflow. Candidate models still create MLflow runs, the champion selection logic still writes `reports/champion_run.json`, and the pipeline writes a separate run record under `pipeline_runs/`.
 
 Pipeline metadata is not model metadata and it is not MLflow metadata. It records workflow-level state: stage status, failed stage, dataset version, MLflow run IDs, and champion run ID.
 

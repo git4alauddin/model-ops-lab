@@ -17,6 +17,7 @@
 - Verified the local Prefect command completes successfully.
 - Verified the Prefect task retry policy is configured.
 - Verified Prefect command failures preserve pipeline failure context.
+- Verified validation and experiment stage helpers preserve pipeline behavior.
 
 ## Commands Executed
 - `Get-ChildItem docs\versions\v5`
@@ -36,8 +37,10 @@
 - `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v5_c6_prefect_orchestration.py`
 - `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v5_c6_prefect_orchestration.py tests\test_v5_c7_prefect_retry_policy.py`
 - `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v5_c3_training_pipeline_entrypoint.py tests\test_v5_c4_pipeline_validation_ownership.py tests\test_v5_c6_prefect_orchestration.py tests\test_v5_c7_prefect_retry_policy.py tests\test_v5_c8_prefect_failure_visibility.py`
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v5_c3_training_pipeline_entrypoint.py tests\test_v5_c4_pipeline_validation_ownership.py tests\test_v5_c6_prefect_orchestration.py tests\test_v5_c7_prefect_retry_policy.py tests\test_v5_c8_prefect_failure_visibility.py tests\test_v5_c9_pipeline_stage_tasks.py`
 - `.\vir_env\Scripts\python.exe -m app.run_prefect_pipeline`
 - `Get-Content pipeline_runs\pipeline_20260604T190942672811Z_7c46b02f.json`
+- `Get-Content pipeline_runs\pipeline_20260604T192411531526Z_764769dc.json`
 - `git diff --check`
 
 ## Expected Output
@@ -57,6 +60,7 @@
 - The local Prefect flow can run without adding a scheduled deployment.
 - The Prefect pipeline task has a small retry policy.
 - Failed Prefect command errors expose the failed pipeline run ID and failed stage when metadata exists.
+- Extracted validation and experiment helpers do not change successful pipeline behavior.
 
 ## Actual Output
 - `Get-ChildItem docs\versions\v5` showed overview, implementation, verification, issues, lessons, and commit log files.
@@ -94,7 +98,12 @@
 - Generated V5-C8 pipeline metadata had `pipeline_version=v5-c8`, `status=passed`, `stage_statuses.validation=passed`, `stage_statuses.experiments=passed`, `mlflow_run_ids=3`, and `champion_run_id=e8d6814b81624d208fc53c8621710f6e`.
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `185 passed in 4.61s`.
 - `Select-String -Path logs\modelopslab.log -Pattern "ERROR|Traceback|pipeline_test_"` returned no matches after the V5-C8 verification run.
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v5_c3_training_pipeline_entrypoint.py tests\test_v5_c4_pipeline_validation_ownership.py tests\test_v5_c6_prefect_orchestration.py tests\test_v5_c7_prefect_retry_policy.py tests\test_v5_c8_prefect_failure_visibility.py tests\test_v5_c9_pipeline_stage_tasks.py` returned `23 passed in 3.52s`.
+- `.\vir_env\Scripts\python.exe -m app.run_prefect_pipeline` completed successfully and created pipeline run `pipeline_20260604T192411531526Z_764769dc`.
+- Generated V5-C9 pipeline metadata had `pipeline_version=v5-c9`, `status=passed`, `stage_statuses.validation=passed`, `stage_statuses.experiments=passed`, `mlflow_run_ids=3`, and `champion_run_id=bb579b6839af402980d57e91580346b3`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `191 passed in 4.39s`.
+- `Select-String -Path logs\modelopslab.log -Pattern "ERROR|Traceback|pipeline_test_"` returned no matches after the V5-C9 verification run.
 - `git diff --check` passed with only normal Windows CRLF warnings.
 
 ## Outcome
-V5-C1 establishes orchestration planning and documentation foundations. V5-C2 adds the pipeline run metadata contract and persistence helper. V5-C3 adds the first executable plain Python pipeline command. V5-C4 removes duplicate validation from the pipeline path while keeping standalone experiment validation intact. V5-C5 adds the training pipeline flow diagram. V5-C6 adds the local Prefect orchestration wrapper. V5-C7 adds a conservative Prefect task retry policy. V5-C8 adds failed pipeline context visibility at the Prefect command boundary.
+V5-C1 establishes orchestration planning and documentation foundations. V5-C2 adds the pipeline run metadata contract and persistence helper. V5-C3 adds the first executable plain Python pipeline command. V5-C4 removes duplicate validation from the pipeline path while keeping standalone experiment validation intact. V5-C5 adds the training pipeline flow diagram. V5-C6 adds the local Prefect orchestration wrapper. V5-C7 adds a conservative Prefect task retry policy. V5-C8 adds failed pipeline context visibility at the Prefect command boundary. V5-C9 extracts validation and experiment stage helpers while preserving the pipeline command behavior.
