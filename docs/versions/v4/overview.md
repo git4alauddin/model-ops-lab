@@ -10,6 +10,7 @@ Implemented chunks:
 - V4-C1: MLflow tracking foundation.
 - V4-C2: failed-run tracking and evaluation duration.
 - V4-C3: dedicated confusion matrix MLflow artifact.
+- V4-C4: MLflow experiment comparison guide.
 
 ## Components Introduced
 - MLflow dependency
@@ -22,6 +23,7 @@ Implemented chunks:
 - failed-run tagging for in-run failures
 - training artifact logging
 - dedicated confusion matrix artifact logging
+- manual MLflow run comparison guide
 - MLflow run ID persistence in training metadata
 - V4 documentation and commit log
 
@@ -45,7 +47,7 @@ Persist the MLflow run ID in generated training metadata.
 - inspect parameters and metrics after training
 - inspect key artifacts after training
 - link experiments to dataset version metadata
-- compare future experiment runs from MLflow UI
+- compare experiment runs from MLflow UI
 
 ## Current V4 Outcome
-V4 now creates MLflow runs during training, logs params/metrics/artifacts, records run IDs in metadata, tracks runtime durations, tags failed in-run errors, and exposes the confusion matrix as a dedicated MLflow artifact.
+V4 now creates MLflow runs during training, logs params/metrics/artifacts, records run IDs in metadata, tracks runtime durations, tags failed in-run errors, exposes the confusion matrix as a dedicated MLflow artifact, and documents how to compare runs manually.

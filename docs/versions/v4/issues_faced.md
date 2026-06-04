@@ -1,7 +1,6 @@
 # V4 Issues Faced
 
 ## Open
-- Experiment comparison documentation is not added yet.
 - Best-run selection rule is not added yet.
 
 ## Resolved
@@ -65,3 +64,23 @@ The MLflow run artifact list now exposes `confusion_matrix.json` directly, while
 
 ### Prevention Strategy
 Keep high-value evaluation outputs as dedicated artifacts when they are commonly inspected on their own.
+
+## V4-C4 Run Comparison Workflow Was Not Documented
+
+### Symptom
+MLflow could track multiple runs, but there was no clear project guide for comparing those runs consistently.
+
+### Root Cause
+The tracking foundation existed before a documented comparison workflow.
+
+### Investigation Process
+Reviewed the MLflow UI workflow and the project's logged params, metrics, tags, and artifacts.
+
+### Fix Applied
+Added `docs/experiments/mlflow_comparison_guide.md` with UI steps, comparison fields, artifact inspection guidance, duration tradeoffs, and a manual checklist.
+
+### Why The Fix Worked
+The project now has a repeatable manual process for comparing MLflow runs before adding a formal best-run rule.
+
+### Prevention Strategy
+Document manual interpretation before automating model selection rules.

@@ -2,6 +2,30 @@
 
 This file records meaningful V4 commits and the operational purpose of each change.
 
+## Pending - v4-c4: add MLflow experiment comparison guide
+
+### What Changed
+- Added `docs/experiments/mlflow_comparison_guide.md`.
+- Documented how to start MLflow UI and open the baseline experiment.
+- Documented how to select and compare multiple runs.
+- Listed params, metrics, tags, and artifacts to inspect during comparison.
+- Added duration-vs-quality interpretation guidance.
+- Added a manual comparison checklist.
+- Clarified when to use MLflow UI vs SQL.
+- Updated `docs/experiments/README.md` with a guide pointer.
+- Updated V4 overview, implementation, verification, issues, and lessons docs.
+- Updated README with the comparison-guide pointer.
+
+### What Problem It Solved
+- Gives a repeatable manual process for comparing MLflow runs.
+- Connects metrics, params, artifacts, and dataset checksums into one comparison workflow.
+- Prepares the project for a future best-run selection rule.
+
+### Verification
+- `Get-Content docs\experiments\mlflow_comparison_guide.md` confirmed the guide exists.
+- `Get-Content docs\experiments\README.md` confirmed the guide is indexed.
+- `git diff --check` passed with only normal Windows CRLF warnings.
+
 ## fc66039 - v4-c3: log confusion matrix as MLflow artifact
 
 ### What Changed

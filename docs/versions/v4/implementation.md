@@ -7,6 +7,7 @@ Implemented chunks:
 - V4-C1: MLflow tracking foundation.
 - V4-C2: failed-run tracking and evaluation duration.
 - V4-C3: dedicated confusion matrix MLflow artifact.
+- V4-C4: MLflow experiment comparison guide.
 
 ## V4-C1 Additions
 - `requirements.txt`
@@ -84,6 +85,16 @@ Implemented chunks:
 - `tests/test_v4_c1_mlflow_tracking_foundation.py`
   - validates MLflow artifact logging includes the dedicated confusion matrix artifact
 
+## V4-C4 Additions
+- `docs/experiments/mlflow_comparison_guide.md`
+  - added manual MLflow run comparison workflow
+  - documents params, metrics, artifacts, and tags to inspect
+  - explains duration-vs-quality tradeoffs
+  - adds a manual comparison checklist
+  - clarifies when to use UI vs SQL
+- `docs/experiments/README.md`
+  - added guide pointer
+
 ## Current V4 Workflow
 ```text
 python -m app.train
@@ -110,5 +121,4 @@ active MLflow run
 ```
 
 ## Remaining V4 Gaps
-- Multiple experiment comparison docs are not added yet.
 - Best-run selection rule is not added yet.

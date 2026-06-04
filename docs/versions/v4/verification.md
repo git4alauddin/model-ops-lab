@@ -16,6 +16,8 @@
 - Verified training metadata includes `evaluation_duration_seconds`.
 - Verified local `artifacts/confusion_matrix.json` is written.
 - Verified latest MLflow run contains `confusion_matrix.json` in artifact listing.
+- Verified MLflow comparison guide exists under `docs/experiments`.
+- Verified experiment docs index links to the comparison guide.
 - Verified validation and reproducibility commands still pass after V4 tracking changes.
 
 ## Commands Executed
@@ -28,6 +30,7 @@
 - `.\vir_env\Scripts\python.exe -m app.validate_data`
 - `.\vir_env\Scripts\python.exe -m app.check_reproducibility`
 - `.\vir_env\Scripts\python.exe -c "import mlflow; ..."`
+- `Get-Content docs\experiments\mlflow_comparison_guide.md`
 
 ## Expected Output
 - V4 focused tests pass.
@@ -38,6 +41,7 @@
 - Training metadata stores evaluation duration.
 - Local `artifacts/confusion_matrix.json` is created.
 - MLflow run contains parameters, metrics, duration metrics, and the confusion matrix artifact.
+- MLflow comparison guide documents UI comparison workflow and manual checklist.
 - Failed in-run errors are visible as MLflow tags.
 
 ## Actual Output
@@ -55,8 +59,9 @@
 - Generated `artifacts/confusion_matrix.json` contains `labels=[0, 1]` and `matrix=[[3, 0], [0, 1]]`.
 - Latest MLflow run query showed `status=FINISHED`, `metrics.accuracy=1.0`, `metrics.f1=1.0`, and `params.pipeline_version=v4-c3`.
 - Latest MLflow artifact listing showed `config_snapshot.json`, `confusion_matrix.json`, `metrics.json`, `model.pkl`, and `training_metadata.json`.
+- `docs/experiments/mlflow_comparison_guide.md` documents MLflow UI comparison steps, params, metrics, artifacts, duration tradeoffs, SQL usage, and a manual comparison checklist.
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed with `status=passed` and `issues=0`.
 - `.\vir_env\Scripts\python.exe -m app.check_reproducibility` completed with `status=passed`.
 
 ## Outcome
-V4-C3 dedicated confusion matrix artifact is operational and visible through MLflow artifacts.
+V4-C4 experiment comparison documentation is available for manual MLflow run comparison.

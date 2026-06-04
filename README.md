@@ -126,6 +126,8 @@ Then open:
 http://127.0.0.1:5000
 ```
 
+For run comparison guidance, see `docs/experiments/mlflow_comparison_guide.md`.
+
 ## Runtime Outputs
 
 Generated runtime files are intentionally ignored by git:
