@@ -2,7 +2,34 @@
 
 This file records meaningful V5 commits and the operational purpose of each change.
 
-## Pending - v5-c2: add pipeline run metadata
+## Pending - v5-c3: add training pipeline entrypoint
+
+### What Changed
+- Added `app/run_training_pipeline.py`.
+- Added `python -m app.run_training_pipeline`.
+- Added validation stage status tracking.
+- Added experiment stage status tracking.
+- Added champion report loading and validation.
+- Added MLflow run ID extraction from eligible champion report runs.
+- Added champion run ID persistence in pipeline metadata.
+- Added failed-stage metadata persistence for validation and experiment failures.
+- Bumped pipeline metadata version to `v5-c3`.
+- Added focused V5-C3 pipeline entrypoint tests.
+- Updated README and V5 docs.
+- Finalized the V5-C2 commit hash as `45b10b2`.
+
+### What Problem It Solved
+- Turns the V5 metadata contract into a real executable pipeline command.
+- Creates pipeline-level metadata for successful and failed workflow runs.
+- Proves the orchestration flow before introducing Prefect.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v5_c2_pipeline_run_metadata.py tests\test_v5_c3_training_pipeline_entrypoint.py` returned `13 passed in 1.53s`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `173 passed in 2.34s`.
+- `.\vir_env\Scripts\python.exe -m app.run_training_pipeline` completed successfully and created pipeline run `pipeline_20260604T174409840205Z_e66818f3`.
+- `git diff --check` passed with only normal Windows CRLF warnings.
+
+## 45b10b2 - v5-c2: add pipeline run metadata
 
 ### What Changed
 - Added `app/pipeline_run_metadata.py`.

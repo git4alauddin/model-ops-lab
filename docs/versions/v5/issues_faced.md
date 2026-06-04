@@ -2,8 +2,9 @@
 
 ## Open
 - Prefect dependency is not added yet.
-- Runtime orchestration command is not added yet.
-- Pipeline metadata persistence is implemented as a helper but not wired into a runtime orchestration command yet.
+- Stage task modules are not added yet.
+- The plain Python pipeline currently wraps `app.run_experiments.main()`, so validation runs twice during the full pipeline command.
+- Prefect orchestration is not added yet.
 
 ## Resolved
 
@@ -46,3 +47,37 @@ The orchestration layer can now target one stable metadata shape instead of inve
 
 ### Prevention Strategy
 Define the metadata contract before connecting orchestration tools or runtime stage execution.
+
+## V5-C3 Plain Pipeline Needed Before Prefect
+
+### Symptom
+The project had pipeline metadata helpers, but no runtime command created a real pipeline run record.
+
+### Root Cause
+V5-C2 intentionally stopped at the metadata contract. The next operational gap was proving the stage lifecycle without adding Prefect yet.
+
+### Investigation Process
+Reviewed the existing validation command, experiment sweep command, champion report format, and pipeline metadata helper.
+
+### Fix Applied
+Added `app/run_training_pipeline.py` as a plain Python wrapper that runs validation, runs the existing experiment sweep, reads the champion report, and persists final pipeline metadata.
+
+### Why The Fix Worked
+The project now has an executable orchestration path without introducing orchestration-tool complexity.
+
+### Prevention Strategy
+Keep orchestration behavior testable in plain Python before wrapping it with Prefect flows and tasks.
+
+## V5-C3 Duplicate Validation Is Accepted Temporarily
+
+### Symptom
+`python -m app.run_training_pipeline` validates the dataset, then `app.run_experiments.main()` validates it again internally.
+
+### Root Cause
+The V5-C3 command wraps stable V4 behavior instead of refactoring experiment internals during the same chunk.
+
+### Fix Applied
+Kept the duplicate validation for now to avoid destabilizing the proven experiment command.
+
+### Prevention Strategy
+Future V5 task extraction should split experiment execution from validation so the pipeline controls validation exactly once.

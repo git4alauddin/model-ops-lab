@@ -8,6 +8,7 @@ The first chunk is intentionally small: define the orchestration direction, docu
 Implemented chunks:
 - V5-C1: orchestration foundation and documentation scaffold.
 - V5-C2: pipeline run metadata contract and persistence helper.
+- V5-C3: plain Python training pipeline entrypoint.
 
 ## V5-C1 Additions
 - `docs/versions/v5/`
@@ -47,6 +48,32 @@ Implemented chunks:
 - `docs/versions/v5/commit_log.md`
   - finalizes the V5-C1 commit hash as `3c8beb8`
 
+## V5-C3 Additions
+- `app/run_training_pipeline.py`
+  - adds `python -m app.run_training_pipeline`
+  - initializes pipeline run metadata
+  - persists running metadata at command start
+  - marks validation as running, passed, or failed
+  - runs the validation gate before experiments
+  - marks experiments as running, passed, or failed
+  - calls the existing `app.run_experiments.main()` workflow
+  - reads `reports/champion_run.json`
+  - copies eligible MLflow run IDs into pipeline metadata
+  - copies champion run ID into pipeline metadata
+  - persists final passed or failed pipeline metadata
+- `app/pipeline_run_metadata.py`
+  - bumps pipeline metadata version to `v5-c3`
+- `tests/test_v5_c3_training_pipeline_entrypoint.py`
+  - covers successful pipeline metadata lifecycle
+  - covers validation failure metadata
+  - covers experiment failure metadata
+  - covers experiment `SystemExit` failure metadata
+  - covers champion and MLflow run ID extraction
+- `README.md`
+  - documents the V5 pipeline command
+- `docs/versions/v5/commit_log.md`
+  - finalizes the V5-C2 commit hash as `45b10b2`
+
 ## Orchestration Boundary
 V5 should not rewrite the working V1-V4 behavior in one step.
 
@@ -55,6 +82,7 @@ Current stable commands remain:
 ```powershell
 python -m app.train
 python -m app.run_experiments
+python -m app.run_training_pipeline
 ```
 
 V5 orchestration will wrap or extract stage behavior carefully instead of duplicating everything blindly.
@@ -63,7 +91,6 @@ V5 orchestration will wrap or extract stage behavior carefully instead of duplic
 Future V5 chunks should introduce:
 
 ```text
-app/pipelines/training_pipeline.py
 app/tasks/validation_task.py
 app/tasks/training_task.py
 app/tasks/experiment_task.py
@@ -75,8 +102,8 @@ Expected pipeline flow:
 ```text
 training pipeline
   -> validation task
-  -> training or experiment task
-  -> artifact verification task
+  -> experiment task
+  -> champion report read
   -> metadata persistence task
 ```
 
@@ -111,13 +138,12 @@ The first orchestration implementation should preserve these facts:
 ```text
 app.train = one configured model
 app.run_experiments = configured candidate sweep + champion selection
-V5 pipeline = controlled workflow wrapper around proven behavior
+app.run_training_pipeline = controlled workflow wrapper around proven behavior
 ```
 
 ## Remaining V5 Gaps
 - Prefect dependency is not added yet.
-- Runtime pipeline command is not added yet.
 - Stage task modules are not added yet.
-- Pipeline metadata persistence is implemented as a helper but is not wired into an orchestration command yet.
+- The plain Python pipeline currently wraps `app.run_experiments.main()`, so validation runs once in the pipeline stage and once inside the experiment command.
 - Retry behavior is not implemented yet.
 - Pipeline diagram is not added yet.

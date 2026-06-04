@@ -85,6 +85,7 @@ V5 is in progress. The project is adding training pipeline automation and orches
 - Prefect orchestration decision record
 - `pipeline_runs/` placeholder for future pipeline metadata
 - pipeline run metadata contract and JSON persistence helper
+- plain Python training pipeline command
 - explicit guardrail that V5 should wrap stable V1-V4 behavior before replacing it
 
 ## Setup
@@ -109,6 +110,18 @@ The default config uses:
 - target column: `churn`
 - dropped column: `customer_id`
 - model: Logistic Regression
+
+## Run Training Pipeline
+
+```powershell
+python -m app.run_training_pipeline
+```
+
+This is the V5 plain Python orchestration command. It runs validation, executes the multi-model experiment sweep, reads the champion report, and writes pipeline-level metadata under:
+
+```text
+pipeline_runs/
+```
 
 ## Run Multi-Model Experiments
 
@@ -181,6 +194,7 @@ The repository keeps the artifact placeholder folder with `.gitkeep`, but traine
 modelOpsLab/
   app/
     train.py
+    run_training_pipeline.py
     run_experiments.py
     validate_data.py
     check_reproducibility.py

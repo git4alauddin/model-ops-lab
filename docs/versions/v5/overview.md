@@ -11,6 +11,7 @@ V5 is in progress.
 Implemented chunks:
 - V5-C1: orchestration foundation and documentation scaffold.
 - V5-C2: pipeline run metadata contract and persistence helper.
+- V5-C3: plain Python training pipeline entrypoint.
 
 ## Components Introduced
 - V5 documentation scaffold
@@ -19,6 +20,8 @@ Implemented chunks:
 - V5 status in README
 - pipeline run metadata helper
 - focused pipeline metadata tests
+- plain Python pipeline command
+- pipeline-level metadata persistence during real runtime execution
 
 ## Workflow To Introduce
 V5 will move toward this workflow:
@@ -26,11 +29,8 @@ V5 will move toward this workflow:
 ```text
 pipeline command
   -> validation stage
-  -> dataset/version context stage
-  -> training stage
-  -> evaluation stage
-  -> artifact persistence stage
-  -> experiment logging stage
+  -> multi-model experiment stage
+  -> champion report read
   -> pipeline metadata persistence
 ```
 
@@ -50,4 +50,4 @@ pipeline command
 - create a foundation for future retraining automation
 
 ## Current V5 Outcome
-V5 has the architecture direction, output structure, and metadata contract for pipeline orchestration. Runtime orchestration code is intentionally not added yet.
+V5 has the architecture direction, output structure, metadata contract, and first plain Python pipeline command. Prefect orchestration is intentionally not added yet.
