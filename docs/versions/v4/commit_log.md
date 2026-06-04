@@ -2,7 +2,7 @@
 
 This file records meaningful V4 commits and the operational purpose of each change.
 
-## Pending - docs: add V4 experiment tracking diagram
+## bd57557 - docs: add V4 experiment tracking diagram
 
 ### What Changed
 - Added `docs/diagrams/v4_experiment_tracking_flow.md`.

@@ -77,6 +77,15 @@ V4 is complete. The project now has experiment tracking and training observabili
 - MLflow champion tagging
 - focused tests for experiment tracking helper behavior
 
+## V5 Status
+
+V5 is in progress. The project is adding training pipeline automation and orchestration foundations:
+
+- V5 documentation scaffold
+- Prefect orchestration decision record
+- `pipeline_runs/` placeholder for future pipeline metadata
+- explicit guardrail that V5 should wrap stable V1-V4 behavior before replacing it
+
 ## Setup
 
 ```powershell
@@ -161,6 +170,7 @@ Generated runtime files are intentionally ignored by git:
 - `logs/modelopslab.log`
 - `mlflow.db`
 - `mlruns/`
+- `pipeline_runs/`
 
 The repository keeps the artifact placeholder folder with `.gitkeep`, but trained models, metrics, metadata snapshots, and logs are local run outputs.
 
@@ -170,8 +180,10 @@ The repository keeps the artifact placeholder folder with `.gitkeep`, but traine
 modelOpsLab/
   app/
     train.py
+    run_experiments.py
     validate_data.py
     check_reproducibility.py
+    champion_selection.py
     experiment_tracking.py
     evaluate.py
     config.py
@@ -199,15 +211,19 @@ modelOpsLab/
     .gitkeep
   reports/
     .gitkeep
+  pipeline_runs/
+    .gitkeep
   tests/
     test_v1_*.py
     test_v2_*.py
     test_v3_*.py
+    test_v4_*.py
   docs/
     versions/v1/
     versions/v2/
     versions/v3/
     versions/v4/
+    versions/v5/
     architecture/
     decisions/
     experiments/

@@ -20,6 +20,10 @@ logs/
 reports/*
 !reports/.gitkeep
 
+# Runtime pipeline run metadata
+pipeline_runs/*
+!pipeline_runs/.gitkeep
+
 # Local MLflow tracking store
 mlruns/
 mlartifacts/
