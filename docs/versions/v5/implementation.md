@@ -9,6 +9,7 @@ Implemented chunks:
 - V5-C1: orchestration foundation and documentation scaffold.
 - V5-C2: pipeline run metadata contract and persistence helper.
 - V5-C3: plain Python training pipeline entrypoint.
+- V5-C4: single validation ownership for the training pipeline.
 
 ## V5-C1 Additions
 - `docs/versions/v5/`
@@ -73,6 +74,28 @@ Implemented chunks:
   - documents the V5 pipeline command
 - `docs/versions/v5/commit_log.md`
   - finalizes the V5-C2 commit hash as `45b10b2`
+
+## V5-C4 Additions
+- `app/run_experiments.py`
+  - extracts `run_experiment_workflow()`
+  - keeps `python -m app.run_experiments` behavior unchanged
+  - validates by default for standalone experiment runs
+  - allows validation to be skipped for pipeline-owned execution
+  - returns the champion report to callers
+- `app/run_training_pipeline.py`
+  - calls `run_experiment_workflow(..., validate_before_run=False)`
+  - keeps validation ownership in the pipeline command
+  - uses the returned champion report instead of re-reading the report file
+- `app/pipeline_run_metadata.py`
+  - bumps pipeline metadata version to `v5-c4`
+- `tests/test_v5_c4_pipeline_validation_ownership.py`
+  - proves standalone experiments validate
+  - proves experiment workflow can skip validation for pipeline ownership
+  - proves the training pipeline validates once
+- `tests/test_v5_c3_training_pipeline_entrypoint.py`
+  - updates pipeline entrypoint tests for returned champion report behavior
+- `docs/versions/v5/commit_log.md`
+  - finalizes the V5-C3 commit hash as `32e7653`
 
 ## Orchestration Boundary
 V5 should not rewrite the working V1-V4 behavior in one step.
@@ -144,6 +167,5 @@ app.run_training_pipeline = controlled workflow wrapper around proven behavior
 ## Remaining V5 Gaps
 - Prefect dependency is not added yet.
 - Stage task modules are not added yet.
-- The plain Python pipeline currently wraps `app.run_experiments.main()`, so validation runs once in the pipeline stage and once inside the experiment command.
 - Retry behavior is not implemented yet.
 - Pipeline diagram is not added yet.

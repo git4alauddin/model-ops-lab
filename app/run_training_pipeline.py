@@ -1,6 +1,5 @@
 """Plain Python V5 training pipeline entrypoint."""
 
-import json
 from pathlib import Path
 from typing import Any, Callable
 
@@ -13,8 +12,7 @@ from app.pipeline_run_metadata import (
     save_pipeline_run_metadata,
     update_stage_status,
 )
-from app.run_experiments import main as run_experiments_main
-from app.run_experiments import resolve_champion_report_path
+from app.run_experiments import run_experiment_workflow
 from app.train import enforce_validation_gate, resolve_validation_schema_path
 from app.utils.logger import build_log_path, get_logger
 from app.validate_data import DEFAULT_CONFIG_PATH, validate_dataset_readiness
@@ -34,11 +32,10 @@ def run_training_pipeline(
     config_path: str | Path = DEFAULT_CONFIG_PATH,
     pipeline_run_id: str | None = None,
     output_dir: Path = DEFAULT_PIPELINE_RUNS_DIR,
-    champion_report_path: Path | None = None,
     validation_runner: Callable[[str | Path, str | Path], ValidationReport] = (
         validate_dataset_readiness
     ),
-    experiment_runner: Callable[[], None] = run_experiments_main,
+    experiment_runner: Callable[..., dict[str, Any]] = run_experiment_workflow,
 ) -> dict[str, Any]:
     """Run validation and multi-model experiments as one controlled pipeline."""
     resolved_config_path = Path(config_path)
@@ -54,9 +51,6 @@ def run_training_pipeline(
         config = load_config(resolved_config_path)
         logger = get_logger(LOGGER_NAME, build_log_path(config))
         validation_schema_path = resolve_validation_schema_path(config)
-        resolved_champion_report_path = (
-            champion_report_path or resolve_champion_report_path(config)
-        )
         logger.info(
             "===== PIPELINE RUN STARTED %s =====",
             metadata["pipeline_run_id"],
@@ -77,8 +71,10 @@ def run_training_pipeline(
         current_stage = EXPERIMENTS_STAGE
         metadata = update_stage_status(metadata, current_stage, "running")
         save_pipeline_run_metadata(metadata, output_dir)
-        _run_experiments(experiment_runner)
-        champion_report = load_champion_report(resolved_champion_report_path)
+        champion_report = _run_experiments(
+            experiment_runner,
+            resolved_config_path,
+        )
         metadata = update_stage_status(metadata, current_stage, "passed")
         metadata = complete_pipeline_run(
             metadata,
@@ -107,28 +103,6 @@ def run_training_pipeline(
         ) from exc
 
 
-def load_champion_report(path: str | Path) -> dict[str, Any]:
-    """Load and validate the champion report produced by experiment runs."""
-    report_path = Path(path)
-    try:
-        with report_path.open("r", encoding="utf-8") as file:
-            report = json.load(file)
-    except (OSError, json.JSONDecodeError) as exc:
-        raise TrainingPipelineError(
-            f"Failed to load champion report: {report_path}"
-        ) from exc
-
-    champion = report.get("champion")
-    if not isinstance(champion, dict) or not isinstance(champion.get("run_id"), str):
-        raise TrainingPipelineError("Champion report requires champion.run_id.")
-
-    eligible_runs = report.get("eligible_runs")
-    if not isinstance(eligible_runs, list):
-        raise TrainingPipelineError("Champion report requires eligible_runs.")
-
-    return report
-
-
 def extract_champion_run_id(champion_report: dict[str, Any]) -> str:
     """Return the champion MLflow run ID from a champion report."""
     champion = champion_report["champion"]
@@ -155,15 +129,40 @@ def main() -> None:
         raise SystemExit(1) from exc
 
 
-def _run_experiments(experiment_runner: Callable[[], None]) -> None:
+def _run_experiments(
+    experiment_runner: Callable[..., dict[str, Any]],
+    config_path: Path,
+) -> dict[str, Any]:
     try:
-        experiment_runner()
+        champion_report = experiment_runner(
+            config_path,
+            validate_before_run=False,
+        )
     except SystemExit as exc:
         if exc.code in (None, 0):
-            return
+            raise TrainingPipelineError(
+                "Experiment runner exited without a champion report."
+            ) from exc
         raise TrainingPipelineError(
             f"Experiment runner exited with code {exc.code}."
         ) from exc
+    return validate_champion_report(champion_report)
+
+
+def validate_champion_report(champion_report: dict[str, Any]) -> dict[str, Any]:
+    """Validate and return a champion report dictionary."""
+    if not isinstance(champion_report, dict):
+        raise TrainingPipelineError("Experiment runner must return a champion report.")
+
+    champion = champion_report.get("champion")
+    if not isinstance(champion, dict) or not isinstance(champion.get("run_id"), str):
+        raise TrainingPipelineError("Champion report requires champion.run_id.")
+
+    eligible_runs = champion_report.get("eligible_runs")
+    if not isinstance(eligible_runs, list):
+        raise TrainingPipelineError("Champion report requires eligible_runs.")
+
+    return champion_report
 
 
 def _mark_pipeline_failed(

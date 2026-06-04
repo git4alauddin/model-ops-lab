@@ -12,6 +12,7 @@ Implemented chunks:
 - V5-C1: orchestration foundation and documentation scaffold.
 - V5-C2: pipeline run metadata contract and persistence helper.
 - V5-C3: plain Python training pipeline entrypoint.
+- V5-C4: single validation ownership for the training pipeline.
 
 ## Components Introduced
 - V5 documentation scaffold
@@ -22,6 +23,7 @@ Implemented chunks:
 - focused pipeline metadata tests
 - plain Python pipeline command
 - pipeline-level metadata persistence during real runtime execution
+- reusable experiment workflow with optional validation
 
 ## Workflow To Introduce
 V5 will move toward this workflow:
@@ -50,4 +52,4 @@ pipeline command
 - create a foundation for future retraining automation
 
 ## Current V5 Outcome
-V5 has the architecture direction, output structure, metadata contract, and first plain Python pipeline command. Prefect orchestration is intentionally not added yet.
+V5 has the architecture direction, output structure, metadata contract, and first plain Python pipeline command. The pipeline owns validation once and then runs experiments without duplicate validation. Prefect orchestration is intentionally not added yet.

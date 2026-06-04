@@ -10,7 +10,7 @@ from uuid import uuid4
 from app.utils.artifacts import ArtifactError, save_json
 
 DEFAULT_PIPELINE_RUNS_DIR = Path("pipeline_runs")
-PIPELINE_VERSION = "v5-c3"
+PIPELINE_VERSION = "v5-c4"
 VALID_PIPELINE_STATUSES = {"running", "passed", "failed"}
 VALID_STAGE_STATUSES = {"pending", "running", "passed", "failed", "skipped"}
 _SAFE_RUN_ID_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+$")

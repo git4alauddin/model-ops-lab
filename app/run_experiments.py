@@ -53,8 +53,10 @@ from app.utils.artifacts import (
 )
 from app.utils.logger import build_log_path, get_logger
 from app.validate_data import validate_dataset_readiness
+from app.validation.reports import ValidationReport
 
 LOGGER_NAME = "modelopslab.experiments"
+DEFAULT_CONFIG_PATH = Path("configs/training.yaml")
 
 
 class ExperimentCandidateError(ValueError):
@@ -107,85 +109,88 @@ def resolve_champion_report_path(config: dict[str, Any]) -> Path:
     return Path(cast(str, selection_config.get("report_path", "reports/champion_run.json")))
 
 
-def main() -> None:
-    """Run all configured experiment candidates and select a champion."""
-    config_path = Path("configs/training.yaml")
+def run_experiment_workflow(
+    config_path: str | Path = DEFAULT_CONFIG_PATH,
+    *,
+    validate_before_run: bool = True,
+) -> dict[str, Any]:
+    """Run configured experiment candidates and return the champion report."""
+    resolved_config_path = Path(config_path)
     logger = get_logger(LOGGER_NAME)
 
-    try:
-        config = load_config(config_path)
-        log_path = build_log_path(config)
-        logger = get_logger(LOGGER_NAME, log_path)
-        run_started_at = datetime.now(UTC).isoformat()
-        logger.info(
-            "===== RUN STARTED %s | workflow=experiments =====",
-            run_started_at,
-        )
+    config = load_config(resolved_config_path)
+    log_path = build_log_path(config)
+    logger = get_logger(LOGGER_NAME, log_path)
+    run_started_at = datetime.now(UTC).isoformat()
+    logger.info(
+        "===== RUN STARTED %s | workflow=experiments =====",
+        run_started_at,
+    )
 
+    if validate_before_run:
         validation_schema_path = resolve_validation_schema_path(config)
-        validation_report = validate_dataset_readiness(config_path, validation_schema_path)
-        validation_counts = count_validation_issues(validation_report)
-        logger.info(
-            _format_log_section(
-                "VALIDATION",
-                {
-                    "status": validation_report.status,
-                    "issues": len(validation_report.issues),
-                    "info": validation_counts["INFO"],
-                    "warnings": validation_counts["WARNING"],
-                    "errors": validation_counts["ERROR"],
-                    "critical": validation_counts["CRITICAL"],
-                },
-            )
+        validation_report = validate_dataset_readiness(
+            resolved_config_path,
+            validation_schema_path,
         )
+        _log_validation_summary(logger, validation_report)
         enforce_validation_gate(validation_report)
 
-        candidates = load_experiment_candidates(config)
-        dataset_context = _build_dataset_context(config)
-        candidate_runs = [
-            _run_candidate(config, dataset_context, candidate, logger)
-            for candidate in candidates
-        ]
-        champion_report = select_champion_run(candidate_runs)
-        champion = champion_report["champion"]
-        cleared_champions = clear_champion_tags(config)
-        for candidate_run in candidate_runs:
-            set_run_tags(
-                config,
-                candidate_run["run_id"],
-                {
-                    "champion": "false",
-                    "champion_selection_batch": run_started_at,
-                },
-            )
+    candidates = load_experiment_candidates(config)
+    dataset_context = _build_dataset_context(config)
+    candidate_runs = [
+        _run_candidate(config, dataset_context, candidate, logger)
+        for candidate in candidates
+    ]
+    champion_report = select_champion_run(candidate_runs)
+    champion = champion_report["champion"]
+    cleared_champions = clear_champion_tags(config)
+    for candidate_run in candidate_runs:
         set_run_tags(
             config,
-            champion["run_id"],
+            candidate_run["run_id"],
             {
-                "champion": "true",
-                "champion_selection_rule": champion_report["selection_rule"],
-                "champion_primary_metric": champion_report["primary_metric"],
+                "champion": "false",
                 "champion_selection_batch": run_started_at,
             },
         )
-        champion_report_path = resolve_champion_report_path(config)
-        save_json(champion_report, champion_report_path)
+    set_run_tags(
+        config,
+        champion["run_id"],
+        {
+            "champion": "true",
+            "champion_selection_rule": champion_report["selection_rule"],
+            "champion_primary_metric": champion_report["primary_metric"],
+            "champion_selection_batch": run_started_at,
+        },
+    )
+    champion_report_path = resolve_champion_report_path(config)
+    save_json(champion_report, champion_report_path)
 
-        logger.info(_format_log_section("RUNTIME", {"log_file": log_path}))
-        logger.info(
-            _format_log_section(
-                "CHAMPION",
-                {
-                    "run_id": champion["run_id"],
-                    "candidate_name": champion["candidate_name"],
-                    "model_type": champion["model_type"],
-                    "f1": champion["metrics"]["f1"],
-                    "report": champion_report_path,
-                    "cleared_previous_champions": cleared_champions,
-                },
-            )
+    logger.info(_format_log_section("RUNTIME", {"log_file": log_path}))
+    logger.info(
+        _format_log_section(
+            "CHAMPION",
+            {
+                "run_id": champion["run_id"],
+                "candidate_name": champion["candidate_name"],
+                "model_type": champion["model_type"],
+                "f1": champion["metrics"]["f1"],
+                "report": champion_report_path,
+                "cleared_previous_champions": cleared_champions,
+            },
         )
-        logger.info("Experiment candidate run completed.")
+    )
+    logger.info("Experiment candidate run completed.")
+    return champion_report
+
+
+def main() -> None:
+    """Run all configured experiment candidates and select a champion."""
+    logger = get_logger(LOGGER_NAME)
+
+    try:
+        run_experiment_workflow(DEFAULT_CONFIG_PATH, validate_before_run=True)
     except (
         ArtifactError,
         ChampionSelectionError,
@@ -201,6 +206,23 @@ def main() -> None:
     ) as exc:
         logger.exception("Experiment candidate run failed: %s", exc)
         raise SystemExit(1) from exc
+
+
+def _log_validation_summary(logger, validation_report: ValidationReport) -> None:
+    validation_counts = count_validation_issues(validation_report)
+    logger.info(
+        _format_log_section(
+            "VALIDATION",
+            {
+                "status": validation_report.status,
+                "issues": len(validation_report.issues),
+                "info": validation_counts["INFO"],
+                "warnings": validation_counts["WARNING"],
+                "errors": validation_counts["ERROR"],
+                "critical": validation_counts["CRITICAL"],
+            },
+        )
+    )
 
 
 def _build_dataset_context(config: dict[str, Any]) -> dict[str, Any]:

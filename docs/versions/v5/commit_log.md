@@ -2,7 +2,35 @@
 
 This file records meaningful V5 commits and the operational purpose of each change.
 
-## Pending - v5-c3: add training pipeline entrypoint
+## Pending - v5-c4: remove duplicate pipeline validation
+
+### What Changed
+- Extracted reusable `run_experiment_workflow()` from `app.run_experiments`.
+- Kept standalone `python -m app.run_experiments` validation enabled by default.
+- Added explicit `validate_before_run` control for experiment workflow reuse.
+- Updated `app.run_training_pipeline` to call experiments with `validate_before_run=False`.
+- Updated pipeline execution to use the returned champion report.
+- Updated V5 pipeline tests to use temporary log paths for expected failure scenarios.
+- Bumped pipeline metadata version to `v5-c4`.
+- Added focused validation ownership tests.
+- Updated V5-C3 pipeline entrypoint tests for returned champion report behavior.
+- Updated README and V5 docs.
+- Finalized the V5-C3 commit hash as `32e7653`.
+
+### What Problem It Solved
+- Removes duplicate validation from `python -m app.run_training_pipeline`.
+- Keeps the standalone experiment command safe when it is run directly.
+- Gives the future Prefect layer a cleaner reusable experiment function.
+- Keeps expected test failure traces out of `logs/modelopslab.log`.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v5_c2_pipeline_run_metadata.py tests\test_v5_c3_training_pipeline_entrypoint.py tests\test_v5_c4_pipeline_validation_ownership.py` returned `17 passed in 1.71s`.
+- `.\vir_env\Scripts\python.exe -m app.run_experiments` completed successfully and logged a standalone `[VALIDATION]` section.
+- `.\vir_env\Scripts\python.exe -m app.run_training_pipeline` completed successfully and created pipeline run `pipeline_20260604T181245710980Z_3db9b1f0`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `177 passed in 2.46s`.
+- `Select-String -Path logs\modelopslab.log -Pattern "ERROR|Traceback|pipeline_test_"` returned no matches after the clean pipeline run.
+
+## 32e7653 - v5-c3: add training pipeline entrypoint
 
 ### What Changed
 - Added `app/run_training_pipeline.py`.

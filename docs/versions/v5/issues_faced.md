@@ -3,7 +3,6 @@
 ## Open
 - Prefect dependency is not added yet.
 - Stage task modules are not added yet.
-- The plain Python pipeline currently wraps `app.run_experiments.main()`, so validation runs twice during the full pipeline command.
 - Prefect orchestration is not added yet.
 
 ## Resolved
@@ -77,7 +76,27 @@ Keep orchestration behavior testable in plain Python before wrapping it with Pre
 The V5-C3 command wraps stable V4 behavior instead of refactoring experiment internals during the same chunk.
 
 ### Fix Applied
-Kept the duplicate validation for now to avoid destabilizing the proven experiment command.
+Kept the duplicate validation temporarily in V5-C3 to avoid destabilizing the proven experiment command.
 
 ### Prevention Strategy
 Future V5 task extraction should split experiment execution from validation so the pipeline controls validation exactly once.
+
+### V5-C4 Resolution
+Extracted `run_experiment_workflow()` with `validate_before_run=True` by default. The standalone experiment command still validates, while `app.run_training_pipeline` calls the workflow with `validate_before_run=False`.
+
+## V5-C4 Expected Failure Tests Polluted Runtime Log
+
+### Symptom
+Focused failure-path tests passed, but `logs/modelopslab.log` contained expected test exceptions from validation and experiment failure scenarios.
+
+### Root Cause
+The tests loaded the real `configs/training.yaml`, so the app logger attached to the real project log file.
+
+### Fix Applied
+Updated V5 pipeline tests to use temporary config files with temporary log directories.
+
+### Why The Fix Worked
+Expected failure traces remain inside pytest temporary paths instead of the project runtime log.
+
+### Prevention Strategy
+Failure-path tests should use temporary runtime output locations unless the test is explicitly verifying production log output.

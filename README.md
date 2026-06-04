@@ -86,6 +86,7 @@ V5 is in progress. The project is adding training pipeline automation and orches
 - `pipeline_runs/` placeholder for future pipeline metadata
 - pipeline run metadata contract and JSON persistence helper
 - plain Python training pipeline command
+- single validation ownership in the V5 pipeline command
 - explicit guardrail that V5 should wrap stable V1-V4 behavior before replacing it
 
 ## Setup
@@ -117,7 +118,7 @@ The default config uses:
 python -m app.run_training_pipeline
 ```
 
-This is the V5 plain Python orchestration command. It runs validation, executes the multi-model experiment sweep, reads the champion report, and writes pipeline-level metadata under:
+This is the V5 plain Python orchestration command. It runs validation once, executes the multi-model experiment sweep, records the champion report output, and writes pipeline-level metadata under:
 
 ```text
 pipeline_runs/
