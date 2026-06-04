@@ -67,3 +67,6 @@ Persist `reports/champion_run.json`.
 
 ## Current V4 Outcome
 V4 creates MLflow runs during training, supports multi-model candidate sweeps, logs params/metrics/artifacts, records run IDs in metadata, tracks runtime durations, tags failed in-run errors, exposes the confusion matrix as a dedicated MLflow artifact, documents run comparison, selects a champion run, tags the champion in MLflow, and writes a champion selection report.
+
+## Diagram
+See `docs/diagrams/v4_experiment_tracking_flow.md`.

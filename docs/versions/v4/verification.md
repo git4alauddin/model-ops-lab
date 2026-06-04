@@ -20,6 +20,7 @@
 - Verified single-model `app.train` still works.
 - Verified multi-model `app.run_experiments` creates candidate runs and a champion report.
 - Verified local `reports/champion_run.json` is written.
+- Verified V4 experiment tracking Mermaid diagram exists under `docs/diagrams`.
 - Verified MLflow shows exactly one active `champion=true` run after the latest candidate sweep.
 - Verified validation and reproducibility commands still pass after V4 changes.
 
@@ -35,6 +36,7 @@
 - `.\vir_env\Scripts\python.exe -m app.check_reproducibility`
 - `.\vir_env\Scripts\python.exe -c "import mlflow; ..."`
 - `Get-Content reports\champion_run.json`
+- `Get-Content docs\diagrams\v4_experiment_tracking_flow.md`
 
 ## Expected Output
 - Focused V4 and trainer tests pass.
@@ -44,6 +46,7 @@
 - Candidate runs include `candidate_name` tags.
 - Exactly one latest active run is tagged `champion=true`.
 - Champion report records champion run, eligible runs, metrics, dataset checksum, and selection rule.
+- V4 diagram documents single-model training and multi-model champion selection paths.
 - Validation and reproducibility still pass.
 
 ## Actual Output
@@ -58,6 +61,7 @@
 - Latest champion model type was `decision_tree`.
 - Latest champion report selected the run by F1-first rule with tie-breakers and same dataset checksum.
 - MLflow query showed exactly `1` active `champion=true` run after champion cleanup.
+- `docs/diagrams/v4_experiment_tracking_flow.md` documents `app.train`, `app.run_experiments`, MLflow runs, candidate artifacts, champion selection, champion tags, and `reports/champion_run.json`.
 - `.\vir_env\Scripts\python.exe -m app.train` completed successfully and created MLflow run `1f1001937f324071b0533ee05d1d58de`.
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed with `status=passed` and `issues=0`.
 - `.\vir_env\Scripts\python.exe -m app.check_reproducibility` completed with `status=passed`.

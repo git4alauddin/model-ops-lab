@@ -2,7 +2,27 @@
 
 This file records meaningful V4 commits and the operational purpose of each change.
 
-## Pending - v4-c6: add multi-model champion selection
+## Pending - docs: add V4 experiment tracking diagram
+
+### What Changed
+- Added `docs/diagrams/v4_experiment_tracking_flow.md`.
+- Documented the single-model training path.
+- Documented the multi-model candidate experiment path.
+- Documented MLflow params, metrics, tags, and artifact flow.
+- Documented champion selection, champion tagging, and `reports/champion_run.json`.
+- Linked the diagram from V4 overview and README.
+- Finalized the V4-C6 commit log hash as `b0aa4ac`.
+
+### What Problem It Solved
+- Makes the completed V4 workflow easier to explain visually.
+- Clarifies the difference between `app.train` and `app.run_experiments`.
+- Shows how MLflow UI, candidate runs, artifacts, and champion selection connect.
+
+### Verification
+- `Get-Content docs\diagrams\v4_experiment_tracking_flow.md` confirmed the diagram exists.
+- `git diff --check` passed with only normal Windows CRLF warnings.
+
+## b0aa4ac - v4-c6: add multi-model champion selection
 
 ### What Changed
 - Added Decision Tree and Random Forest model support.
