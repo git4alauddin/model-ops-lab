@@ -3,7 +3,7 @@
 ## Open
 - Prefect dependency is not added yet.
 - Runtime orchestration command is not added yet.
-- Pipeline metadata persistence is not implemented yet.
+- Pipeline metadata persistence is implemented as a helper but not wired into a runtime orchestration command yet.
 
 ## Resolved
 
@@ -26,3 +26,23 @@ The project now has a clear boundary: orchestration should wrap or extract prove
 
 ### Prevention Strategy
 For new operational layers, document architecture boundaries before implementation.
+
+## V5-C2 Metadata Contract Needed Before Orchestration
+
+### Symptom
+Prefect orchestration will need to record pipeline status, stage status, MLflow run IDs, and champion output, but those fields did not have a code-level contract yet.
+
+### Root Cause
+V1-V4 metadata focused on model training, validation, dataset versions, and MLflow runs. Pipeline-level execution metadata is a separate concern.
+
+### Investigation Process
+Reviewed existing artifact persistence, training metadata, experiment candidate outputs, and V5 planning docs.
+
+### Fix Applied
+Added `app/pipeline_run_metadata.py` with run ID generation, metadata building, stage updates, completion marking, safe path creation, and JSON persistence.
+
+### Why The Fix Worked
+The orchestration layer can now target one stable metadata shape instead of inventing fields inside each future pipeline task.
+
+### Prevention Strategy
+Define the metadata contract before connecting orchestration tools or runtime stage execution.

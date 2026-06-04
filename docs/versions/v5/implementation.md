@@ -7,6 +7,7 @@ The first chunk is intentionally small: define the orchestration direction, docu
 
 Implemented chunks:
 - V5-C1: orchestration foundation and documentation scaffold.
+- V5-C2: pipeline run metadata contract and persistence helper.
 
 ## V5-C1 Additions
 - `docs/versions/v5/`
@@ -23,6 +24,28 @@ Implemented chunks:
   - documents that V5 orchestration is starting
 - `docs/versions/v4/commit_log.md`
   - finalizes the V4 diagram commit hash
+
+## V5-C2 Additions
+- `app/pipeline_run_metadata.py`
+  - builds filesystem-safe pipeline run IDs
+  - builds the canonical pipeline run metadata payload
+  - validates pipeline-level statuses
+  - validates stage-level statuses
+  - updates stage status without mutating the original metadata
+  - marks pipeline runs as passed or failed
+  - persists metadata to `pipeline_runs/<pipeline_run_id>.json`
+- `tests/test_v5_c2_pipeline_run_metadata.py`
+  - covers run ID format
+  - covers metadata field contract
+  - covers stage status updates
+  - covers success completion metadata
+  - covers failed-run validation
+  - covers safe output path validation
+  - covers JSON persistence
+- `README.md`
+  - records the metadata helper in V5 status and project structure
+- `docs/versions/v5/commit_log.md`
+  - finalizes the V5-C1 commit hash as `3c8beb8`
 
 ## Orchestration Boundary
 V5 should not rewrite the working V1-V4 behavior in one step.
@@ -58,13 +81,13 @@ training pipeline
 ```
 
 ## Pipeline Metadata Output
-Future pipeline runs should persist metadata under:
+Pipeline run metadata is persisted under:
 
 ```text
 pipeline_runs/
 ```
 
-Runtime metadata files in this folder should remain local run outputs. The repository tracks only `.gitkeep`.
+Runtime metadata files in this folder remain local run outputs. The repository tracks only `.gitkeep`.
 
 Expected metadata fields:
 
@@ -95,6 +118,6 @@ V5 pipeline = controlled workflow wrapper around proven behavior
 - Prefect dependency is not added yet.
 - Runtime pipeline command is not added yet.
 - Stage task modules are not added yet.
-- Pipeline metadata persistence is not implemented yet.
+- Pipeline metadata persistence is implemented as a helper but is not wired into an orchestration command yet.
 - Retry behavior is not implemented yet.
 - Pipeline diagram is not added yet.

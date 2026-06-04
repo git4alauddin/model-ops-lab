@@ -10,12 +10,15 @@ V5 is in progress.
 
 Implemented chunks:
 - V5-C1: orchestration foundation and documentation scaffold.
+- V5-C2: pipeline run metadata contract and persistence helper.
 
 ## Components Introduced
 - V5 documentation scaffold
 - pipeline run output folder
 - orchestration decision record
 - V5 status in README
+- pipeline run metadata helper
+- focused pipeline metadata tests
 
 ## Workflow To Introduce
 V5 will move toward this workflow:
@@ -47,4 +50,4 @@ pipeline command
 - create a foundation for future retraining automation
 
 ## Current V5 Outcome
-V5-C1 establishes the architecture direction and output structure for pipeline orchestration. Runtime orchestration code is intentionally not added yet.
+V5 has the architecture direction, output structure, and metadata contract for pipeline orchestration. Runtime orchestration code is intentionally not added yet.

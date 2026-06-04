@@ -84,6 +84,7 @@ V5 is in progress. The project is adding training pipeline automation and orches
 - V5 documentation scaffold
 - Prefect orchestration decision record
 - `pipeline_runs/` placeholder for future pipeline metadata
+- pipeline run metadata contract and JSON persistence helper
 - explicit guardrail that V5 should wrap stable V1-V4 behavior before replacing it
 
 ## Setup
@@ -185,6 +186,7 @@ modelOpsLab/
     check_reproducibility.py
     champion_selection.py
     experiment_tracking.py
+    pipeline_run_metadata.py
     evaluate.py
     config.py
     data.py
@@ -218,6 +220,7 @@ modelOpsLab/
     test_v2_*.py
     test_v3_*.py
     test_v4_*.py
+    test_v5_*.py
   docs/
     versions/v1/
     versions/v2/
