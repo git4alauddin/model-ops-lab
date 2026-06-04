@@ -1,7 +1,7 @@
 # V4 Issues Faced
 
 ## Open
-- Best-run selection rule is not added yet.
+None. V4 experiment tracking and observability scope is complete.
 
 ## Resolved
 
@@ -84,3 +84,23 @@ The project now has a repeatable manual process for comparing MLflow runs before
 
 ### Prevention Strategy
 Document manual interpretation before automating model selection rules.
+
+## V4-C5 Best-Run Selection Rule Was Missing
+
+### Symptom
+Runs could be compared manually, but there was no documented rule for selecting the best run.
+
+### Root Cause
+Comparison guidance existed before a decision policy.
+
+### Investigation Process
+Reviewed the current metrics, artifacts, dataset version fields, and churn-classification tradeoffs.
+
+### Fix Applied
+Added `docs/experiments/best_run_selection_rule.md` with eligibility requirements, F1-first ranking, tie-breakers, rejection rules, and decision record format.
+
+### Why The Fix Worked
+Run selection now follows a consistent documented policy instead of ad hoc metric inspection.
+
+### Prevention Strategy
+Define model-selection criteria before adding automated selection or registry promotion.

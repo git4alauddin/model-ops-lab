@@ -9,3 +9,4 @@
 - Fake MLflow tests validate tracking calls quickly, but real `python -m app.train` verification is still needed to cover dependency loading and backend behavior.
 - Important evaluation outputs should be logged as dedicated artifacts when they are useful to inspect directly in the MLflow UI.
 - Run comparison should check params, metrics, artifacts, and dataset checksum together; metrics alone can hide setup differences.
+- Best-run selection needs eligibility checks and tie-breakers; choosing by one metric without context is not rigorous enough.

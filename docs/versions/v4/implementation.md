@@ -8,6 +8,7 @@ Implemented chunks:
 - V4-C2: failed-run tracking and evaluation duration.
 - V4-C3: dedicated confusion matrix MLflow artifact.
 - V4-C4: MLflow experiment comparison guide.
+- V4-C5: best-run selection rule.
 
 ## V4-C1 Additions
 - `requirements.txt`
@@ -95,6 +96,20 @@ Implemented chunks:
 - `docs/experiments/README.md`
   - added guide pointer
 
+## V4-C5 Additions
+- `docs/experiments/best_run_selection_rule.md`
+  - added eligible-run requirements
+  - defines same-data comparison using dataset name, version, and checksum
+  - selects `f1` as the primary ranking metric
+  - defines secondary metric checks using precision, recall, accuracy, and confusion matrix
+  - defines tie-breakers: recall, precision, accuracy, runtime, simplicity, pipeline version
+  - defines rejection rules for incomplete or invalid runs
+  - adds manual selection checklist and decision record format
+- `docs/experiments/mlflow_comparison_guide.md`
+  - links comparison workflow to the best-run selection rule
+- `docs/experiments/README.md`
+  - indexes the best-run selection rule
+
 ## Current V4 Workflow
 ```text
 python -m app.train
@@ -120,5 +135,17 @@ active MLflow run
   -> re-raise the original exception
 ```
 
+Manual experiment workflow:
+
+```text
+MLflow UI
+  -> compare eligible runs
+  -> confirm same dataset checksum
+  -> rank by F1
+  -> inspect precision, recall, accuracy, and confusion matrix
+  -> apply tie-breakers
+  -> record selected run ID and reason
+```
+
 ## Remaining V4 Gaps
-- Best-run selection rule is not added yet.
+None. V4 experiment tracking and observability scope is complete.

@@ -17,7 +17,9 @@
 - Verified local `artifacts/confusion_matrix.json` is written.
 - Verified latest MLflow run contains `confusion_matrix.json` in artifact listing.
 - Verified MLflow comparison guide exists under `docs/experiments`.
-- Verified experiment docs index links to the comparison guide.
+- Verified best-run selection rule exists under `docs/experiments`.
+- Verified experiment docs index links to the comparison guide and best-run rule.
+- Verified comparison guide points to the best-run selection rule.
 - Verified validation and reproducibility commands still pass after V4 tracking changes.
 
 ## Commands Executed
@@ -31,6 +33,8 @@
 - `.\vir_env\Scripts\python.exe -m app.check_reproducibility`
 - `.\vir_env\Scripts\python.exe -c "import mlflow; ..."`
 - `Get-Content docs\experiments\mlflow_comparison_guide.md`
+- `Get-Content docs\experiments\best_run_selection_rule.md`
+- `Get-Content docs\experiments\README.md`
 
 ## Expected Output
 - V4 focused tests pass.
@@ -42,6 +46,7 @@
 - Local `artifacts/confusion_matrix.json` is created.
 - MLflow run contains parameters, metrics, duration metrics, and the confusion matrix artifact.
 - MLflow comparison guide documents UI comparison workflow and manual checklist.
+- Best-run rule documents eligibility, metric priority, tie-breakers, rejection rules, and decision record format.
 - Failed in-run errors are visible as MLflow tags.
 
 ## Actual Output
@@ -60,8 +65,10 @@
 - Latest MLflow run query showed `status=FINISHED`, `metrics.accuracy=1.0`, `metrics.f1=1.0`, and `params.pipeline_version=v4-c3`.
 - Latest MLflow artifact listing showed `config_snapshot.json`, `confusion_matrix.json`, `metrics.json`, `model.pkl`, and `training_metadata.json`.
 - `docs/experiments/mlflow_comparison_guide.md` documents MLflow UI comparison steps, params, metrics, artifacts, duration tradeoffs, SQL usage, and a manual comparison checklist.
+- `docs/experiments/best_run_selection_rule.md` documents eligible runs, same-data checks, F1-first ranking, tie-breakers, rejection rules, and decision record format.
+- `docs/experiments/README.md` indexes both experiment guides.
 - `.\vir_env\Scripts\python.exe -m app.validate_data` completed with `status=passed` and `issues=0`.
 - `.\vir_env\Scripts\python.exe -m app.check_reproducibility` completed with `status=passed`.
 
 ## Outcome
-V4-C4 experiment comparison documentation is available for manual MLflow run comparison.
+V4 experiment tracking and observability scope is complete.

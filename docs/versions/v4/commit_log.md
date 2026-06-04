@@ -2,7 +2,34 @@
 
 This file records meaningful V4 commits and the operational purpose of each change.
 
-## Pending - v4-c4: add MLflow experiment comparison guide
+## Pending - v4-c5: add best-run selection rule
+
+### What Changed
+- Added `docs/experiments/best_run_selection_rule.md`.
+- Defined eligible-run requirements for best-run selection.
+- Defined same-data comparison using dataset name, version, and checksum.
+- Selected `f1` as the primary ranking metric.
+- Added secondary checks using precision, recall, accuracy, and confusion matrix.
+- Added tie-breakers for recall, precision, accuracy, runtime, model simplicity, and pipeline version.
+- Added rejection rules for incomplete or invalid runs.
+- Added manual selection checklist and decision record format.
+- Linked the comparison guide to the best-run selection rule.
+- Indexed the best-run rule in `docs/experiments/README.md`.
+- Marked V4 as complete in README and V4 docs.
+- Finalized the V4-C4 commit log hash as `c316826`.
+
+### What Problem It Solved
+- Removes ad hoc best-run selection.
+- Establishes a consistent manual model-selection policy before automation.
+- Closes the final V4 experiment tracking and observability gap.
+
+### Verification
+- `Get-Content docs\experiments\best_run_selection_rule.md` confirmed the rule exists.
+- `Get-Content docs\experiments\mlflow_comparison_guide.md` confirmed the guide links to the rule.
+- `Get-Content docs\experiments\README.md` confirmed both guides are indexed.
+- `git diff --check` passed with only normal Windows CRLF warnings.
+
+## c316826 - v4-c4: add MLflow experiment comparison guide
 
 ### What Changed
 - Added `docs/experiments/mlflow_comparison_guide.md`.

@@ -16,6 +16,12 @@ Was a slower run actually worth it?
 
 MLflow does not decide the best model automatically for us yet. For now, this guide describes manual comparison.
 
+For the formal manual selection rule, see:
+
+```text
+docs/experiments/best_run_selection_rule.md
+```
+
 ## Start The MLflow UI
 
 From the project root:
@@ -228,3 +234,5 @@ Dataset version/checksum tells whether the data was the same.
 ```
 
 A good comparison always checks setup, result, and artifacts together.
+
+After comparing runs, apply `best_run_selection_rule.md` before calling one run the best run.

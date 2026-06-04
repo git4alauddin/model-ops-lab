@@ -58,7 +58,7 @@ V3 is complete. The project now has dataset versioning and reproducibility found
 
 ## V4 Status
 
-V4 is in progress. The project is adding experiment tracking and training observability:
+V4 is complete. The project now has experiment tracking and training observability:
 
 - MLflow dependency
 - MLflow tracking configuration
@@ -71,6 +71,8 @@ V4 is in progress. The project is adding experiment tracking and training observ
 - dedicated confusion matrix artifact logging
 - MLflow run ID persistence in training metadata
 - failed-run tagging for in-run training errors
+- manual MLflow run comparison guide
+- manual best-run selection rule
 - focused tests for experiment tracking helper behavior
 
 ## Setup
@@ -127,6 +129,7 @@ http://127.0.0.1:5000
 ```
 
 For run comparison guidance, see `docs/experiments/mlflow_comparison_guide.md`.
+For best-run selection guidance, see `docs/experiments/best_run_selection_rule.md`.
 
 ## Runtime Outputs
 
