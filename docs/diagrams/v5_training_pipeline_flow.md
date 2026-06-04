@@ -2,16 +2,17 @@
 
 This diagram shows the current V5 training pipeline.
 
-It is intentionally limited to the implemented V5 behavior: local Prefect orchestration, pipeline metadata, extracted stage helpers, single validation ownership, reusable experiment workflow, MLflow candidate runs, champion selection, and failure-stage recording.
+It is intentionally limited to the implemented V5 behavior: local Prefect orchestration, optional inactive deployment scaffold, pipeline metadata, extracted stage helpers, single validation ownership, reusable experiment workflow, MLflow candidate runs, champion selection, and failure-stage recording.
 
 ```mermaid
 flowchart TD
     prefect_cmd["python -m app.run_prefect_pipeline"]
+    prefect_yaml["prefect.yaml<br/>local-training-pipeline<br/>schedule inactive"]
     prefect_flow["Prefect flow<br/>modelopslab-training-pipeline"]
     prefect_task["Prefect task<br/>run-training-pipeline<br/>retries=2"]
     pipeline_cmd["python -m app.run_training_pipeline"]
     config["configs/training.yaml"]
-    metadata_start["Initialize pipeline metadata<br/>pipeline_version=v5-c9<br/>status=running"]
+    metadata_start["Initialize pipeline metadata<br/>pipeline_version=v5-c10<br/>status=running"]
     validation["Validation stage helper<br/>app.tasks.validation_task"]
     validation_runner["validate_dataset_readiness"]
     validation_gate{"Validation passed?"}
@@ -39,6 +40,7 @@ flowchart TD
 
     experiment_failed{"Experiment stage failed?"}
 
+    prefect_yaml -. optional deployment scaffold .-> prefect_flow
     prefect_cmd --> prefect_flow
     prefect_flow --> prefect_task
     prefect_task --> pipeline_cmd

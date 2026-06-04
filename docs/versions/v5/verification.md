@@ -18,6 +18,7 @@
 - Verified the Prefect task retry policy is configured.
 - Verified Prefect command failures preserve pipeline failure context.
 - Verified validation and experiment stage helpers preserve pipeline behavior.
+- Verified the Prefect deployment scaffold is defined with an inactive schedule.
 
 ## Commands Executed
 - `Get-ChildItem docs\versions\v5`
@@ -41,6 +42,8 @@
 - `.\vir_env\Scripts\python.exe -m app.run_prefect_pipeline`
 - `Get-Content pipeline_runs\pipeline_20260604T190942672811Z_7c46b02f.json`
 - `Get-Content pipeline_runs\pipeline_20260604T192411531526Z_764769dc.json`
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v5_c6_prefect_orchestration.py tests\test_v5_c7_prefect_retry_policy.py tests\test_v5_c8_prefect_failure_visibility.py tests\test_v5_c9_pipeline_stage_tasks.py tests\test_v5_c10_prefect_deployment_scaffold.py`
+- `Get-Content pipeline_runs\pipeline_20260604T194100934115Z_fb6e81dd.json`
 - `git diff --check`
 
 ## Expected Output
@@ -61,6 +64,7 @@
 - The Prefect pipeline task has a small retry policy.
 - Failed Prefect command errors expose the failed pipeline run ID and failed stage when metadata exists.
 - Extracted validation and experiment helpers do not change successful pipeline behavior.
+- The deployment scaffold points to the current flow and keeps its schedule inactive by default.
 
 ## Actual Output
 - `Get-ChildItem docs\versions\v5` showed overview, implementation, verification, issues, lessons, and commit log files.
@@ -103,7 +107,12 @@
 - Generated V5-C9 pipeline metadata had `pipeline_version=v5-c9`, `status=passed`, `stage_statuses.validation=passed`, `stage_statuses.experiments=passed`, `mlflow_run_ids=3`, and `champion_run_id=bb579b6839af402980d57e91580346b3`.
 - `.\vir_env\Scripts\python.exe -m pytest -q` returned `191 passed in 4.39s`.
 - `Select-String -Path logs\modelopslab.log -Pattern "ERROR|Traceback|pipeline_test_"` returned no matches after the V5-C9 verification run.
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v5_c6_prefect_orchestration.py tests\test_v5_c7_prefect_retry_policy.py tests\test_v5_c8_prefect_failure_visibility.py tests\test_v5_c9_pipeline_stage_tasks.py tests\test_v5_c10_prefect_deployment_scaffold.py` returned `17 passed in 3.28s`.
+- `.\vir_env\Scripts\python.exe -m app.run_prefect_pipeline` completed successfully and created pipeline run `pipeline_20260604T194100934115Z_fb6e81dd`.
+- Generated V5-C10 pipeline metadata had `pipeline_version=v5-c10`, `status=passed`, `stage_statuses.validation=passed`, `stage_statuses.experiments=passed`, `mlflow_run_ids=3`, and `champion_run_id=6bc55750118c47cca0b84f4300768b5e`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `194 passed in 4.28s`.
+- `Select-String -Path logs\modelopslab.log -Pattern "ERROR|Traceback|pipeline_test_"` returned no matches after the V5-C10 verification run.
 - `git diff --check` passed with only normal Windows CRLF warnings.
 
 ## Outcome
-V5-C1 establishes orchestration planning and documentation foundations. V5-C2 adds the pipeline run metadata contract and persistence helper. V5-C3 adds the first executable plain Python pipeline command. V5-C4 removes duplicate validation from the pipeline path while keeping standalone experiment validation intact. V5-C5 adds the training pipeline flow diagram. V5-C6 adds the local Prefect orchestration wrapper. V5-C7 adds a conservative Prefect task retry policy. V5-C8 adds failed pipeline context visibility at the Prefect command boundary. V5-C9 extracts validation and experiment stage helpers while preserving the pipeline command behavior.
+V5-C1 establishes orchestration planning and documentation foundations. V5-C2 adds the pipeline run metadata contract and persistence helper. V5-C3 adds the first executable plain Python pipeline command. V5-C4 removes duplicate validation from the pipeline path while keeping standalone experiment validation intact. V5-C5 adds the training pipeline flow diagram. V5-C6 adds the local Prefect orchestration wrapper. V5-C7 adds a conservative Prefect task retry policy. V5-C8 adds failed pipeline context visibility at the Prefect command boundary. V5-C9 extracts validation and experiment stage helpers while preserving the pipeline command behavior. V5-C10 adds a Prefect local deployment scaffold with an inactive schedule.

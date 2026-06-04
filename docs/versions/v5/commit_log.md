@@ -2,7 +2,34 @@
 
 This file records meaningful V5 commits and the operational purpose of each change.
 
-## Pending - v5-c9: extract pipeline stage helpers
+## Pending - v5-c10: add Prefect deployment scaffold
+
+### What Changed
+- Added `prefect.yaml`.
+- Defined `local-training-pipeline` deployment.
+- Pointed the deployment at `app/orchestration/prefect_pipeline.py:training_pipeline_flow`.
+- Added local process work pool target `modelopslab-local-process-pool`.
+- Added inactive daily schedule `daily-local-training` in `Asia/Kolkata`.
+- Bumped pipeline metadata version to `v5-c10`.
+- Added focused deployment scaffold tests.
+- Added `docs/deployment/prefect_local_deployment.md`.
+- Updated README, V5 diagram, and V5 docs.
+- Finalized the V5-C9 commit hash as `6f82997`.
+
+### What Problem It Solved
+- Adds version-controlled Prefect deployment configuration.
+- Makes deployment and scheduling concepts learnable through CLI and UI steps.
+- Keeps scheduling inactive by default to avoid accidental local training runs.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v5_c6_prefect_orchestration.py tests\test_v5_c7_prefect_retry_policy.py tests\test_v5_c8_prefect_failure_visibility.py tests\test_v5_c9_pipeline_stage_tasks.py tests\test_v5_c10_prefect_deployment_scaffold.py` returned `17 passed in 3.28s`.
+- `.\vir_env\Scripts\python.exe -m app.run_prefect_pipeline` completed successfully and created pipeline run `pipeline_20260604T194100934115Z_fb6e81dd`.
+- Generated V5-C10 pipeline metadata had `pipeline_version=v5-c10`, `status=passed`, `stage_statuses.validation=passed`, `stage_statuses.experiments=passed`, `mlflow_run_ids=3`, and `champion_run_id=6bc55750118c47cca0b84f4300768b5e`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `194 passed in 4.28s`.
+- `Select-String -Path logs\modelopslab.log -Pattern "ERROR|Traceback|pipeline_test_"` returned no matches after the V5-C10 verification run.
+- `git diff --check` passed with only normal Windows CRLF warnings.
+
+## 6f82997 - v5-c9: extract pipeline stage helpers
 
 ### What Changed
 - Added `app/tasks/validation_task.py`.

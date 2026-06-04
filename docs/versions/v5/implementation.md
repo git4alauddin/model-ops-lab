@@ -15,6 +15,7 @@ Implemented chunks:
 - V5-C7: Prefect task retry policy.
 - V5-C8: Prefect failure context visibility.
 - V5-C9: pipeline stage task helpers.
+- V5-C10: Prefect local deployment scaffold.
 
 ## V5-C1 Additions
 - `docs/versions/v5/`
@@ -206,6 +207,26 @@ Implemented chunks:
 - `docs/versions/v5/commit_log.md`
   - finalizes the V5-C8 commit hash as `61eeb5a`
 
+## V5-C10 Additions
+- `prefect.yaml`
+  - defines `local-training-pipeline`
+  - points to `app/orchestration/prefect_pipeline.py:training_pipeline_flow`
+  - uses local process work pool `modelopslab-local-process-pool`
+  - includes an inactive daily schedule in `Asia/Kolkata`
+- `tests/test_v5_c10_prefect_deployment_scaffold.py`
+  - proves the deployment entrypoint, parameters, work pool, and inactive schedule are defined
+- `docs/deployment/prefect_local_deployment.md`
+  - explains deployment concepts
+  - documents CLI setup
+  - documents GUI learning flow
+  - records guardrails for local use
+- `app/pipeline_run_metadata.py`
+  - bumps pipeline metadata version to `v5-c10`
+- `README.md`
+  - links the deployment scaffold guide
+- `docs/versions/v5/commit_log.md`
+  - finalizes the V5-C9 commit hash as `6f82997`
+
 ## Orchestration Boundary
 V5 should not rewrite the working V1-V4 behavior in one step.
 
@@ -224,7 +245,7 @@ V5 orchestration will wrap or extract stage behavior carefully instead of duplic
 Future V5 chunks should introduce:
 
 ```text
-Prefect deployment configuration
+safe schedule activation after local worker behavior is understood
 ```
 
 Expected pipeline flow:
@@ -275,4 +296,4 @@ app.run_prefect_pipeline = local Prefect wrapper around app.run_training_pipelin
 ```
 
 ## Remaining V5 Gaps
-- Prefect scheduling and deployment configuration are not implemented yet.
+- Prefect deployment schedule exists but remains inactive by default.

@@ -1,7 +1,7 @@
 # V5 Issues Faced
 
 ## Open
-- Prefect scheduling and deployment configuration are not added yet.
+- Prefect deployment schedule exists but remains inactive by default.
 
 ## Resolved
 
@@ -166,3 +166,20 @@ The pipeline behavior stays the same, but the stage responsibilities are now eas
 
 ### Prevention Strategy
 Extract orchestration boundaries incrementally after behavior is proven, not while the base pipeline is still unstable.
+
+## V5-C10 Deployment Scaffold Needed Safe Defaults
+
+### Symptom
+V5 had local Prefect flow execution, but no version-controlled deployment definition for learning scheduling and UI workflow.
+
+### Root Cause
+Adding a live schedule too early could create accidental pipeline runs before local worker behavior is understood.
+
+### Fix Applied
+Added `prefect.yaml` with a local process work pool target and an inactive daily schedule. Added a deployment guide with CLI and GUI steps.
+
+### Why The Fix Worked
+The project now has deployment configuration that can be inspected, deployed, and learned from without making scheduled runs automatic.
+
+### Prevention Strategy
+Deployment scaffolds should be versioned before activation, and schedules should stay inactive until worker behavior is clear.

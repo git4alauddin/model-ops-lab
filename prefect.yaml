@@ -1,0 +1,22 @@
+name: modelopslab
+prefect-version: 3.7.3
+
+deployments:
+  - name: local-training-pipeline
+    version: v5-c10
+    tags:
+      - modelopslab
+      - v5
+      - local
+    description: Local deployment scaffold for the ModelOpsLab training pipeline.
+    entrypoint: app/orchestration/prefect_pipeline.py:training_pipeline_flow
+    parameters:
+      config_path: configs/training.yaml
+    work_pool:
+      name: modelopslab-local-process-pool
+      work_queue_name: default
+    schedules:
+      - slug: daily-local-training
+        cron: "0 9 * * *"
+        timezone: Asia/Kolkata
+        active: false
