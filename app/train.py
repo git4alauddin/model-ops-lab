@@ -208,6 +208,13 @@ def main() -> None:
 
             save_model(fitted_pipeline, artifact_paths["model"])
             save_json(metrics, artifact_paths["metrics"])
+            save_json(
+                {
+                    "labels": [0, 1],
+                    "matrix": metrics["confusion_matrix"],
+                },
+                artifact_paths["confusion_matrix"],
+            )
             save_json(config, artifact_paths["config_snapshot"])
             save_json(metadata, artifact_paths["metadata"])
             log_training_outputs(config, metrics, metadata, artifact_paths)
@@ -307,6 +314,7 @@ def main() -> None:
                 {
                     "model": artifact_paths["model"],
                     "metrics": artifact_paths["metrics"],
+                    "confusion_matrix": artifact_paths["confusion_matrix"],
                     "config_snapshot": artifact_paths["config_snapshot"],
                     "metadata": artifact_paths["metadata"],
                 },

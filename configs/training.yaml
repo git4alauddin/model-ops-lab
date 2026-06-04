@@ -20,6 +20,7 @@ artifacts:
   dir: artifacts
   model_file: model.pkl
   metrics_file: metrics.json
+  confusion_matrix_file: confusion_matrix.json
   config_snapshot_file: config_snapshot.json
   metadata_file: training_metadata.json
 

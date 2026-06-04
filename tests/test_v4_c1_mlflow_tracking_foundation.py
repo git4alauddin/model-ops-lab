@@ -46,7 +46,7 @@ def test_build_mlflow_params_includes_dataset_version_context():
 
     params = build_mlflow_params(config, metadata)
 
-    assert params["pipeline_version"] == "v4-c2"
+    assert params["pipeline_version"] == "v4-c3"
     assert params["model_type"] == "logistic_regression"
     assert params["test_size"] == 0.2
     assert params["random_state"] == 42
@@ -95,6 +95,7 @@ def test_log_training_outputs_logs_params_metrics_and_artifacts(tmp_path):
     }
     artifact_paths = {
         "metrics": tmp_path / "metrics.json",
+        "confusion_matrix": tmp_path / "confusion_matrix.json",
         "metadata": tmp_path / "training_metadata.json",
     }
 
@@ -114,6 +115,7 @@ def test_log_training_outputs_logs_params_metrics_and_artifacts(tmp_path):
     }
     assert fake_mlflow.logged_artifacts == [
         str(artifact_paths["metrics"]),
+        str(artifact_paths["confusion_matrix"]),
         str(artifact_paths["metadata"]),
     ]
 

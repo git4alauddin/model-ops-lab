@@ -6,6 +6,7 @@ V4 adds experiment tracking and training observability on top of the V1-V3 pipel
 Implemented chunks:
 - V4-C1: MLflow tracking foundation.
 - V4-C2: failed-run tracking and evaluation duration.
+- V4-C3: dedicated confusion matrix MLflow artifact.
 
 ## V4-C1 Additions
 - `requirements.txt`
@@ -66,6 +67,23 @@ Implemented chunks:
   - validates MLflow duration metric construction
   - validates failed body errors are tagged on the active run
 
+## V4-C3 Additions
+- `configs/training.yaml`
+  - added `artifacts.confusion_matrix_file`
+- `app/utils/artifacts.py`
+  - added `confusion_matrix` artifact path construction
+- `app/experiment_tracking.py`
+  - bumped tracked `pipeline_version` to `v4-c3`
+- `app/train.py`
+  - persists `artifacts/confusion_matrix.json`
+  - writes labels and matrix in a self-contained JSON structure
+  - includes `confusion_matrix` in the formatted `[ARTIFACTS]` log section
+  - logs the dedicated confusion matrix file to MLflow with the other artifacts
+- `tests/test_v1_c10_artifact_persistence.py`
+  - validates confusion matrix artifact path construction
+- `tests/test_v4_c1_mlflow_tracking_foundation.py`
+  - validates MLflow artifact logging includes the dedicated confusion matrix artifact
+
 ## Current V4 Workflow
 ```text
 python -m app.train
@@ -74,9 +92,10 @@ python -m app.train
   -> train baseline model
   -> evaluate held-out test set with duration timing
   -> persist local artifacts
+  -> persist dedicated confusion_matrix.json
   -> log MLflow params
   -> log MLflow metrics, including training and evaluation duration
-  -> log MLflow artifacts
+  -> log MLflow artifacts, including confusion_matrix.json
   -> persist mlflow_run_id and evaluation duration in training metadata
 ```
 
@@ -91,6 +110,5 @@ active MLflow run
 ```
 
 ## Remaining V4 Gaps
-- Confusion matrix is not logged as a dedicated MLflow artifact yet.
 - Multiple experiment comparison docs are not added yet.
 - Best-run selection rule is not added yet.

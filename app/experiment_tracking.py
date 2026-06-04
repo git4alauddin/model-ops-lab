@@ -13,7 +13,7 @@ class ExperimentTrackingError(ValueError):
 
 DEFAULT_EXPERIMENT_NAME = "modelopslab"
 DEFAULT_TRACKING_URI = "sqlite:///mlflow.db"
-PIPELINE_VERSION = "v4-c2"
+PIPELINE_VERSION = "v4-c3"
 
 
 def build_experiment_tracking_config(config: dict[str, Any]) -> dict[str, str]:

@@ -68,6 +68,7 @@ V4 is in progress. The project is adding experiment tracking and training observ
 - core metric logging
 - training and evaluation duration metric logging
 - artifact logging
+- dedicated confusion matrix artifact logging
 - MLflow run ID persistence in training metadata
 - failed-run tagging for in-run training errors
 - focused tests for experiment tracking helper behavior
@@ -131,6 +132,7 @@ Generated runtime files are intentionally ignored by git:
 
 - `artifacts/model.pkl`
 - `artifacts/metrics.json`
+- `artifacts/confusion_matrix.json`
 - `artifacts/config_snapshot.json`
 - `artifacts/training_metadata.json`
 - `reports/validation_report.json`

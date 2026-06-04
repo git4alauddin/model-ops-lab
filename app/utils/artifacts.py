@@ -27,6 +27,7 @@ def build_artifact_paths(config: dict[str, Any]) -> dict[str, Path]:
         "dir",
         "model_file",
         "metrics_file",
+        "confusion_matrix_file",
         "config_snapshot_file",
         "metadata_file",
     )
@@ -40,6 +41,7 @@ def build_artifact_paths(config: dict[str, Any]) -> dict[str, Path]:
     return {
         "model": artifact_dir / artifact_config["model_file"],
         "metrics": artifact_dir / artifact_config["metrics_file"],
+        "confusion_matrix": artifact_dir / artifact_config["confusion_matrix_file"],
         "config_snapshot": artifact_dir / artifact_config["config_snapshot_file"],
         "metadata": artifact_dir / artifact_config["metadata_file"],
     }

@@ -72,6 +72,7 @@ def test_build_artifact_paths_from_config():
             "dir": "artifacts",
             "model_file": "model.pkl",
             "metrics_file": "metrics.json",
+            "confusion_matrix_file": "confusion_matrix.json",
             "config_snapshot_file": "config_snapshot.json",
             "metadata_file": "training_metadata.json",
         }
@@ -81,6 +82,7 @@ def test_build_artifact_paths_from_config():
 
     assert str(paths["model"]) == "artifacts\\model.pkl"
     assert str(paths["metrics"]) == "artifacts\\metrics.json"
+    assert str(paths["confusion_matrix"]) == "artifacts\\confusion_matrix.json"
     assert str(paths["config_snapshot"]) == "artifacts\\config_snapshot.json"
     assert str(paths["metadata"]) == "artifacts\\training_metadata.json"
 
