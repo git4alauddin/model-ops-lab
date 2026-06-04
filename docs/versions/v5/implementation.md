@@ -10,6 +10,10 @@ Implemented chunks:
 - V5-C2: pipeline run metadata contract and persistence helper.
 - V5-C3: plain Python training pipeline entrypoint.
 - V5-C4: single validation ownership for the training pipeline.
+- V5-C5: training pipeline flow diagram.
+- V5-C6: local Prefect orchestration wrapper.
+- V5-C7: Prefect task retry policy.
+- V5-C8: Prefect failure context visibility.
 
 ## V5-C1 Additions
 - `docs/versions/v5/`
@@ -148,6 +152,30 @@ Implemented chunks:
   - shows the retry-enabled Prefect task
 - `docs/versions/v5/commit_log.md`
   - finalizes the V5-C6 commit hash as `6d9997f`
+
+## V5-C8 Additions
+- `app/run_training_pipeline.py`
+  - attaches failed pipeline metadata to `TrainingPipelineError`
+  - exposes `pipeline_run_id` and `failed_stage` on failed pipeline exceptions
+- `app/run_prefect_pipeline.py`
+  - preserves nested pipeline failure metadata when wrapping flow failures
+  - includes failed `pipeline_run_id` and `failed_stage` in Prefect command errors when available
+  - logs failed pipeline run context at the command boundary
+- `app/pipeline_run_metadata.py`
+  - bumps pipeline metadata version to `v5-c8`
+- `tests/test_v5_c8_prefect_failure_visibility.py`
+  - proves failed pipeline exceptions expose metadata context
+  - proves Prefect command errors preserve nested pipeline failure metadata
+- `tests/test_v5_c3_training_pipeline_entrypoint.py`
+  - keeps expected pipeline success and failure logs silent during focused tests
+- `tests/test_v5_c4_pipeline_validation_ownership.py`
+  - keeps expected pipeline success logs silent during focused tests
+- `README.md`
+  - documents Prefect failure context visibility
+- `docs/diagrams/v5_training_pipeline_flow.md`
+  - shows command-level failure context from failed pipeline metadata
+- `docs/versions/v5/commit_log.md`
+  - finalizes the V5-C7 commit hash as `dfea121`
 
 ## Orchestration Boundary
 V5 should not rewrite the working V1-V4 behavior in one step.

@@ -26,6 +26,17 @@ EXPERIMENTS_STAGE = "experiments"
 class TrainingPipelineError(ValueError):
     """Raised when the plain Python training pipeline fails."""
 
+    def __init__(
+        self,
+        message: str,
+        *,
+        metadata: dict[str, Any] | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.metadata = metadata
+        self.pipeline_run_id = _metadata_value(metadata, "pipeline_run_id")
+        self.failed_stage = _metadata_value(metadata, "failed_stage")
+
 
 def run_training_pipeline(
     *,
@@ -99,7 +110,8 @@ def run_training_pipeline(
             metadata["pipeline_run_id"],
         )
         raise TrainingPipelineError(
-            f"Training pipeline failed at stage {current_stage}: {exc}"
+            f"Training pipeline failed at stage {current_stage}: {exc}",
+            metadata=failed_metadata,
         ) from exc
 
 
@@ -175,6 +187,15 @@ def _mark_pipeline_failed(
         status="failed",
         failed_stage=failed_stage,
     )
+
+
+def _metadata_value(metadata: dict[str, Any] | None, key: str) -> str | None:
+    if not isinstance(metadata, dict):
+        return None
+    value = metadata.get(key)
+    if isinstance(value, str):
+        return value
+    return None
 
 
 if __name__ == "__main__":

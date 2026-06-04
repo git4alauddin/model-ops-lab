@@ -11,7 +11,7 @@ flowchart TD
     prefect_task["Prefect task<br/>run-training-pipeline<br/>retries=2"]
     pipeline_cmd["python -m app.run_training_pipeline"]
     config["configs/training.yaml"]
-    metadata_start["Initialize pipeline metadata<br/>pipeline_version=v5-c7<br/>status=running"]
+    metadata_start["Initialize pipeline metadata<br/>pipeline_version=v5-c8<br/>status=running"]
     validation["Validation stage<br/>validate_dataset_readiness"]
     validation_gate{"Validation passed?"}
     validation_failed["Mark validation failed<br/>failed_stage=validation"]
@@ -32,6 +32,7 @@ flowchart TD
     champion["Champion run ID"]
     metadata_passed["Finalize pipeline metadata<br/>status=passed<br/>mlflow_run_ids<br/>champion_run_id"]
     metadata_failed["Finalize pipeline metadata<br/>status=failed<br/>failed_stage=experiments"]
+    failure_context["Prefect command failure context<br/>pipeline_run_id + failed_stage"]
     pipeline_output["pipeline_runs/<pipeline_run_id>.json"]
 
     experiment_failed{"Experiment stage failed?"}
@@ -72,6 +73,8 @@ flowchart TD
     experiment_workflow --> experiment_failed
     experiment_failed -- yes --> metadata_failed
     metadata_failed --> pipeline_output
+    metadata_failed --> failure_context
+    validation_failed --> failure_context
 
     experiment_failed -- no --> metadata_passed
     champion_report --> metadata_passed
@@ -86,6 +89,8 @@ V5 introduces a pipeline-level view of training.
 The Prefect command wraps the existing plain Python pipeline in a local Prefect flow and task. The pipeline command owns validation once, then calls the reusable experiment workflow with validation disabled for that inner workflow. Candidate models still create MLflow runs, the champion selection logic still writes `reports/champion_run.json`, and the pipeline writes a separate run record under `pipeline_runs/`.
 
 Pipeline metadata is not model metadata and it is not MLflow metadata. It records workflow-level state: stage status, failed stage, dataset version, MLflow run IDs, and champion run ID.
+
+When the Prefect-wrapped pipeline fails, the command-level error preserves the failed `pipeline_run_id` and `failed_stage` from the pipeline metadata so the matching `pipeline_runs/<pipeline_run_id>.json` file can be inspected directly.
 
 ## Current Boundary
 

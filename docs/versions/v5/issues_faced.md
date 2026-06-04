@@ -133,3 +133,20 @@ Transient task failures can be retried by Prefect while the underlying pipeline 
 
 ### Prevention Strategy
 Keep retry policy small and explicit until the pipeline has more granular task modules and stronger failure classification.
+
+## V5-C8 Failed Prefect Runs Needed Metadata Context
+
+### Symptom
+The plain pipeline persisted failed run metadata, but the Prefect command wrapped failures with a generic command-level exception.
+
+### Root Cause
+`run_prefect_pipeline()` did not preserve the `pipeline_run_id` or `failed_stage` from the underlying pipeline failure.
+
+### Fix Applied
+Attached failed metadata to `TrainingPipelineError`, then made `PrefectPipelineError` extract and expose that metadata from the exception chain.
+
+### Why The Fix Worked
+The pipeline metadata file remains the source of truth, while the command-level error now points directly to the failed run and failed stage.
+
+### Prevention Strategy
+When wrapping lower-level workflow errors, preserve structured failure context instead of replacing it with only a generic message.

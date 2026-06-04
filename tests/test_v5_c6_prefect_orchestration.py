@@ -74,7 +74,7 @@ def test_run_prefect_pipeline_wraps_flow_errors():
 def _pipeline_metadata() -> dict:
     return {
         "pipeline_run_id": "pipeline-prefect-test",
-        "pipeline_version": "v5-c7",
+        "pipeline_version": "v5-c8",
         "status": "passed",
         "stage_statuses": {
             "validation": "passed",

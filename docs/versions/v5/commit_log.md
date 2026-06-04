@@ -2,7 +2,33 @@
 
 This file records meaningful V5 commits and the operational purpose of each change.
 
-## Pending - v5-c7: add Prefect retry policy
+## Pending - v5-c8: expose Prefect failure context
+
+### What Changed
+- Attached failed pipeline metadata to `TrainingPipelineError`.
+- Exposed `pipeline_run_id` and `failed_stage` on pipeline failures.
+- Preserved nested pipeline failure metadata inside `PrefectPipelineError`.
+- Added failed run context to the Prefect command error/log boundary.
+- Bumped pipeline metadata version to `v5-c8`.
+- Added focused failure visibility tests.
+- Kept expected pipeline success and failure logs silent in focused tests.
+- Updated README, V5 diagram, and V5 docs.
+- Finalized the V5-C7 commit hash as `dfea121`.
+
+### What Problem It Solved
+- Makes failed Prefect-wrapped pipeline runs easier to inspect.
+- Points users to the exact failed pipeline run metadata file.
+- Keeps pipeline metadata as the source of truth while improving command-level visibility.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v5_c3_training_pipeline_entrypoint.py tests\test_v5_c4_pipeline_validation_ownership.py tests\test_v5_c6_prefect_orchestration.py tests\test_v5_c7_prefect_retry_policy.py tests\test_v5_c8_prefect_failure_visibility.py` returned `17 passed in 3.53s`.
+- `.\vir_env\Scripts\python.exe -m app.run_prefect_pipeline` completed successfully and created pipeline run `pipeline_20260604T190942672811Z_7c46b02f`.
+- Generated V5-C8 pipeline metadata had `pipeline_version=v5-c8`, `status=passed`, `stage_statuses.validation=passed`, `stage_statuses.experiments=passed`, `mlflow_run_ids=3`, and `champion_run_id=e8d6814b81624d208fc53c8621710f6e`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `185 passed in 4.61s`.
+- `Select-String -Path logs\modelopslab.log -Pattern "ERROR|Traceback|pipeline_test_"` returned no matches after the V5-C8 verification run.
+- `git diff --check` passed with only normal Windows CRLF warnings.
+
+## dfea121 - v5-c7: add Prefect retry policy
 
 ### What Changed
 - Added `PIPELINE_TASK_RETRIES = 2`.

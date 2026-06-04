@@ -2,6 +2,8 @@
 
 from pathlib import Path
 
+import pytest
+
 from app.run_training_pipeline import (
     TrainingPipelineError,
     extract_champion_run_id,
@@ -13,6 +15,14 @@ from app.validation.reports import (
     ValidationIssue,
     build_validation_report,
 )
+
+
+@pytest.fixture(autouse=True)
+def _silence_training_pipeline_logger(monkeypatch):
+    monkeypatch.setattr(
+        "app.run_training_pipeline.get_logger",
+        lambda *args, **kwargs: _SilentLogger(),
+    )
 
 
 def test_run_training_pipeline_persists_success_metadata(tmp_path):
@@ -242,3 +252,11 @@ def _write_test_config(tmp_path: Path) -> Path:
         encoding="utf-8",
     )
     return config_path
+
+
+class _SilentLogger:
+    def info(self, *args, **kwargs):
+        return None
+
+    def exception(self, *args, **kwargs):
+        return None
