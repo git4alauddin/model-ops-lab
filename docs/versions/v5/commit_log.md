@@ -2,7 +2,30 @@
 
 This file records meaningful V5 commits and the operational purpose of each change.
 
-## Pending - v5-c4: remove duplicate pipeline validation
+## Pending - v5-c5: add training pipeline flow diagram
+
+### What Changed
+- Added `docs/diagrams/v5_training_pipeline_flow.md`.
+- Documented the plain Python training pipeline command.
+- Documented validation ownership.
+- Documented `run_experiment_workflow(..., validate_before_run=false)`.
+- Documented MLflow candidate runs and champion selection.
+- Documented passed and failed pipeline metadata outputs.
+- Linked the V5 diagram from README.
+- Updated V5 docs.
+- Finalized the V5-C4 commit hash as `b166db6`.
+
+### What Problem It Solved
+- Makes the current V5 orchestration behavior easier to explain visually.
+- Clarifies the difference between pipeline metadata, MLflow metadata, and champion reports.
+- Creates a clean reference point before Prefect is introduced.
+
+### Verification
+- `Get-Content docs\diagrams\v5_training_pipeline_flow.md` confirmed the diagram exists.
+- `Select-String -Path README.md -Pattern "v5_training_pipeline_flow"` confirmed README links the diagram.
+- `git diff --check` passed with only normal Windows CRLF warnings.
+
+## b166db6 - v5-c4: remove duplicate pipeline validation
 
 ### What Changed
 - Extracted reusable `run_experiment_workflow()` from `app.run_experiments`.

@@ -24,6 +24,7 @@ Implemented chunks:
 - plain Python pipeline command
 - pipeline-level metadata persistence during real runtime execution
 - reusable experiment workflow with optional validation
+- V5 training pipeline flow diagram
 
 ## Workflow To Introduce
 V5 will move toward this workflow:
@@ -53,3 +54,5 @@ pipeline command
 
 ## Current V5 Outcome
 V5 has the architecture direction, output structure, metadata contract, and first plain Python pipeline command. The pipeline owns validation once and then runs experiments without duplicate validation. Prefect orchestration is intentionally not added yet.
+
+For the V5 training pipeline diagram, see `docs/diagrams/v5_training_pipeline_flow.md`.

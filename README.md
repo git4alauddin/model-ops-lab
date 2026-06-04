@@ -169,6 +169,7 @@ http://127.0.0.1:5000
 For run comparison guidance, see `docs/experiments/mlflow_comparison_guide.md`.
 For best-run selection guidance, see `docs/experiments/best_run_selection_rule.md`.
 For the V4 experiment tracking flow, see `docs/diagrams/v4_experiment_tracking_flow.md`.
+For the V5 training pipeline flow, see `docs/diagrams/v5_training_pipeline_flow.md`.
 
 ## Runtime Outputs
 

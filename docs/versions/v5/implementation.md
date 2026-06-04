@@ -97,6 +97,19 @@ Implemented chunks:
 - `docs/versions/v5/commit_log.md`
   - finalizes the V5-C3 commit hash as `32e7653`
 
+## V5-C5 Additions
+- `docs/diagrams/v5_training_pipeline_flow.md`
+  - documents the plain Python pipeline command
+  - shows validation ownership
+  - shows `run_experiment_workflow(..., validate_before_run=false)`
+  - shows MLflow candidate runs
+  - shows champion selection output
+  - shows passed and failed pipeline metadata output
+- `README.md`
+  - links the V5 training pipeline flow diagram
+- `docs/versions/v5/commit_log.md`
+  - finalizes the V5-C4 commit hash as `b166db6`
+
 ## Orchestration Boundary
 V5 should not rewrite the working V1-V4 behavior in one step.
 

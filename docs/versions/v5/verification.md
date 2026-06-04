@@ -11,6 +11,7 @@
 - Verified V5-C3 plain Python pipeline entrypoint behavior.
 - Verified V5-C4 validation ownership behavior.
 - Verified expected failure-path tests no longer pollute `logs/modelopslab.log`.
+- Verified V5 training pipeline flow diagram exists and is linked from README.
 
 ## Commands Executed
 - `Get-ChildItem docs\versions\v5`
@@ -24,6 +25,8 @@
 - `.\vir_env\Scripts\python.exe -m app.run_experiments`
 - `.\vir_env\Scripts\python.exe -m app.run_training_pipeline`
 - `Select-String -Path logs\modelopslab.log -Pattern "ERROR|Traceback|pipeline_test_"`
+- `Get-Content docs\diagrams\v5_training_pipeline_flow.md`
+- `Select-String -Path README.md -Pattern "v5_training_pipeline_flow"`
 - `git diff --check`
 
 ## Expected Output
@@ -38,6 +41,7 @@
 - Standalone experiments still validate.
 - The V5 pipeline validates once and skips duplicate experiment-level validation.
 - The project runtime log stays free of expected test failure traces.
+- The V5 diagram documents the current plain Python pipeline flow.
 
 ## Actual Output
 - `Get-ChildItem docs\versions\v5` showed overview, implementation, verification, issues, lessons, and commit log files.
@@ -57,6 +61,8 @@
 - `.\vir_env\Scripts\python.exe -m app.run_training_pipeline` completed successfully and created pipeline run `pipeline_20260604T181245710980Z_3db9b1f0`.
 - Generated V5-C4 pipeline metadata had `pipeline_version=v5-c4`, `status=passed`, `stage_statuses.validation=passed`, `stage_statuses.experiments=passed`, `mlflow_run_ids=3`, and `champion_run_id=ab11db237b434d3a90eb23835f0be62d`.
 - `Select-String -Path logs\modelopslab.log -Pattern "ERROR|Traceback|pipeline_test_"` returned no matches after the clean pipeline run.
+- `Get-Content docs\diagrams\v5_training_pipeline_flow.md` confirmed the V5 diagram exists.
+- `Select-String -Path README.md -Pattern "v5_training_pipeline_flow"` confirmed README links the diagram.
 - `git diff --check` passed with only normal Windows CRLF warnings.
 
 ## Outcome
