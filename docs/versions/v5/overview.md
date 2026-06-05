@@ -19,6 +19,7 @@ Implemented chunks:
 - V5-C8: Prefect failure context visibility.
 - V5-C9: pipeline stage task helpers.
 - V5-C10: Prefect local deployment scaffold.
+- V5-C11: stage-level Prefect tasks.
 
 ## Components Introduced
 - V5 documentation scaffold
@@ -32,9 +33,9 @@ Implemented chunks:
 - reusable experiment workflow with optional validation
 - V5 training pipeline flow diagram
 - Prefect dependency
-- local Prefect flow and task wrapper
+- local Prefect flow and stage-level task wrapper
 - Prefect pipeline command
-- Prefect retry policy for the pipeline task
+- Prefect retry policy for the validation task
 - failure context propagation from pipeline metadata into Prefect command errors
 - validation and experiment stage helper modules
 - version-controlled Prefect deployment scaffold with inactive schedule
@@ -67,6 +68,6 @@ pipeline command
 - create a foundation for future retraining automation
 
 ## Current V5 Outcome
-V5 has the architecture direction, output structure, metadata contract, plain Python pipeline command, local Prefect wrapper, Prefect task retry policy, Prefect failure context visibility, extracted validation/experiment stage helpers, and a local Prefect deployment scaffold. The pipeline owns validation once and then runs experiments without duplicate validation. The deployment schedule is intentionally inactive by default.
+V5 has the architecture direction, output structure, metadata contract, plain Python pipeline command, local Prefect stage-level wrapper, validation retry policy, Prefect failure context visibility, extracted validation/experiment stage helpers, and a local Prefect deployment scaffold. The pipeline owns validation once and then runs experiments without duplicate validation. The deployment schedule is intentionally inactive by default.
 
 For the V5 training pipeline diagram, see `docs/diagrams/v5_training_pipeline_flow.md`.

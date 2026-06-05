@@ -3,7 +3,7 @@ prefect-version: 3.7.3
 
 deployments:
   - name: local-training-pipeline
-    version: v5-c10
+    version: v5-c11
     tags:
       - modelopslab
       - v5

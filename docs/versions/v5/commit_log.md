@@ -2,7 +2,39 @@
 
 This file records meaningful V5 commits and the operational purpose of each change.
 
-## Pending - v5-c10: add Prefect deployment scaffold
+## Pending - v5-c11: split Prefect flow into stage tasks
+
+### What Changed
+- Replaced the one-big Prefect task with stage-level Prefect tasks.
+- Added `initialize_pipeline_run_task`.
+- Added `validation_stage_task`.
+- Added `experiment_stage_task`.
+- Added `finalize_pipeline_run_task`.
+- Kept validation retries at two retries with a five-second delay.
+- Kept experiment retries disabled to avoid duplicate MLflow candidate runs.
+- Preserved failed metadata context on Prefect stage errors.
+- Kept `app.run_training_pipeline` as the plain Python fallback path.
+- Bumped pipeline metadata version to `v5-c11`.
+- Bumped Prefect deployment scaffold version to `v5-c11`.
+- Added focused stage-level Prefect task tests.
+- Updated README, V5 diagram, and V5 docs.
+- Finalized the V5-C10 commit hash as `937e33e`.
+
+### What Problem It Solved
+- Makes the Prefect UI show meaningful pipeline stages.
+- Improves orchestration clarity without enabling scheduling.
+- Preserves the existing pipeline metadata contract.
+
+### Verification
+- `.\vir_env\Scripts\python.exe -m pytest -q tests\test_v5_c6_prefect_orchestration.py tests\test_v5_c7_prefect_retry_policy.py tests\test_v5_c8_prefect_failure_visibility.py tests\test_v5_c9_pipeline_stage_tasks.py tests\test_v5_c10_prefect_deployment_scaffold.py tests\test_v5_c11_prefect_stage_tasks.py` returned `21 passed in 3.14s`.
+- `.\vir_env\Scripts\python.exe -m app.run_prefect_pipeline` completed successfully and created pipeline run `pipeline_20260605T160419437059Z_10b85a77`.
+- The Prefect command output showed separate task runs for `initialize-pipeline-run`, `validation-stage`, `experiment-stage`, and `finalize-pipeline-run`.
+- Generated V5-C11 pipeline metadata had `pipeline_version=v5-c11`, `status=passed`, `stage_statuses.validation=passed`, `stage_statuses.experiments=passed`, `mlflow_run_ids=3`, and `champion_run_id=ad515aeb89ca4720ac853af2ee34678f`.
+- `.\vir_env\Scripts\python.exe -m pytest -q` returned `198 passed in 4.22s`.
+- `Select-String -Path logs\modelopslab.log -Pattern "ERROR|Traceback|pipeline_test_"` returned no matches after the V5-C11 verification run.
+- `git diff --check` passed with only normal Windows CRLF warnings.
+
+## 937e33e - v5-c10: add Prefect deployment scaffold
 
 ### What Changed
 - Added `prefect.yaml`.

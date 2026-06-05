@@ -140,6 +140,7 @@ def main() -> None:
         logger.error("Training pipeline command failed: %s", exc)
         raise SystemExit(1) from exc
 
+
 def _mark_pipeline_failed(
     metadata: dict[str, Any],
     failed_stage: str,

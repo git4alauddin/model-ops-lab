@@ -17,3 +17,4 @@
 - Wrapping pipeline errors should preserve structured context such as `pipeline_run_id` and `failed_stage`; otherwise the metadata exists but is hard to find during debugging.
 - Stage helper modules are useful before full Prefect task decomposition because they clarify boundaries while preserving the proven pipeline command.
 - Prefect deployment configuration can be versioned safely before schedule activation; inactive schedules are useful for learning without accidental runs.
+- Task-level Prefect orchestration improves UI clarity, but experiment-stage retries should stay disabled until duplicate MLflow runs are handled intentionally.

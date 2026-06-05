@@ -13,7 +13,7 @@ def test_prefect_yaml_defines_local_training_pipeline_deployment():
 
     deployment = deployments[0]
     assert deployment["name"] == "local-training-pipeline"
-    assert deployment["version"] == "v5-c10"
+    assert deployment["version"] == "v5-c11"
     assert deployment["entrypoint"] == (
         "app/orchestration/prefect_pipeline.py:training_pipeline_flow"
     )

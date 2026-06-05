@@ -183,3 +183,20 @@ The project now has deployment configuration that can be inspected, deployed, an
 
 ### Prevention Strategy
 Deployment scaffolds should be versioned before activation, and schedules should stay inactive until worker behavior is clear.
+
+## V5-C11 Task-Level Prefect Split Needed Retry Guardrails
+
+### Symptom
+The Prefect UI could show only one large pipeline task, which hid the validation and experiment boundaries.
+
+### Root Cause
+V5-C6 intentionally wrapped the proven plain Python pipeline first. That was stable, but less useful for learning task-level orchestration.
+
+### Fix Applied
+Split the Prefect flow into initialization, validation, experiment, and finalization tasks while keeping the plain Python pipeline command as a fallback.
+
+### Why The Fix Worked
+The Prefect UI can now show meaningful pipeline stages, and the same metadata contract is preserved.
+
+### Prevention Strategy
+Keep retries only on safe stages. The experiment task does not retry because retrying it can create duplicate MLflow candidate runs.

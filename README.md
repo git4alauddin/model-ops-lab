@@ -87,8 +87,8 @@ V5 is in progress. The project is adding training pipeline automation and orches
 - pipeline run metadata contract and JSON persistence helper
 - plain Python training pipeline command
 - single validation ownership in the V5 pipeline command
-- local Prefect orchestration wrapper
-- Prefect task retry policy for transient pipeline task failures
+- local Prefect task-level orchestration wrapper
+- Prefect validation task retry policy for transient validation failures
 - Prefect failure context that exposes failed pipeline run ID and stage
 - extracted validation and experiment stage helpers
 - Prefect local deployment scaffold with inactive schedule
@@ -137,7 +137,7 @@ python -m app.run_prefect_pipeline
 
 This runs the same V5 training pipeline through a local Prefect flow. It is the primary local orchestration command; the deployment scaffold is optional and its schedule is inactive by default.
 
-The Prefect task uses a small retry policy for transient task failures. If the wrapped pipeline fails, the command error includes the failed `pipeline_run_id` and `failed_stage` when pipeline metadata is available.
+The Prefect flow exposes stage-level tasks for initialization, validation, experiments, and finalization. The validation task uses a small retry policy for transient validation failures; the experiment task does not retry to avoid duplicate MLflow candidate runs. If the wrapped pipeline fails, the command error includes the failed `pipeline_run_id` and `failed_stage` when pipeline metadata is available.
 
 For the local deployment scaffold and UI learning steps, see `docs/deployment/prefect_local_deployment.md`.
 

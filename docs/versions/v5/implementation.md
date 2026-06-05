@@ -16,6 +16,7 @@ Implemented chunks:
 - V5-C8: Prefect failure context visibility.
 - V5-C9: pipeline stage task helpers.
 - V5-C10: Prefect local deployment scaffold.
+- V5-C11: stage-level Prefect tasks.
 
 ## V5-C1 Additions
 - `docs/versions/v5/`
@@ -227,6 +228,35 @@ Implemented chunks:
 - `docs/versions/v5/commit_log.md`
   - finalizes the V5-C9 commit hash as `6f82997`
 
+## V5-C11 Additions
+- `app/orchestration/prefect_pipeline.py`
+  - replaces the one-big Prefect task with stage-level Prefect tasks
+  - adds `initialize_pipeline_run_task`
+  - adds `validation_stage_task`
+  - adds `experiment_stage_task`
+  - adds `finalize_pipeline_run_task`
+  - preserves failed metadata on stage-level Prefect errors
+  - keeps retries on validation only
+  - disables experiment retries to avoid duplicate MLflow candidate runs
+- `app/pipeline_run_metadata.py`
+  - bumps pipeline metadata version to `v5-c11`
+- `app/run_training_pipeline.py`
+  - remains the plain Python fallback path
+- `prefect.yaml`
+  - bumps deployment version to `v5-c11`
+- `tests/test_v5_c6_prefect_orchestration.py`
+  - verifies the flow delegates through stage-level Prefect tasks
+- `tests/test_v5_c7_prefect_retry_policy.py`
+  - verifies validation retries and experiment no-retry behavior
+- `tests/test_v5_c11_prefect_stage_tasks.py`
+  - verifies initialization, validation, experiment, finalization, and failed metadata behavior
+- `README.md`
+  - documents stage-level Prefect task behavior
+- `docs/diagrams/v5_training_pipeline_flow.md`
+  - shows stage-level Prefect tasks
+- `docs/versions/v5/commit_log.md`
+  - finalizes the V5-C10 commit hash as `937e33e`
+
 ## Orchestration Boundary
 V5 should not rewrite the working V1-V4 behavior in one step.
 
@@ -253,11 +283,10 @@ Expected pipeline flow:
 ```text
 training pipeline
   -> Prefect flow
-  -> Prefect task
-  -> validation task
-  -> experiment task
-  -> champion report read
-  -> metadata persistence task
+  -> initialize pipeline run task
+  -> validation stage task
+  -> experiment stage task
+  -> finalize pipeline run task
 ```
 
 ## Pipeline Metadata Output
