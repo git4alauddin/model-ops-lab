@@ -6,7 +6,7 @@ Add training pipeline automation and workflow orchestration foundations.
 V5 moves the project from manually executed training scripts toward reproducible, dependency-aware ML workflows.
 
 ## Completion Status
-V5 is in progress.
+V5 is complete.
 
 Implemented chunks:
 - V5-C1: orchestration foundation and documentation scaffold.
@@ -71,3 +71,22 @@ pipeline command
 V5 has the architecture direction, output structure, metadata contract, plain Python pipeline command, local Prefect stage-level wrapper, validation retry policy, Prefect failure context visibility, extracted validation/experiment stage helpers, and a local Prefect deployment scaffold. The pipeline owns validation once and then runs experiments without duplicate validation. The deployment schedule is intentionally inactive by default.
 
 For the V5 training pipeline diagram, see `docs/diagrams/v5_training_pipeline_flow.md`.
+
+## Closure Summary
+V5 moves ModelOpsLab from manual training and experiment commands into a controlled orchestration layer.
+
+The final V5 workflow supports:
+
+```text
+plain Python pipeline command
+local Prefect stage-level flow
+pipeline run metadata
+validation ownership
+multi-model experiment execution
+MLflow run ID capture
+champion run capture
+failure-stage visibility
+deployment scaffold for UI learning
+```
+
+Automatic scheduling remains inactive by design. Future versions can activate schedules only after local worker behavior and run cadence are intentionally defined.

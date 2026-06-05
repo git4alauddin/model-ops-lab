@@ -271,8 +271,8 @@ python -m app.run_prefect_pipeline
 
 V5 orchestration will wrap or extract stage behavior carefully instead of duplicating everything blindly.
 
-## Planned V5 Runtime Direction
-Future V5 chunks should introduce:
+## Future Runtime Direction
+Future versions can introduce:
 
 ```text
 safe schedule activation after local worker behavior is understood
@@ -325,4 +325,5 @@ app.run_prefect_pipeline = local Prefect wrapper around app.run_training_pipelin
 ```
 
 ## Remaining V5 Gaps
-- Prefect deployment schedule exists but remains inactive by default.
+- None for V5.
+- Prefect deployment schedule exists but remains inactive by default as a deliberate safety guardrail.

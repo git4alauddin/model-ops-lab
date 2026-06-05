@@ -2,7 +2,25 @@
 
 This file records meaningful V5 commits and the operational purpose of each change.
 
-## Pending - v5-c11: split Prefect flow into stage tasks
+## Pending - v5-c12: close orchestration version
+
+### What Changed
+- Marked V5 as complete.
+- Added V5 closure summary.
+- Reframed inactive Prefect schedule as an intentional guardrail.
+- Updated README V5 status.
+- Finalized the V5-C11 commit hash as `8c9fa85`.
+
+### What Problem It Solved
+- Creates a clean closure point before V6.
+- Separates completed orchestration foundations from future schedule activation.
+- Documents that inactive scheduling is deliberate, not unfinished work.
+
+### Verification
+- Documentation-only closure.
+- `git diff --check` passed with only normal Windows CRLF warnings.
+
+## 8c9fa85 - v5-c11: split Prefect flow into stage tasks
 
 ### What Changed
 - Replaced the one-big Prefect task with stage-level Prefect tasks.

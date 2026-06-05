@@ -79,7 +79,7 @@ V4 is complete. The project now has experiment tracking and training observabili
 
 ## V5 Status
 
-V5 is in progress. The project is adding training pipeline automation and orchestration foundations:
+V5 is complete. The project now has training pipeline automation and orchestration foundations:
 
 - V5 documentation scaffold
 - Prefect orchestration decision record
@@ -93,6 +93,8 @@ V5 is in progress. The project is adding training pipeline automation and orches
 - extracted validation and experiment stage helpers
 - Prefect local deployment scaffold with inactive schedule
 - explicit guardrail that V5 should wrap stable V1-V4 behavior before replacing it
+
+The deployment schedule exists but is inactive by default. This is intentional: direct local runs and manual UI-triggered deployment runs are supported, while automatic scheduled runs require an explicit future activation decision.
 
 ## Setup
 

@@ -1,6 +1,9 @@
 # V5 Issues Faced
 
 ## Open
+- None.
+
+## Guardrails
 - Prefect deployment schedule exists but remains inactive by default.
 
 ## Resolved
