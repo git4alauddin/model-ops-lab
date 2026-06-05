@@ -3,10 +3,11 @@
 ## Scope
 V6 adds model registry and promotion lifecycle foundations.
 
-The first chunk is intentionally documentation-first: define the registry approach, lifecycle vocabulary, and boundaries before adding runtime code.
+V6 started documentation-first: define the registry approach, lifecycle vocabulary, and boundaries before adding runtime code.
 
 Implemented chunks:
 - V6-C1: model registry foundation and decision record.
+- V6-C2: model registry metadata contract.
 
 ## V6-C1 Additions
 - `docs/versions/v6/`
@@ -17,6 +18,23 @@ Implemented chunks:
   - adds V6 status and direction
 - `docs/versions/v5/commit_log.md`
   - finalizes the V5-C12 commit hash
+
+## V6-C2 Additions
+- `app/model_registry.py`
+  - defines lifecycle states: `candidate`, `champion`, `archived`
+  - defines the model version metadata builder
+  - validates required model registry fields
+  - validates lifecycle state values
+  - validates metrics are present and numeric
+  - validates optional promotion fields when provided
+- `model_registry/.gitkeep`
+  - creates the local registry folder placeholder
+- `tests/test_v6_c2_model_registry_contract.py`
+  - verifies the canonical metadata shape
+  - verifies missing required fields are rejected
+  - verifies invalid lifecycle states are rejected
+  - verifies all supported lifecycle states are accepted
+  - verifies metric values must be numeric
 
 ## Registry Boundary
 V6 should not replace MLflow experiment tracking.
@@ -32,8 +50,6 @@ V6 registry = project-level model versions and promotion state
 Future V6 chunks should introduce:
 
 ```text
-model_registry/
-app/model_registry.py
 app/register_model.py
 app/promote_model.py
 tests/test_v6_*.py
@@ -45,6 +61,7 @@ Expected registry record fields:
 model_name
 model_version
 status
+registry_version
 created_at
 updated_at
 mlflow_run_id
@@ -65,7 +82,7 @@ Start with explicit manual promotion.
 Do not automatically promote every champion report into a registry champion until the registry contract and rollback behavior are tested.
 
 ## Remaining V6 Gaps
-- Registry storage folder is not added yet.
-- Model registry code is not added yet.
 - Register and promote commands are not added yet.
 - Registry diagram is not added yet.
+- Registry persistence is not added yet.
+- Rollback behavior is not added yet.

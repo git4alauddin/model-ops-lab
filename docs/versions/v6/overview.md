@@ -10,11 +10,13 @@ V6 is in progress.
 
 Implemented chunks:
 - V6-C1: model registry foundation and decision record.
+- V6-C2: model registry metadata contract.
 
 ## Components To Introduce
 - V6 documentation scaffold
 - model registry decision record
 - model version metadata contract
+- local registry folder placeholder
 - promotion lifecycle states
 - registry output location
 - model registration command

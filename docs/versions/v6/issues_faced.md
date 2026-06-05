@@ -1,9 +1,9 @@
 # V6 Issues Faced
 
 ## Open
-- Registry storage folder is not added yet.
-- Model registry runtime code is not added yet.
 - Register and promote commands are not added yet.
+- Registry persistence is not added yet.
+- Rollback behavior is not added yet.
 
 ## Resolved
 
@@ -23,3 +23,20 @@ The project now has a clear boundary between MLflow experiment tracking and proj
 
 ### Prevention Strategy
 Define lifecycle states and ownership before writing model registry code.
+
+## V6-C2 Contract Before Persistence
+
+### Symptom
+The project needed model registry runtime code, but persistence and promotion behavior would be unclear without a metadata contract.
+
+### Root Cause
+Registration, promotion, and rollback all depend on the same model version fields and lifecycle state vocabulary.
+
+### Fix Applied
+Added `app/model_registry.py` with a validated model version metadata contract and focused tests.
+
+### Why The Fix Worked
+Future registry commands can now build on one shared contract instead of inventing metadata shape independently.
+
+### Prevention Strategy
+Add persistence and promotion only after the contract is covered by tests.
