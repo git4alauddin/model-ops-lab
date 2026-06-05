@@ -2,7 +2,7 @@
 
 This file records meaningful V5 commits and the operational purpose of each change.
 
-## Pending - v5-c12: close orchestration version
+## e8cd385 - v5-c12: close orchestration version
 
 ### What Changed
 - Marked V5 as complete.

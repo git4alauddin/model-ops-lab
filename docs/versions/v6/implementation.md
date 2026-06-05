@@ -1,0 +1,71 @@
+# V6 Implementation
+
+## Scope
+V6 adds model registry and promotion lifecycle foundations.
+
+The first chunk is intentionally documentation-first: define the registry approach, lifecycle vocabulary, and boundaries before adding runtime code.
+
+Implemented chunks:
+- V6-C1: model registry foundation and decision record.
+
+## V6-C1 Additions
+- `docs/versions/v6/`
+  - added V6 overview, implementation, verification, issues, lessons, and commit log files
+- `docs/decisions/adr_local_model_registry_for_v6.md`
+  - records the decision to start with a local project registry before direct MLflow Model Registry integration
+- `README.md`
+  - adds V6 status and direction
+- `docs/versions/v5/commit_log.md`
+  - finalizes the V5-C12 commit hash
+
+## Registry Boundary
+V6 should not replace MLflow experiment tracking.
+
+Current responsibilities:
+
+```text
+MLflow = experiment runs, params, metrics, artifacts
+V6 registry = project-level model versions and promotion state
+```
+
+## Planned V6 Runtime Direction
+Future V6 chunks should introduce:
+
+```text
+model_registry/
+app/model_registry.py
+app/register_model.py
+app/promote_model.py
+tests/test_v6_*.py
+```
+
+Expected registry record fields:
+
+```text
+model_name
+model_version
+status
+created_at
+updated_at
+mlflow_run_id
+candidate_name
+model_type
+dataset_name
+dataset_version
+dataset_checksum
+metrics
+artifact_uri
+promoted_from
+promotion_reason
+```
+
+## Design Guardrail
+Start with explicit manual promotion.
+
+Do not automatically promote every champion report into a registry champion until the registry contract and rollback behavior are tested.
+
+## Remaining V6 Gaps
+- Registry storage folder is not added yet.
+- Model registry code is not added yet.
+- Register and promote commands are not added yet.
+- Registry diagram is not added yet.
