@@ -5,3 +5,5 @@ joblib>=1.4.0
 pytest>=8.2.0
 mlflow>=3.0.0
 prefect>=3.0.0
+fastapi>=0.110.0
+uvicorn>=0.29.0

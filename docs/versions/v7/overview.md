@@ -1,0 +1,57 @@
+# V7 Overview
+
+## Version Goal
+Add model serving API and inference infrastructure.
+
+V7 moves the project from managed model lifecycle records to an API layer that can serve predictions from the selected model.
+
+## Completion Status
+V7 is in progress.
+
+Implemented chunks:
+- V7-C1: serving API foundation.
+
+## Components To Introduce
+- FastAPI application boundary
+- health endpoint
+- readiness endpoint
+- prediction request schema
+- prediction response schema
+- registry-based model loading
+- single prediction endpoint
+- batch prediction endpoint
+- request ID handling
+- prediction logging
+- latency tracking
+- structured serving errors
+- serving flow diagram
+- serving documentation
+
+## Serving Direction
+V7 starts with a minimal API foundation first.
+
+The first serving boundary proves the service can start and expose operational endpoints before adding model loading and prediction behavior.
+
+## Initial API Surface
+
+```text
+GET /health
+```
+
+Meaning:
+
+```text
+the API process is alive and responding
+```
+
+Health does not mean the model is ready. Readiness and prediction behavior will be added separately.
+
+## Operational Objectives
+- expose model behavior through an HTTP API
+- separate API routes from prediction logic
+- validate inference requests before prediction
+- load model versions through registry metadata
+- return model version and request metadata with predictions
+- make inference failures observable
+- prepare for Dockerized serving in V8
+
