@@ -11,6 +11,7 @@ V7 is in progress.
 Implemented chunks:
 - V7-C1: serving API foundation.
 - V7-C2: readiness endpoint.
+- V7-C3: inference request and response schemas.
 
 ## Components To Introduce
 - FastAPI application boundary
@@ -55,6 +56,32 @@ the API can find exactly one champion model in the local registry
 ```
 
 If no champion exists or multiple champions exist, `/ready` returns `503` with a `not_ready` response.
+
+## Inference Contract
+The first prediction contract is schema version `v1`.
+
+Request fields:
+
+```text
+schema_version
+tenure_months
+monthly_charges
+total_charges
+contract_type
+internet_service
+payment_method
+is_senior
+```
+
+The schema rejects:
+
+```text
+missing required fields
+unexpected fields
+invalid numeric ranges
+invalid categorical values
+unsupported schema versions
+```
 
 ## Operational Objectives
 - expose model behavior through an HTTP API

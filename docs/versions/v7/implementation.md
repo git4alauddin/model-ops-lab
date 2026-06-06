@@ -103,3 +103,66 @@ Not-ready response:
   "reason": "No champion model found."
 }
 ```
+
+## V7-C3: Inference Request And Response Schemas
+
+### Files Added
+
+```text
+app/api/schemas.py
+tests/test_v7_c3_inference_schemas.py
+```
+
+### Files Updated
+
+```text
+docs/versions/v7/
+```
+
+### Behavior
+- Added `PredictionRequest`.
+- Added `PredictionResponse`.
+- Added `ServingErrorResponse`.
+- Enforced inference schema version `v1`.
+- Rejected unexpected request fields.
+- Rejected invalid numeric ranges.
+- Rejected invalid categorical values.
+
+### Prediction Request Shape
+
+```json
+{
+  "schema_version": "v1",
+  "tenure_months": 12,
+  "monthly_charges": 79.5,
+  "total_charges": 950.0,
+  "contract_type": "month_to_month",
+  "internet_service": "fiber_optic",
+  "payment_method": "credit_card",
+  "is_senior": false
+}
+```
+
+### Prediction Response Shape
+
+```json
+{
+  "status": "success",
+  "prediction": 1,
+  "probability": 0.82,
+  "model_name": "customer_churn_model",
+  "model_version": "v1-ready",
+  "request_id": "request-1",
+  "latency_ms": 12.4
+}
+```
+
+### Error Response Shape
+
+```json
+{
+  "status": "failed",
+  "error": "Model unavailable.",
+  "request_id": "request-1"
+}
+```

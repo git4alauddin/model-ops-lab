@@ -18,3 +18,11 @@ FastAPI could not infer a valid response model from a route annotated as `dict |
 
 ### Resolution
 Disabled response-model inference for `/ready` and let the route return either a normal dictionary or a `JSONResponse` with HTTP `503`.
+
+## V7-C3: Inference Schemas
+
+### Issue
+Prediction behavior needs a strict input and output contract before `/predict` is implemented.
+
+### Resolution
+Added Pydantic schemas for prediction requests, successful prediction responses, and structured serving errors.

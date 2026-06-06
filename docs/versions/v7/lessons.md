@@ -8,3 +8,6 @@
 - A readiness endpoint should return `503` when the service cannot safely serve traffic.
 - Readiness should reject ambiguous champion state because serving the wrong model is an operational risk.
 - `/health` must stay independent from model readiness so process availability can be debugged separately.
+- Prediction schemas should be defined before prediction code so invalid client payloads are blocked at the API boundary.
+- Extra inference fields should be rejected because silent unused fields can hide client/schema drift.
+- Response schemas should include model and request metadata so predictions stay traceable.
