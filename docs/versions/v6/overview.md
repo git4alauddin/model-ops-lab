@@ -89,3 +89,38 @@ champion report
 ```
 
 The registry remains local project metadata. It does not replace MLflow experiment tracking.
+
+## How To Run V6 Locally
+Run these commands from the `modelOpsLab` project directory after activating the virtual environment.
+
+```powershell
+python -m app.run_experiments
+python -m app.register_model
+python -m app.promote_model
+python -m app.query_model_registry
+```
+
+What each command does:
+
+```text
+app.run_experiments      -> creates or refreshes reports/champion_run.json
+app.register_model       -> registers that champion as a candidate model version
+app.promote_model        -> promotes the candidate to champion
+app.query_model_registry -> prints current registry state and champion model
+```
+
+To test rollback, first query the registry and copy an archived model version:
+
+```powershell
+python -m app.query_model_registry
+python -m app.rollback_model --model-version <archived-version> --reason "Rollback test"
+python -m app.query_model_registry
+```
+
+Rollback is intentionally guarded:
+
+```text
+only archived versions can be rolled back
+a rollback reason is required
+the current champion is archived before the old version becomes champion
+```
