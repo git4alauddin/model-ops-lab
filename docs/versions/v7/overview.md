@@ -12,6 +12,7 @@ Implemented chunks:
 - V7-C1: serving API foundation.
 - V7-C2: readiness endpoint.
 - V7-C3: inference request and response schemas.
+- V7-C4: registry-based model loader.
 
 ## Components To Introduce
 - FastAPI application boundary
@@ -81,6 +82,26 @@ unexpected fields
 invalid numeric ranges
 invalid categorical values
 unsupported schema versions
+```
+
+## Model Loading Direction
+V7 loads the active serving model from the local model registry.
+
+Loader flow:
+
+```text
+local registry
+-> exactly one champion model
+-> artifact URI
+-> local model artifact path
+-> loaded model object
+```
+
+The loader currently supports:
+
+```text
+local model artifact file paths
+mlflow-run://<run_id>/artifacts/model references
 ```
 
 ## Operational Objectives

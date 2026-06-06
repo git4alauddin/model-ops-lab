@@ -26,3 +26,11 @@ Prediction behavior needs a strict input and output contract before `/predict` i
 
 ### Resolution
 Added Pydantic schemas for prediction requests, successful prediction responses, and structured serving errors.
+
+## V7-C4: Registry-Based Model Loader
+
+### Issue
+Registry records can point to MLflow-style artifact references, while local artifacts are stored as concrete files.
+
+### Resolution
+Added artifact URI resolution that maps `mlflow-run://<run_id>/artifacts/model` to the local MLflow `model.pkl` artifact when available.

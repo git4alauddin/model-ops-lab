@@ -11,3 +11,6 @@
 - Prediction schemas should be defined before prediction code so invalid client payloads are blocked at the API boundary.
 - Extra inference fields should be rejected because silent unused fields can hide client/schema drift.
 - Response schemas should include model and request metadata so predictions stay traceable.
+- Serving model loading should go through the registry so the API serves the selected champion, not a hardcoded artifact.
+- The loader should return lineage metadata with the model object because prediction responses and logs need model identity.
+- Artifact URI resolution should fail loudly when the artifact is missing instead of silently falling back to a different model.

@@ -166,3 +166,48 @@ docs/versions/v7/
   "request_id": "request-1"
 }
 ```
+
+## V7-C4: Registry-Based Model Loader
+
+### Files Added
+
+```text
+app/serving/model_loader.py
+tests/test_v7_c4_model_loader.py
+```
+
+### Files Updated
+
+```text
+docs/versions/v7/
+```
+
+### Behavior
+- Added `LoadedModel`.
+- Added `ModelLoaderError`.
+- Added champion metadata resolution for serving.
+- Requires exactly one champion model.
+- Resolves local model artifact file paths.
+- Resolves `mlflow-run://<run_id>/artifacts/model` references to local MLflow artifacts.
+- Loads model artifacts with `joblib`.
+- Returns model object, registry metadata, and resolved artifact path together.
+
+### Loader Flow
+
+```text
+load_champion_model
+  -> resolve_champion_model_metadata
+  -> resolve_model_artifact_path
+  -> joblib.load
+  -> LoadedModel(model, metadata, artifact_path)
+```
+
+### Failure Behavior
+
+```text
+no champion model              -> ModelLoaderError
+multiple champion models       -> ModelLoaderError
+missing artifact               -> ModelLoaderError
+invalid MLflow artifact URI    -> ModelLoaderError
+unloadable model artifact      -> ModelLoaderError
+```

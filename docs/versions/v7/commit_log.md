@@ -39,7 +39,7 @@
 - `python -m pytest -q tests\test_v7_c1_serving_foundation.py tests\test_v7_c2_readiness_endpoint.py` passed: `9 passed in 0.63s`.
 - `python -m pytest -q` passed: `249 passed in 5.61s`.
 
-## Pending - v7-c3: add inference schemas
+## 36dda0d - v7-c3: add inference schemas
 
 ### What Changed
 - Added prediction request schema.
@@ -58,3 +58,25 @@
 - `python -m pytest -q tests\test_v7_c3_inference_schemas.py` passed: `8 passed in 0.13s`.
 - PowerShell-expanded V7 suite command passed: `17 passed in 0.59s`.
 - `python -m pytest -q` passed: `257 passed in 5.30s`.
+
+## Pending - v7-c4: add registry-based model loader
+
+### What Changed
+- Added serving model loader.
+- Added loaded model container.
+- Added controlled model loader errors.
+- Resolved exactly one champion model from registry metadata.
+- Resolved local and MLflow-run artifact references.
+- Loaded model artifacts with `joblib`.
+- Added focused model loader tests.
+- Updated V7 docs for implementation, verification, lessons, and issues.
+
+### What Problem It Solved
+- Prepares the serving layer to load the registry champion model before `/predict` is implemented.
+- Avoids hardcoded model paths in the future prediction endpoint.
+
+### Verification
+- `python -m pytest -q tests\test_v7_c4_model_loader.py` passed: `8 passed in 0.27s`.
+- PowerShell-expanded V7 suite command passed: `25 passed in 0.80s`.
+- `python -c "from app.serving.model_loader import load_champion_model; loaded = load_champion_model(); print(loaded.metadata['model_version']); print(loaded.artifact_path.name); print(type(loaded.model).__name__)"` printed `v1-7ab8f00a`, `model.pkl`, and `Pipeline`.
+- `python -m pytest -q` passed: `265 passed in 5.12s`.
