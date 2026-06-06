@@ -41,7 +41,7 @@ This file records meaningful V6 commits and the operational purpose of each chan
 - `python -m pytest -q tests\test_v6_c2_model_registry_contract.py` passed: `5 passed in 0.05s`.
 - `python -m pytest -q` passed: `203 passed in 8.27s`.
 
-## Pending - v6-c3: add model registry persistence
+## 0ac6a45 - v6-c3: add model registry persistence
 
 ### What Changed
 - Added safe model registry metadata path construction.
@@ -59,3 +59,24 @@ This file records meaningful V6 commits and the operational purpose of each chan
 - `python -m pytest -q tests\test_v6_c3_model_registry_persistence.py` passed: `6 passed in 0.20s`.
 - `python -m pytest -q tests\test_v6_c2_model_registry_contract.py` passed: `5 passed in 0.16s`.
 - `python -m pytest -q` passed: `209 passed in 5.27s`.
+
+## Pending - v6-c4: add model registration command
+
+### What Changed
+- Added model registration command.
+- Connected `reports/champion_run.json` to local model registry metadata.
+- Registered selected champion runs as `candidate` model versions.
+- Added clear failures for missing or incomplete champion reports.
+- Added focused registration command tests.
+- Updated V6 docs for implementation, verification, lessons, and issues.
+
+### What Problem It Solved
+- Converts experiment champion output into a managed local model registry record.
+- Keeps promotion explicit by registering the model as a candidate first.
+
+### Verification
+- `python -m pytest -q tests\test_v6_c4_register_model_command.py` passed: `5 passed in 0.20s`.
+- `python -m pytest -q tests\test_v6_c2_model_registry_contract.py` passed: `5 passed in 0.15s`.
+- `python -m pytest -q tests\test_v6_c3_model_registry_persistence.py` passed: `6 passed in 0.17s`.
+- `python -m app.register_model` registered `customer_churn_model` candidate version `v1-7ab8f00a`.
+- `python -m pytest -q` passed: `214 passed in 4.70s`.

@@ -8,3 +8,5 @@
 - Lifecycle state names should be project-owned first, then mapped to external registry tooling later if needed.
 - Registry persistence should validate both before saving and after loading.
 - Registry filenames must be safe because model names and versions become filesystem paths.
+- Champion selection is an experiment decision; registration turns that decision into a managed model lifecycle record.
+- Registration should create a `candidate` first, not a `champion`, so promotion stays explicit.

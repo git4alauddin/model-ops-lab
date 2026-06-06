@@ -9,6 +9,7 @@ Implemented chunks:
 - V6-C1: model registry foundation and decision record.
 - V6-C2: model registry metadata contract.
 - V6-C3: model registry metadata persistence.
+- V6-C4: model registration command.
 
 ## V6-C1 Additions
 - `docs/versions/v6/`
@@ -55,6 +56,21 @@ Implemented chunks:
   - verifies unsafe model versions are rejected
   - verifies invalid loaded metadata is rejected
 
+## V6-C4 Additions
+- `app/register_model.py`
+  - reads `reports/champion_run.json`
+  - extracts the selected champion run
+  - builds model registry metadata from champion lineage and metrics
+  - registers the model as `candidate`
+  - persists the registry record under `model_registry/`
+  - fails clearly when the champion report is missing or incomplete
+- `tests/test_v6_c4_register_model_command.py`
+  - verifies successful registration from a champion report
+  - verifies explicit model version override
+  - verifies missing champion report failure
+  - verifies missing champion object failure
+  - verifies incomplete champion fields fail clearly
+
 ## Registry Boundary
 V6 should not replace MLflow experiment tracking.
 
@@ -69,7 +85,6 @@ V6 registry = project-level model versions and promotion state
 Future V6 chunks should introduce:
 
 ```text
-app/register_model.py
 app/promote_model.py
 tests/test_v6_*.py
 ```
@@ -101,6 +116,6 @@ Start with explicit manual promotion.
 Do not automatically promote every champion report into a registry champion until the registry contract and rollback behavior are tested.
 
 ## Remaining V6 Gaps
-- Register and promote commands are not added yet.
+- Champion promotion command is not added yet.
 - Registry diagram is not added yet.
 - Rollback behavior is not added yet.

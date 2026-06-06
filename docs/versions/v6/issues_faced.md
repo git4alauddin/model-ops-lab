@@ -1,7 +1,7 @@
 # V6 Issues Faced
 
 ## Open
-- Register and promote commands are not added yet.
+- Champion promotion command is not added yet.
 - Rollback behavior is not added yet.
 
 ## Resolved
@@ -56,3 +56,20 @@ Registry records now round-trip through local JSON storage while preserving the 
 
 ### Prevention Strategy
 Keep generated registry records ignored by git and validate path inputs before writing files.
+
+## V6-C4 Registration From Champion Report
+
+### Symptom
+The project could select a champion run and persist registry records, but there was no command connecting those two capabilities.
+
+### Root Cause
+Champion selection belonged to V4 experiment tracking. Registry persistence belonged to V6. No registration step translated champion output into model registry metadata.
+
+### Fix Applied
+Added `app/register_model.py` to read the champion report, build candidate model metadata, and save it through the registry persistence layer.
+
+### Why The Fix Worked
+The selected champion run can now become a managed candidate model version without automatically promoting it.
+
+### Prevention Strategy
+Keep registration and promotion as separate commands so lifecycle changes remain intentional.
