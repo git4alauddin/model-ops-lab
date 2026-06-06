@@ -24,6 +24,10 @@ reports/*
 pipeline_runs/*
 !pipeline_runs/.gitkeep
 
+# Runtime model registry metadata
+model_registry/*
+!model_registry/.gitkeep
+
 # Local MLflow tracking store
 mlruns/
 mlartifacts/

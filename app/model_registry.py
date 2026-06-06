@@ -2,12 +2,17 @@
 
 from copy import deepcopy
 from datetime import UTC, datetime
+import json
 from pathlib import Path
+import re
 from typing import Any
+
+from app.utils.artifacts import ArtifactError, save_json
 
 DEFAULT_MODEL_REGISTRY_DIR = Path("model_registry")
 MODEL_REGISTRY_VERSION = "v6-c2"
 MODEL_LIFECYCLE_STATES = ("candidate", "champion", "archived")
+_SAFE_MODEL_ID_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+$")
 
 REQUIRED_MODEL_VERSION_FIELDS: tuple[str, ...] = (
     "registry_version",
@@ -118,7 +123,70 @@ def validate_model_version_metadata(metadata: dict[str, Any]) -> None:
     _validate_optional_string(metadata, "promotion_reason")
 
 
+def build_model_version_metadata_path(
+    model_name: str,
+    model_version: str,
+    output_dir: Path = DEFAULT_MODEL_REGISTRY_DIR,
+) -> Path:
+    """Build a safe registry metadata JSON path for one model version."""
+    _validate_safe_model_identifier(model_name, "model_name")
+    _validate_safe_model_identifier(model_version, "model_version")
+    return output_dir / f"{model_name}__{model_version}.json"
+
+
+def save_model_version_metadata(
+    metadata: dict[str, Any],
+    output_dir: Path = DEFAULT_MODEL_REGISTRY_DIR,
+) -> Path:
+    """Validate and persist one model registry metadata record."""
+    validate_model_version_metadata(metadata)
+    path = build_model_version_metadata_path(
+        metadata["model_name"],
+        metadata["model_version"],
+        output_dir,
+    )
+    try:
+        save_json(metadata, path)
+    except ArtifactError as exc:
+        raise ModelRegistryError("Failed to save model registry metadata.") from exc
+    return path
+
+
+def load_model_version_metadata(
+    model_name: str,
+    model_version: str,
+    output_dir: Path = DEFAULT_MODEL_REGISTRY_DIR,
+) -> dict[str, Any]:
+    """Load and validate one model registry metadata record."""
+    path = build_model_version_metadata_path(model_name, model_version, output_dir)
+    try:
+        with path.open("r", encoding="utf-8") as file:
+            metadata = json.load(file)
+    except FileNotFoundError as exc:
+        raise ModelRegistryError(
+            f"Model registry metadata file not found: {path}"
+        ) from exc
+    except json.JSONDecodeError as exc:
+        raise ModelRegistryError(
+            f"Invalid JSON in model registry metadata: {path}"
+        ) from exc
+    except OSError as exc:
+        raise ModelRegistryError(
+            f"Unable to read model registry metadata: {path}"
+        ) from exc
+
+    validate_model_version_metadata(metadata)
+    return metadata
+
+
 def _validate_optional_string(metadata: dict[str, Any], field: str) -> None:
     value = metadata.get(field)
     if value is not None and not isinstance(value, str):
         raise ModelRegistryError(f"{field} must be a string when provided.")
+
+
+def _validate_safe_model_identifier(value: str, field: str) -> None:
+    if not isinstance(value, str) or not value:
+        raise ModelRegistryError(f"{field} must be a non-empty string.")
+    if not _SAFE_MODEL_ID_PATTERN.fullmatch(value):
+        raise ModelRegistryError(f"{field} must be filesystem-safe.")

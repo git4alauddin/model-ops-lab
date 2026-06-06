@@ -6,6 +6,7 @@
 - Verified README includes V6 in the compact version scope table.
 - Verified V5-C12 commit hash is finalized in V5 commit log.
 - Verified V6-C2 model registry metadata contract tests.
+- Verified V6-C3 model registry persistence tests.
 
 ## Commands Executed
 - `Get-ChildItem docs\versions\v6`
@@ -14,6 +15,8 @@
 - `Select-String -Path docs\versions\v5\commit_log.md -Pattern "e8cd385"`
 - `git diff --check`
 - `python -m pytest -q tests\test_v6_c2_model_registry_contract.py`
+- `python -m pytest -q tests\test_v6_c3_model_registry_persistence.py`
+- `python -m pytest -q`
 
 ## Expected Output
 - V6 docs exist.
@@ -22,6 +25,7 @@
 - V5-C12 is finalized with commit hash `e8cd385`.
 - No runtime behavior changes are introduced in V6-C1.
 - V6-C2 accepts valid model registry records and rejects invalid metadata.
+- V6-C3 saves and loads validated local registry metadata records.
 
 ## Actual Output
 - `docs\versions\v6` contains overview, implementation, verification, issues, lessons, and commit log files.
@@ -31,8 +35,13 @@
 - No tests were run because V6-C1 is documentation and decision-record only.
 - `python -m pytest -q tests\test_v6_c2_model_registry_contract.py` passed: `5 passed in 0.05s`.
 - `python -m pytest -q` passed: `203 passed in 8.27s`.
+- `python -m pytest -q tests\test_v6_c3_model_registry_persistence.py` passed: `6 passed in 0.20s`.
+- `python -m pytest -q tests\test_v6_c2_model_registry_contract.py` passed: `5 passed in 0.16s`.
+- `python -m pytest -q` passed: `209 passed in 5.27s`.
 
 ## Outcome
 V6-C1 establishes model registry planning and documentation foundations before runtime registry code is added.
 
 V6-C2 establishes the model registry metadata contract before registration and promotion commands are added.
+
+V6-C3 persists validated model registry metadata locally before registration and promotion commands are added.

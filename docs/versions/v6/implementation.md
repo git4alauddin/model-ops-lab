@@ -8,6 +8,7 @@ V6 started documentation-first: define the registry approach, lifecycle vocabula
 Implemented chunks:
 - V6-C1: model registry foundation and decision record.
 - V6-C2: model registry metadata contract.
+- V6-C3: model registry metadata persistence.
 
 ## V6-C1 Additions
 - `docs/versions/v6/`
@@ -35,6 +36,24 @@ Implemented chunks:
   - verifies invalid lifecycle states are rejected
   - verifies all supported lifecycle states are accepted
   - verifies metric values must be numeric
+
+## V6-C3 Additions
+- `app/model_registry.py`
+  - builds filesystem-safe registry metadata paths
+  - saves validated model version metadata as JSON
+  - loads saved model version metadata from JSON
+  - validates loaded metadata before returning it
+  - rejects unsafe model names and model versions
+- `.gitignore`
+  - ignores generated `model_registry/` runtime JSON files
+  - keeps `model_registry/.gitkeep` tracked
+- `tests/test_v6_c3_model_registry_persistence.py`
+  - verifies safe registry filename construction
+  - verifies valid metadata can be saved
+  - verifies saved metadata can be loaded
+  - verifies unsafe model names are rejected
+  - verifies unsafe model versions are rejected
+  - verifies invalid loaded metadata is rejected
 
 ## Registry Boundary
 V6 should not replace MLflow experiment tracking.
@@ -84,5 +103,4 @@ Do not automatically promote every champion report into a registry champion unti
 ## Remaining V6 Gaps
 - Register and promote commands are not added yet.
 - Registry diagram is not added yet.
-- Registry persistence is not added yet.
 - Rollback behavior is not added yet.

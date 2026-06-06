@@ -2,7 +2,6 @@
 
 ## Open
 - Register and promote commands are not added yet.
-- Registry persistence is not added yet.
 - Rollback behavior is not added yet.
 
 ## Resolved
@@ -40,3 +39,20 @@ Future registry commands can now build on one shared contract instead of inventi
 
 ### Prevention Strategy
 Add persistence and promotion only after the contract is covered by tests.
+
+## V6-C3 Safe Registry Persistence
+
+### Symptom
+Validated model registry metadata could be created, but there was no safe way to store or reload it.
+
+### Root Cause
+The registry did not yet have path-building, JSON persistence, or load-time validation behavior.
+
+### Fix Applied
+Added safe metadata path construction, save/load helpers, and focused persistence tests.
+
+### Why The Fix Worked
+Registry records now round-trip through local JSON storage while preserving the same contract validation.
+
+### Prevention Strategy
+Keep generated registry records ignored by git and validate path inputs before writing files.

@@ -6,3 +6,5 @@
 - Promotion should start as an explicit manual action before becoming automated.
 - A model registry needs a validated metadata contract before it needs persistence or UI features.
 - Lifecycle state names should be project-owned first, then mapped to external registry tooling later if needed.
+- Registry persistence should validate both before saving and after loading.
+- Registry filenames must be safe because model names and versions become filesystem paths.

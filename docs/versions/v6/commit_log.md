@@ -24,7 +24,7 @@ This file records meaningful V6 commits and the operational purpose of each chan
 - Verified V5-C12 commit hash is finalized as `e8cd385`.
 - Ran `git diff --check`; it passed with normal LF-to-CRLF working-copy warnings only.
 
-## Pending - v6-c2: add model registry metadata contract
+## 94e9291 - v6-c2: add model registry metadata contract
 
 ### What Changed
 - Added model registry metadata contract module.
@@ -40,3 +40,22 @@ This file records meaningful V6 commits and the operational purpose of each chan
 ### Verification
 - `python -m pytest -q tests\test_v6_c2_model_registry_contract.py` passed: `5 passed in 0.05s`.
 - `python -m pytest -q` passed: `203 passed in 8.27s`.
+
+## Pending - v6-c3: add model registry persistence
+
+### What Changed
+- Added safe model registry metadata path construction.
+- Added model registry metadata save and load helpers.
+- Added load-time validation for persisted registry JSON.
+- Ignored generated `model_registry/` runtime JSON files while keeping `.gitkeep` tracked.
+- Added focused persistence tests.
+- Updated V6 docs for implementation, verification, lessons, and issues.
+
+### What Problem It Solved
+- Moves registry metadata from in-memory records to validated local JSON records.
+- Creates a persistence layer that future registration and promotion commands can use.
+
+### Verification
+- `python -m pytest -q tests\test_v6_c3_model_registry_persistence.py` passed: `6 passed in 0.20s`.
+- `python -m pytest -q tests\test_v6_c2_model_registry_contract.py` passed: `5 passed in 0.16s`.
+- `python -m pytest -q` passed: `209 passed in 5.27s`.
