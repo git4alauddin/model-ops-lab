@@ -172,7 +172,7 @@ This file records meaningful V6 commits and the operational purpose of each chan
 - `git diff --check` passed with normal LF-to-CRLF working-copy warnings only.
 - No tests were run because V6-C8 is documentation-only.
 
-## Pending - v6-c9: define model rollback guardrails
+## 578fbcc - v6-c9: define model rollback guardrails
 
 ### What Changed
 - Added rollback ADR for V6 model registry.
@@ -191,3 +191,27 @@ This file records meaningful V6 commits and the operational purpose of each chan
 - `Select-String -Path docs\decisions\adr_model_registry_rollback_for_v6.md -Pattern "archived -> champion|current champion -> archived|rollback reason|one active champion|python -m app.rollback_model"` found the expected rollback guardrails.
 - `git diff --check` passed with normal LF-to-CRLF working-copy warnings only.
 - No tests were run because V6-C9 is documentation-only.
+
+## Pending - v6-c10: add model rollback command
+
+### What Changed
+- Added model rollback command.
+- Required rollback target to be archived.
+- Required rollback reason.
+- Archived current champion during rollback.
+- Promoted rollback target to champion.
+- Added focused rollback command tests.
+- Updated V6 docs for implementation, verification, lessons, and issues.
+
+### What Problem It Solved
+- Implements the explicit rollback lifecycle transition.
+- Restores an archived model version as champion while preserving one active champion.
+
+### Verification
+- `python -m pytest -q tests\test_v6_c10_rollback_model_command.py` passed: `7 passed in 0.21s`.
+- `python -m pytest -q tests\test_v6_c5_promote_model_command.py` passed: `5 passed in 0.20s`.
+- `python -m pytest -q tests\test_v6_c6_single_champion.py` passed: `5 passed in 0.25s`.
+- `python -m pytest -q tests\test_v6_c7_model_registry_query.py` passed: `5 passed in 0.25s`.
+- `python -m pytest -q tests\test_v6_c2_model_registry_contract.py tests\test_v6_c3_model_registry_persistence.py tests\test_v6_c4_register_model_command.py` passed: `16 passed in 0.28s`.
+- `python -m app.rollback_model --model-version v1-previous --reason "Command-level rollback check" --output-dir <temp>` rolled back a temporary archived model version to champion.
+- `python -m pytest -q` passed: `236 passed in 5.22s`.

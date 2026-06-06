@@ -20,3 +20,5 @@
 - Registry diagrams need to show ownership boundaries: MLflow tracks experiments, the registry tracks model lifecycle.
 - Rollback is a lifecycle decision, not just a file update.
 - Rollback rules should be defined before code because rollback can change the active production-style model.
+- Rollback should only restore archived versions, not candidates or current champions.
+- Rollback must preserve lineage and change only lifecycle state metadata.

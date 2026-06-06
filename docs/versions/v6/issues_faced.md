@@ -1,7 +1,7 @@
 # V6 Issues Faced
 
 ## Open
-- Rollback command is not added yet.
+- V6 closure checks are not added yet.
 
 ## Resolved
 
@@ -157,3 +157,20 @@ Rollback now has clear constraints before code is added: target must be archived
 
 ### Prevention Strategy
 Implement rollback only after guardrails are documented and test cases are clear.
+
+## V6-C10 Rollback Command Safety
+
+### Symptom
+Rollback rules existed, but there was no command that safely restored an archived model version.
+
+### Root Cause
+The registry needed a dedicated rollback path separate from candidate promotion.
+
+### Fix Applied
+Added `app/rollback_model.py` with archived-only rollback, required reason, current champion archival, and focused tests.
+
+### Why The Fix Worked
+Rollback now follows the documented guardrails and preserves one active champion for the model name.
+
+### Prevention Strategy
+Keep rollback separate from promotion so candidate promotion and archived rollback stay distinct lifecycle operations.

@@ -18,6 +18,7 @@ Implemented chunks:
 - V6-C7: model registry query command.
 - V6-C8: model registry flow diagram.
 - V6-C9: rollback guardrails decision record.
+- V6-C10: model rollback command.
 
 ## Components To Introduce
 - V6 documentation scaffold
@@ -31,6 +32,7 @@ Implemented chunks:
 - model registry query command
 - model registry flow diagram
 - rollback guardrails
+- rollback command
 - promotion lifecycle states
 - registry output location
 - archived model handling

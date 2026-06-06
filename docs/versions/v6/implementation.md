@@ -15,6 +15,7 @@ Implemented chunks:
 - V6-C7: model registry query command.
 - V6-C8: model registry flow diagram.
 - V6-C9: rollback guardrails decision record.
+- V6-C10: model rollback command.
 
 ## V6-C1 Additions
 - `docs/versions/v6/`
@@ -143,6 +144,25 @@ Implemented chunks:
   - preserves one active champion per model name
   - keeps rollback manual before runtime implementation
 
+## V6-C10 Additions
+- `app/rollback_model.py`
+  - adds explicit rollback command entrypoint
+  - requires `--model-version`
+  - requires `--reason`
+  - loads rollback target from the local registry
+  - requires rollback target status to be `archived`
+  - archives the current champion for the same model name
+  - promotes rollback target to `champion`
+  - persists rollback reason in registry metadata
+- `tests/test_v6_c10_rollback_model_command.py`
+  - verifies archived model rollback to champion
+  - verifies current champion becomes archived
+  - verifies rollback reason persistence
+  - verifies candidate rollback is rejected
+  - verifies champion rollback is rejected
+  - verifies missing rollback reason is rejected
+  - verifies unrelated model champion is unchanged
+
 ## Registry Boundary
 V6 should not replace MLflow experiment tracking.
 
@@ -187,4 +207,4 @@ Start with explicit manual promotion.
 Do not automatically promote every champion report into a registry champion until the registry contract and rollback behavior are tested.
 
 ## Remaining V6 Gaps
-- Rollback command is not added yet.
+- V6 closure checks are not added yet.
