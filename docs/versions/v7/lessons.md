@@ -23,3 +23,6 @@
 - Prediction logs should be structured JSONL so they are easy to append, inspect, and later aggregate.
 - Successful and failed prediction attempts need the same request ID so responses can be matched to logs.
 - FastAPI validation failures happen before route logic, so logging those requires middleware or exception handlers later.
+- Batch prediction should load the model once, not once per instance.
+- Batch responses need per-instance request IDs so individual prediction events remain traceable.
+- Empty batches should be rejected at schema validation because they do not represent useful inference work.

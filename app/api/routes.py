@@ -6,7 +6,11 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
 from app.api.constants import API_VERSION, SERVICE_NAME
-from app.api.schemas import PredictionRequest
+from app.api.schemas import (
+    BatchPredictionRequest,
+    BatchPredictionResponse,
+    PredictionRequest,
+)
 from app.serving.model_loader import load_champion_model, ModelLoaderError
 from app.serving.prediction_logging import (
     build_prediction_failure_log,
@@ -78,6 +82,44 @@ def predict(request: PredictionRequest):
 
     write_prediction_log(build_prediction_success_log(request, prediction_response))
     return prediction_response
+
+
+@router.post("/predict/batch", response_model=None)
+def predict_batch(request: BatchPredictionRequest):
+    """Return churn predictions for multiple validated request instances."""
+    batch_request_id = str(uuid4())
+    try:
+        loaded_model = load_champion_model()
+    except ModelLoaderError as exc:
+        return _error_response(
+            status_code=503,
+            request_id=batch_request_id,
+            error=str(exc),
+        )
+
+    predictions = []
+    try:
+        for index, instance in enumerate(request.instances):
+            prediction_response = predict_customer_churn(
+                instance,
+                loaded_model,
+                request_id=f"{batch_request_id}-{index}",
+            )
+            write_prediction_log(
+                build_prediction_success_log(instance, prediction_response)
+            )
+            predictions.append(prediction_response)
+    except PredictionError as exc:
+        return _error_response(
+            status_code=500,
+            request_id=batch_request_id,
+            error=str(exc),
+        )
+
+    return BatchPredictionResponse(
+        request_id=batch_request_id,
+        predictions=predictions,
+    )
 
 
 def _error_response(

@@ -42,6 +42,24 @@ class PredictionResponse(BaseModel):
     latency_ms: float = Field(ge=0)
 
 
+class BatchPredictionRequest(BaseModel):
+    """Validated batch customer churn prediction request."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    instances: list[PredictionRequest] = Field(min_length=1)
+
+
+class BatchPredictionResponse(BaseModel):
+    """Successful batch prediction response."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    status: Literal["success"] = "success"
+    request_id: str = Field(min_length=1)
+    predictions: list[PredictionResponse] = Field(min_length=1)
+
+
 class ServingErrorResponse(BaseModel):
     """Structured serving error response."""
 

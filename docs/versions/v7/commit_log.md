@@ -123,7 +123,7 @@
 - PowerShell-expanded V7 suite command passed: `36 passed in 1.19s`.
 - `python -m pytest -q` passed: `276 passed in 8.00s`.
 
-## Pending - v7-c7: add prediction logging
+## 942dcd1 - v7-c7: add prediction logging
 
 ### What Changed
 - Added JSONL prediction logging helpers.
@@ -142,3 +142,25 @@
 - `python -m pytest -q tests\test_v7_c6_predict_endpoint.py tests\test_v7_c7_prediction_logging.py` passed: `11 passed in 0.97s`.
 - PowerShell-expanded V7 suite command passed: `43 passed in 1.13s`.
 - `python -m pytest -q` passed: `283 passed in 5.64s`.
+
+## Pending - v7-c8: add batch prediction endpoint
+
+### What Changed
+- Added batch prediction request schema.
+- Added batch prediction response schema.
+- Added `POST /predict/batch`.
+- Loaded the champion model once per batch request.
+- Reused the existing prediction service for each instance.
+- Logged each successful prediction result.
+- Added focused batch prediction endpoint tests.
+- Updated V7 docs for implementation, verification, lessons, and issues.
+
+### What Problem It Solved
+- Supports multi-row inference through the serving API.
+- Reuses existing single-prediction validation, loading, prediction, and logging foundations.
+
+### Verification
+- `python -m pytest -q tests\test_v7_c8_batch_prediction_endpoint.py` passed: `7 passed in 0.86s`.
+- `python -m pytest -q tests\test_v7_c6_predict_endpoint.py tests\test_v7_c7_prediction_logging.py tests\test_v7_c8_batch_prediction_endpoint.py` passed: `18 passed in 0.97s`.
+- PowerShell-expanded V7 suite command passed: `50 passed in 1.25s`.
+- `python -m pytest -q` passed: `290 passed in 5.50s`.

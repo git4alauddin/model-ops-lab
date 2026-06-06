@@ -58,3 +58,11 @@ Prediction responses were returned to clients but not persisted for later debugg
 
 ### Resolution
 Added JSONL prediction logs for successful predictions and controlled serving failures.
+
+## V7-C8: Batch Prediction Endpoint
+
+### Issue
+Batch prediction needed to reuse single prediction behavior without loading the model for every instance.
+
+### Resolution
+Added a batch route that loads the champion once, runs the existing prediction service for each instance, and logs each successful prediction event.

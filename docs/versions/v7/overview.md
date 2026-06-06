@@ -16,6 +16,7 @@ Implemented chunks:
 - V7-C5: prediction service.
 - V7-C6: prediction endpoint.
 - V7-C7: prediction logging.
+- V7-C8: batch prediction endpoint.
 
 ## Components To Introduce
 - FastAPI application boundary
@@ -162,6 +163,29 @@ prediction execution failure
 ```
 
 Invalid request payloads are rejected by FastAPI before route logic runs, so they are not logged by the prediction logger yet.
+
+## Batch Prediction API
+`POST /predict/batch` supports multiple prediction instances in one request.
+
+Batch flow:
+
+```text
+POST /predict/batch
+-> validate BatchPredictionRequest
+-> load champion model once
+-> run prediction service for each instance
+-> log each successful prediction
+-> return BatchPredictionResponse
+```
+
+Failure behavior:
+
+```text
+empty batch             -> HTTP 422
+invalid instance        -> HTTP 422
+model unavailable       -> HTTP 503
+prediction failure      -> HTTP 500
+```
 
 ## Operational Objectives
 - expose model behavior through an HTTP API

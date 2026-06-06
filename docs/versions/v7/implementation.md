@@ -338,3 +338,50 @@ logs/predictions.jsonl
   "error": "No champion model found."
 }
 ```
+
+## V7-C8: Batch Prediction Endpoint
+
+### Files Added
+
+```text
+tests/test_v7_c8_batch_prediction_endpoint.py
+```
+
+### Files Updated
+
+```text
+app/api/schemas.py
+app/api/routes.py
+docs/versions/v7/
+```
+
+### Behavior
+- Added `BatchPredictionRequest`.
+- Added `BatchPredictionResponse`.
+- Added `POST /predict/batch`.
+- Validates a non-empty `instances` list.
+- Loads the champion model once per batch request.
+- Runs prediction service once per instance.
+- Logs each successful prediction result.
+- Returns HTTP `422` for empty batch or invalid instance payloads.
+- Returns HTTP `503` when the champion model cannot be loaded.
+- Returns HTTP `500` when prediction execution fails.
+
+### Batch Request Shape
+
+```json
+{
+  "instances": [
+    {
+      "schema_version": "v1",
+      "tenure_months": 12,
+      "monthly_charges": 79.5,
+      "total_charges": 950.0,
+      "contract_type": "month_to_month",
+      "internet_service": "fiber_optic",
+      "payment_method": "credit_card",
+      "is_senior": false
+    }
+  ]
+}
+```

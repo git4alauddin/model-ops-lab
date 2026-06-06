@@ -33,6 +33,11 @@
 - Verified model loading failures are logged.
 - Verified prediction failures are logged.
 - Verified invalid request payloads are not logged by route-level prediction logging.
+- Verified batch request schema rejects empty batches.
+- Verified `POST /predict/batch` returns multiple prediction responses.
+- Verified batch prediction rejects invalid instances.
+- Verified batch prediction maps model loading and prediction failures to controlled HTTP responses.
+- Verified batch prediction logs each successful instance prediction.
 
 ## Commands Executed
 - `python -m pytest -q tests\test_v7_c1_serving_foundation.py`
@@ -45,6 +50,8 @@
 - `python -m pytest -q tests\test_v7_c6_predict_endpoint.py`
 - `python -m pytest -q tests\test_v7_c7_prediction_logging.py`
 - `python -m pytest -q tests\test_v7_c6_predict_endpoint.py tests\test_v7_c7_prediction_logging.py`
+- `python -m pytest -q tests\test_v7_c8_batch_prediction_endpoint.py`
+- `python -m pytest -q tests\test_v7_c6_predict_endpoint.py tests\test_v7_c7_prediction_logging.py tests\test_v7_c8_batch_prediction_endpoint.py`
 - Command-level FastAPI `POST /predict` check using `TestClient`
 - PowerShell-expanded V7 suite command for `tests\test_v7_*.py`
 - `python -c "from app.serving.model_loader import load_champion_model; loaded = load_champion_model(); print(loaded.metadata['model_version']); print(loaded.artifact_path.name); print(type(loaded.model).__name__)"`
@@ -68,6 +75,7 @@
 - Prediction endpoint exposes successful inference through HTTP.
 - Prediction endpoint maps serving failures to controlled HTTP responses.
 - Prediction logs are written for success and controlled serving failures.
+- Batch prediction endpoint exposes multi-instance inference through HTTP.
 - Existing test suite remains passing.
 
 ## Actual Output
@@ -94,6 +102,10 @@
 - `python -m pytest -q tests\test_v7_c6_predict_endpoint.py tests\test_v7_c7_prediction_logging.py` passed: `11 passed in 0.97s`.
 - PowerShell-expanded V7 suite command passed: `43 passed in 1.13s`.
 - `python -m pytest -q` passed: `283 passed in 5.64s`.
+- `python -m pytest -q tests\test_v7_c8_batch_prediction_endpoint.py` passed: `7 passed in 0.86s`.
+- `python -m pytest -q tests\test_v7_c6_predict_endpoint.py tests\test_v7_c7_prediction_logging.py tests\test_v7_c8_batch_prediction_endpoint.py` passed: `18 passed in 0.97s`.
+- PowerShell-expanded V7 suite command passed: `50 passed in 1.25s`.
+- `python -m pytest -q` passed: `290 passed in 5.50s`.
 
 ## Outcome
 V7-C1 creates the first serving API boundary without adding model loading or prediction behavior yet.
@@ -109,3 +121,5 @@ V7-C5 adds pure prediction service logic before adding the HTTP `/predict` route
 V7-C6 exposes single-row model prediction through `POST /predict`.
 
 V7-C7 adds structured local prediction logging for successful and failed serving attempts.
+
+V7-C8 adds batch prediction support through `POST /predict/batch`.
