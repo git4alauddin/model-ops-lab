@@ -13,6 +13,7 @@ Implemented chunks:
 - V6-C2: model registry metadata contract.
 - V6-C3: model registry metadata persistence.
 - V6-C4: model registration command.
+- V6-C5: champion promotion command.
 
 ## Components To Introduce
 - V6 documentation scaffold
@@ -21,9 +22,9 @@ Implemented chunks:
 - local registry folder placeholder
 - local registry JSON persistence
 - model registration command
+- champion promotion command
 - promotion lifecycle states
 - registry output location
-- champion promotion command
 - archived model handling
 
 ## Registry Lifecycle

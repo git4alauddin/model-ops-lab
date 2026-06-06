@@ -8,6 +8,7 @@
 - Verified V6-C2 model registry metadata contract tests.
 - Verified V6-C3 model registry persistence tests.
 - Verified V6-C4 model registration command tests.
+- Verified V6-C5 champion promotion command tests.
 
 ## Commands Executed
 - `Get-ChildItem docs\versions\v6`
@@ -19,6 +20,8 @@
 - `python -m pytest -q tests\test_v6_c3_model_registry_persistence.py`
 - `python -m pytest -q tests\test_v6_c4_register_model_command.py`
 - `python -m app.register_model`
+- `python -m pytest -q tests\test_v6_c5_promote_model_command.py`
+- `python -m app.promote_model`
 - `python -m pytest -q`
 
 ## Expected Output
@@ -30,6 +33,7 @@
 - V6-C2 accepts valid model registry records and rejects invalid metadata.
 - V6-C3 saves and loads validated local registry metadata records.
 - V6-C4 registers the champion report as a local candidate model version.
+- V6-C5 promotes a registered candidate model version to champion.
 
 ## Actual Output
 - `docs\versions\v6` contains overview, implementation, verification, issues, lessons, and commit log files.
@@ -47,6 +51,12 @@
 - `python -m pytest -q tests\test_v6_c3_model_registry_persistence.py` passed: `6 passed in 0.17s`.
 - `python -m app.register_model` registered `customer_churn_model` candidate version `v1-7ab8f00a`.
 - `python -m pytest -q` passed: `214 passed in 4.70s`.
+- `python -m pytest -q tests\test_v6_c5_promote_model_command.py` passed: `5 passed in 0.19s`.
+- `python -m pytest -q tests\test_v6_c2_model_registry_contract.py` passed: `5 passed in 0.14s`.
+- `python -m pytest -q tests\test_v6_c3_model_registry_persistence.py` passed: `6 passed in 0.18s`.
+- `python -m pytest -q tests\test_v6_c4_register_model_command.py` passed: `5 passed in 0.18s`.
+- `python -m app.promote_model` promoted `customer_churn_model` version `v1-7ab8f00a` to champion.
+- `python -m pytest -q` passed: `219 passed in 4.46s`.
 
 ## Outcome
 V6-C1 establishes model registry planning and documentation foundations before runtime registry code is added.
@@ -56,3 +66,5 @@ V6-C2 establishes the model registry metadata contract before registration and p
 V6-C3 persists validated model registry metadata locally before registration and promotion commands are added.
 
 V6-C4 registers the current champion report as a local candidate model version.
+
+V6-C5 promotes a registered candidate model version to champion.

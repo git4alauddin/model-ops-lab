@@ -179,6 +179,33 @@ def load_model_version_metadata(
     return metadata
 
 
+def update_model_lifecycle_status(
+    metadata: dict[str, Any],
+    *,
+    status: str,
+    promotion_reason: str | None = None,
+    updated_at: str | None = None,
+) -> dict[str, Any]:
+    """Return validated metadata with an updated lifecycle status."""
+    validate_model_version_metadata(metadata)
+    if status not in MODEL_LIFECYCLE_STATES:
+        raise ModelRegistryError(
+            "Invalid model lifecycle status: "
+            f"{status}. Expected one of {list(MODEL_LIFECYCLE_STATES)}."
+        )
+
+    previous_status = metadata["status"]
+    updated_metadata = deepcopy(metadata)
+    updated_metadata["status"] = status
+    updated_metadata["updated_at"] = updated_at or datetime.now(UTC).isoformat()
+    updated_metadata["promoted_from"] = previous_status
+    if promotion_reason is not None:
+        updated_metadata["promotion_reason"] = promotion_reason
+
+    validate_model_version_metadata(updated_metadata)
+    return updated_metadata
+
+
 def _validate_optional_string(metadata: dict[str, Any], field: str) -> None:
     value = metadata.get(field)
     if value is not None and not isinstance(value, str):

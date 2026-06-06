@@ -60,7 +60,7 @@ This file records meaningful V6 commits and the operational purpose of each chan
 - `python -m pytest -q tests\test_v6_c2_model_registry_contract.py` passed: `5 passed in 0.16s`.
 - `python -m pytest -q` passed: `209 passed in 5.27s`.
 
-## Pending - v6-c4: add model registration command
+## e8c10b4 - v6-c4: add model registration command
 
 ### What Changed
 - Added model registration command.
@@ -80,3 +80,25 @@ This file records meaningful V6 commits and the operational purpose of each chan
 - `python -m pytest -q tests\test_v6_c3_model_registry_persistence.py` passed: `6 passed in 0.17s`.
 - `python -m app.register_model` registered `customer_churn_model` candidate version `v1-7ab8f00a`.
 - `python -m pytest -q` passed: `214 passed in 4.70s`.
+
+## Pending - v6-c5: add champion promotion command
+
+### What Changed
+- Added lifecycle status update helper.
+- Added champion promotion command.
+- Added candidate-only promotion guard.
+- Added promotion reason persistence.
+- Added focused promotion command tests.
+- Updated V6 docs for implementation, verification, lessons, and issues.
+
+### What Problem It Solved
+- Adds the explicit lifecycle transition from `candidate` to `champion`.
+- Prevents accidental promotion of already promoted or archived model records.
+
+### Verification
+- `python -m pytest -q tests\test_v6_c5_promote_model_command.py` passed: `5 passed in 0.19s`.
+- `python -m pytest -q tests\test_v6_c2_model_registry_contract.py` passed: `5 passed in 0.14s`.
+- `python -m pytest -q tests\test_v6_c3_model_registry_persistence.py` passed: `6 passed in 0.18s`.
+- `python -m pytest -q tests\test_v6_c4_register_model_command.py` passed: `5 passed in 0.18s`.
+- `python -m app.promote_model` promoted `customer_churn_model` version `v1-7ab8f00a` to champion.
+- `python -m pytest -q` passed: `219 passed in 4.46s`.

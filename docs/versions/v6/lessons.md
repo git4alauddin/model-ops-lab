@@ -10,3 +10,5 @@
 - Registry filenames must be safe because model names and versions become filesystem paths.
 - Champion selection is an experiment decision; registration turns that decision into a managed model lifecycle record.
 - Registration should create a `candidate` first, not a `champion`, so promotion stays explicit.
+- Promotion should reject non-candidate records to prevent accidental lifecycle rewrites.
+- Promotion should persist both the reason and the previous lifecycle state for auditability.

@@ -1,7 +1,6 @@
 # V6 Issues Faced
 
 ## Open
-- Champion promotion command is not added yet.
 - Rollback behavior is not added yet.
 
 ## Resolved
@@ -73,3 +72,20 @@ The selected champion run can now become a managed candidate model version witho
 
 ### Prevention Strategy
 Keep registration and promotion as separate commands so lifecycle changes remain intentional.
+
+## V6-C5 Explicit Champion Promotion
+
+### Symptom
+Registered candidate model versions existed, but there was no controlled lifecycle transition to champion.
+
+### Root Cause
+Registration and persistence did not yet define how a candidate becomes the active winner.
+
+### Fix Applied
+Added `app/promote_model.py` to load a candidate record, validate its current state, update it to `champion`, and persist promotion metadata.
+
+### Why The Fix Worked
+The project now separates candidate registration from champion promotion while keeping the transition auditable.
+
+### Prevention Strategy
+Reject promotion attempts for non-candidate records and keep rollback as a separate future behavior.
