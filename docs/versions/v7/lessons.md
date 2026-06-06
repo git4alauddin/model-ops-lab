@@ -20,3 +20,6 @@
 - The HTTP prediction endpoint should be thin: validate request, load model, call prediction service, map errors.
 - Swagger becomes useful once request and response schemas are connected to `POST /predict`.
 - Model-unavailable failures should return `503` because the service is alive but not ready to serve predictions.
+- Prediction logs should be structured JSONL so they are easy to append, inspect, and later aggregate.
+- Successful and failed prediction attempts need the same request ID so responses can be matched to logs.
+- FastAPI validation failures happen before route logic, so logging those requires middleware or exception handlers later.

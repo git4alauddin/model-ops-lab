@@ -101,7 +101,7 @@
 - PowerShell-expanded V7 suite command passed: `32 passed in 1.95s`.
 - `python -m pytest -q` passed: `272 passed in 7.73s`.
 
-## Pending - v7-c6: add prediction endpoint
+## b05ba69 - v7-c6: add prediction endpoint
 
 ### What Changed
 - Added `POST /predict`.
@@ -122,3 +122,23 @@
 - Command-level FastAPI `POST /predict` check returned HTTP `200`, `success`, prediction `1`, and model version `v1-7ab8f00a`.
 - PowerShell-expanded V7 suite command passed: `36 passed in 1.19s`.
 - `python -m pytest -q` passed: `276 passed in 8.00s`.
+
+## Pending - v7-c7: add prediction logging
+
+### What Changed
+- Added JSONL prediction logging helpers.
+- Logged successful prediction responses.
+- Logged model loading failures.
+- Logged prediction execution failures.
+- Added focused prediction logging tests.
+- Updated V7 docs for implementation, verification, lessons, and issues.
+
+### What Problem It Solved
+- Makes prediction requests traceable after the HTTP response is returned.
+- Creates the local observability foundation needed before batch inference and monitoring.
+
+### Verification
+- `python -m pytest -q tests\test_v7_c7_prediction_logging.py` passed: `7 passed in 0.89s`.
+- `python -m pytest -q tests\test_v7_c6_predict_endpoint.py tests\test_v7_c7_prediction_logging.py` passed: `11 passed in 0.97s`.
+- PowerShell-expanded V7 suite command passed: `43 passed in 1.13s`.
+- `python -m pytest -q` passed: `283 passed in 5.64s`.

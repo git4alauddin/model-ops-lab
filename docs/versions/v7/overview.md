@@ -15,6 +15,7 @@ Implemented chunks:
 - V7-C4: registry-based model loader.
 - V7-C5: prediction service.
 - V7-C6: prediction endpoint.
+- V7-C7: prediction logging.
 
 ## Components To Introduce
 - FastAPI application boundary
@@ -142,6 +143,25 @@ invalid request payload -> HTTP 422
 model unavailable       -> HTTP 503
 prediction failure      -> HTTP 500
 ```
+
+## Prediction Logging
+Every valid prediction request that reaches route logic writes a JSONL audit record.
+
+Log path:
+
+```text
+logs/predictions.jsonl
+```
+
+Logged outcomes:
+
+```text
+successful prediction
+model loading failure
+prediction execution failure
+```
+
+Invalid request payloads are rejected by FastAPI before route logic runs, so they are not logged by the prediction logger yet.
 
 ## Operational Objectives
 - expose model behavior through an HTTP API

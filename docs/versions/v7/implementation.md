@@ -280,3 +280,61 @@ expand POST /predict
 click Try it out
 submit a valid request body
 ```
+
+## V7-C7: Prediction Logging
+
+### Files Added
+
+```text
+app/serving/prediction_logging.py
+tests/test_v7_c7_prediction_logging.py
+```
+
+### Files Updated
+
+```text
+app/api/routes.py
+docs/versions/v7/
+```
+
+### Behavior
+- Added JSONL prediction logging.
+- Writes successful prediction records.
+- Writes model loading failure records.
+- Writes prediction execution failure records.
+- Includes timestamp, request ID, status, schema version, model identity, prediction, probability, latency, or error.
+- Leaves invalid `422` request payloads unlogged because FastAPI rejects them before route execution.
+
+### Log Path
+
+```text
+logs/predictions.jsonl
+```
+
+### Success Log Shape
+
+```json
+{
+  "timestamp": "2026-06-07T00:00:00+00:00",
+  "request_id": "request-1",
+  "status": "success",
+  "model_name": "customer_churn_model",
+  "model_version": "v1-test",
+  "schema_version": "v1",
+  "prediction": 1,
+  "probability": 0.82,
+  "latency_ms": 4.2
+}
+```
+
+### Failure Log Shape
+
+```json
+{
+  "timestamp": "2026-06-07T00:00:00+00:00",
+  "request_id": "request-1",
+  "status": "failed",
+  "schema_version": "v1",
+  "error": "No champion model found."
+}
+```

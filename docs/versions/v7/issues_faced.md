@@ -50,3 +50,11 @@ The prediction endpoint needed to expose model serving without duplicating loade
 
 ### Resolution
 Added a thin FastAPI route that delegates to the model loader and prediction service, then maps controlled failures to HTTP responses.
+
+## V7-C7: Prediction Logging
+
+### Issue
+Prediction responses were returned to clients but not persisted for later debugging or monitoring.
+
+### Resolution
+Added JSONL prediction logs for successful predictions and controlled serving failures.

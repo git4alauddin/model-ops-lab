@@ -28,6 +28,11 @@
 - Verified `POST /predict` returns HTTP `503` when the model cannot be loaded.
 - Verified `POST /predict` returns HTTP `500` when prediction execution fails.
 - Verified command-level prediction against the current local champion model.
+- Verified prediction log records are written as JSONL.
+- Verified successful predictions are logged.
+- Verified model loading failures are logged.
+- Verified prediction failures are logged.
+- Verified invalid request payloads are not logged by route-level prediction logging.
 
 ## Commands Executed
 - `python -m pytest -q tests\test_v7_c1_serving_foundation.py`
@@ -38,6 +43,8 @@
 - `python -m pytest -q tests\test_v7_c4_model_loader.py`
 - `python -m pytest -q tests\test_v7_c5_predictor.py`
 - `python -m pytest -q tests\test_v7_c6_predict_endpoint.py`
+- `python -m pytest -q tests\test_v7_c7_prediction_logging.py`
+- `python -m pytest -q tests\test_v7_c6_predict_endpoint.py tests\test_v7_c7_prediction_logging.py`
 - Command-level FastAPI `POST /predict` check using `TestClient`
 - PowerShell-expanded V7 suite command for `tests\test_v7_*.py`
 - `python -c "from app.serving.model_loader import load_champion_model; loaded = load_champion_model(); print(loaded.metadata['model_version']); print(loaded.artifact_path.name); print(type(loaded.model).__name__)"`
@@ -60,6 +67,7 @@
 - Prediction service raises controlled errors for invalid model behavior.
 - Prediction endpoint exposes successful inference through HTTP.
 - Prediction endpoint maps serving failures to controlled HTTP responses.
+- Prediction logs are written for success and controlled serving failures.
 - Existing test suite remains passing.
 
 ## Actual Output
@@ -82,6 +90,10 @@
 - Command-level FastAPI `POST /predict` check returned HTTP `200`, `success`, prediction `1`, and model version `v1-7ab8f00a`.
 - PowerShell-expanded V7 suite command passed: `36 passed in 1.19s`.
 - `python -m pytest -q` passed: `276 passed in 8.00s`.
+- `python -m pytest -q tests\test_v7_c7_prediction_logging.py` passed: `7 passed in 0.89s`.
+- `python -m pytest -q tests\test_v7_c6_predict_endpoint.py tests\test_v7_c7_prediction_logging.py` passed: `11 passed in 0.97s`.
+- PowerShell-expanded V7 suite command passed: `43 passed in 1.13s`.
+- `python -m pytest -q` passed: `283 passed in 5.64s`.
 
 ## Outcome
 V7-C1 creates the first serving API boundary without adding model loading or prediction behavior yet.
@@ -95,3 +107,5 @@ V7-C4 adds registry-based model loading for the future `/predict` endpoint.
 V7-C5 adds pure prediction service logic before adding the HTTP `/predict` route.
 
 V7-C6 exposes single-row model prediction through `POST /predict`.
+
+V7-C7 adds structured local prediction logging for successful and failed serving attempts.

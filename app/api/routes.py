@@ -8,6 +8,11 @@ from fastapi.responses import JSONResponse
 from app.api.constants import API_VERSION, SERVICE_NAME
 from app.api.schemas import PredictionRequest
 from app.serving.model_loader import load_champion_model, ModelLoaderError
+from app.serving.prediction_logging import (
+    build_prediction_failure_log,
+    build_prediction_success_log,
+    write_prediction_log,
+)
 from app.serving.predictor import predict_customer_churn, PredictionError
 from app.serving.readiness import build_readiness_status
 
@@ -45,18 +50,33 @@ def predict(request: PredictionRequest):
             request_id=request_id,
         )
     except ModelLoaderError as exc:
+        write_prediction_log(
+            build_prediction_failure_log(
+                request,
+                request_id=request_id,
+                error=str(exc),
+            )
+        )
         return _error_response(
             status_code=503,
             request_id=request_id,
             error=str(exc),
         )
     except PredictionError as exc:
+        write_prediction_log(
+            build_prediction_failure_log(
+                request,
+                request_id=request_id,
+                error=str(exc),
+            )
+        )
         return _error_response(
             status_code=500,
             request_id=request_id,
             error=str(exc),
         )
 
+    write_prediction_log(build_prediction_success_log(request, prediction_response))
     return prediction_response
 
 
