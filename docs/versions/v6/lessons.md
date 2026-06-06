@@ -16,3 +16,5 @@
 - Promotion should scope champion replacement by model name so unrelated models are not affected.
 - Registry metadata should be queryable without manually opening JSON files.
 - Query commands should summarize the operational state instead of dumping raw metadata.
+- Diagrams should explain implemented lifecycle behavior, not future architecture guesses.
+- Registry diagrams need to show ownership boundaries: MLflow tracks experiments, the registry tracks model lifecycle.

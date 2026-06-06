@@ -11,6 +11,7 @@
 - Verified V6-C5 champion promotion command tests.
 - Verified V6-C6 single champion enforcement tests.
 - Verified V6-C7 model registry query command tests.
+- Verified V6-C8 model registry flow diagram exists.
 
 ## Commands Executed
 - `Get-ChildItem docs\versions\v6`
@@ -27,6 +28,7 @@
 - `python -m pytest -q tests\test_v6_c6_single_champion.py`
 - `python -m pytest -q tests\test_v6_c7_model_registry_query.py`
 - `python -m app.query_model_registry`
+- `Get-Content docs\diagrams\v6_model_registry_flow.md`
 - `python -m pytest -q`
 
 ## Expected Output
@@ -41,6 +43,7 @@
 - V6-C5 promotes a registered candidate model version to champion.
 - V6-C6 archives previous champions when promoting a new champion for the same model name.
 - V6-C7 prints a concise local registry summary and current champion.
+- V6-C8 documents the implemented registry lifecycle in a focused Mermaid diagram.
 
 ## Actual Output
 - `docs\versions\v6` contains overview, implementation, verification, issues, lessons, and commit log files.
@@ -81,6 +84,10 @@
 - `python -m pytest -q tests\test_v6_c6_single_champion.py` passed: `5 passed in 0.23s`.
 - `python -m app.query_model_registry` printed champion `v1-7ab8f00a` for `customer_churn_model`.
 - `python -m pytest -q` passed: `229 passed in 4.71s`.
+- `Get-Content docs\diagrams\v6_model_registry_flow.md` confirmed the V6 registry diagram exists.
+- `Select-String -Path docs\diagrams\v6_model_registry_flow.md -Pattern "flowchart TD|app.register_model|app.promote_model|app.query_model_registry|status=archived"` found the expected lifecycle nodes.
+- `git diff --check` passed with normal LF-to-CRLF working-copy warnings only.
+- No tests were run because V6-C8 is documentation-only.
 
 ## Outcome
 V6-C1 establishes model registry planning and documentation foundations before runtime registry code is added.
@@ -96,3 +103,5 @@ V6-C5 promotes a registered candidate model version to champion.
 V6-C6 keeps one active champion per model name by archiving prior champions during promotion.
 
 V6-C7 makes local registry state inspectable from a command instead of opening JSON files manually.
+
+V6-C8 documents the registry lifecycle visually without adding runtime behavior.

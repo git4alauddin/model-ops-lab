@@ -16,6 +16,7 @@ Implemented chunks:
 - V6-C5: champion promotion command.
 - V6-C6: single champion enforcement.
 - V6-C7: model registry query command.
+- V6-C8: model registry flow diagram.
 
 ## Components To Introduce
 - V6 documentation scaffold
@@ -27,6 +28,7 @@ Implemented chunks:
 - champion promotion command
 - single champion enforcement
 - model registry query command
+- model registry flow diagram
 - promotion lifecycle states
 - registry output location
 - archived model handling

@@ -13,6 +13,7 @@ Implemented chunks:
 - V6-C5: champion promotion command.
 - V6-C6: single champion enforcement.
 - V6-C7: model registry query command.
+- V6-C8: model registry flow diagram.
 
 ## V6-C1 Additions
 - `docs/versions/v6/`
@@ -125,6 +126,14 @@ Implemented chunks:
   - verifies non-registry JSON files are ignored
   - verifies compact summary formatting
 
+## V6-C8 Additions
+- `docs/diagrams/v6_model_registry_flow.md`
+  - documents champion report registration into a candidate record
+  - documents candidate promotion into champion
+  - documents previous champion archival
+  - documents registry query inspection
+  - clarifies the boundary between MLflow tracking and local registry metadata
+
 ## Registry Boundary
 V6 should not replace MLflow experiment tracking.
 
@@ -169,5 +178,4 @@ Start with explicit manual promotion.
 Do not automatically promote every champion report into a registry champion until the registry contract and rollback behavior are tested.
 
 ## Remaining V6 Gaps
-- Registry diagram is not added yet.
 - Rollback behavior is not added yet.

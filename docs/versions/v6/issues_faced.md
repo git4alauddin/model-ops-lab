@@ -123,3 +123,20 @@ Registry state can now be inspected through a command-level workflow that uses t
 
 ### Prevention Strategy
 Keep future lifecycle operations paired with simple inspection commands or reports.
+
+## V6-C8 Lifecycle Needed Visual Closure
+
+### Symptom
+V6 behavior was implemented across registration, promotion, single champion enforcement, and querying, but the lifecycle required reading multiple files.
+
+### Root Cause
+The implementation had no focused flow diagram for the model registry lifecycle.
+
+### Fix Applied
+Added a concise Mermaid diagram for the implemented V6 registry flow.
+
+### Why The Fix Worked
+The diagram shows how champion reports become candidate records, how promotion creates one champion, how old champions are archived, and how registry query inspection works.
+
+### Prevention Strategy
+Add version-specific diagrams only after the behavior is stable enough to avoid speculative documentation.

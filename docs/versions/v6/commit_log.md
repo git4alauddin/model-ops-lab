@@ -128,7 +128,7 @@ This file records meaningful V6 commits and the operational purpose of each chan
 - `python -m app.promote_model` promoted `customer_churn_model` version `v1-7ab8f00a` to champion.
 - `python -m pytest -q` passed: `224 passed in 4.59s`.
 
-## Pending - v6-c7: add model registry query command
+## 845ebc8 - v6-c7: add model registry query command
 
 ### What Changed
 - Added model registry query command.
@@ -151,3 +151,23 @@ This file records meaningful V6 commits and the operational purpose of each chan
 - `python -m pytest -q tests\test_v6_c6_single_champion.py` passed: `5 passed in 0.23s`.
 - `python -m app.query_model_registry` printed champion `v1-7ab8f00a` for `customer_churn_model`.
 - `python -m pytest -q` passed: `229 passed in 4.71s`.
+
+## Pending - v6-c8: add model registry flow diagram
+
+### What Changed
+- Added V6 model registry Mermaid flow diagram.
+- Documented registration from champion report to candidate record.
+- Documented promotion from candidate to champion.
+- Documented previous champion archival.
+- Documented query command inspection.
+- Updated V6 docs for implementation, verification, lessons, and issues.
+
+### What Problem It Solved
+- Makes the implemented V6 lifecycle understandable without reading multiple code files.
+- Keeps lifecycle documentation outside the main README.
+
+### Verification
+- `Get-Content docs\diagrams\v6_model_registry_flow.md` confirmed the V6 registry diagram exists.
+- `Select-String -Path docs\diagrams\v6_model_registry_flow.md -Pattern "flowchart TD|app.register_model|app.promote_model|app.query_model_registry|status=archived"` found the expected lifecycle nodes.
+- `git diff --check` passed with normal LF-to-CRLF working-copy warnings only.
+- No tests were run because V6-C8 is documentation-only.
