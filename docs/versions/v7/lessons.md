@@ -5,4 +5,6 @@
 - Readiness checks should be added separately once model loading exists.
 - Keeping API app creation separate from the Uvicorn entry point makes testing simpler.
 - Service identity and API version should be explicit because they will appear in responses, logs, and future monitoring.
-
+- A readiness endpoint should return `503` when the service cannot safely serve traffic.
+- Readiness should reject ambiguous champion state because serving the wrong model is an operational risk.
+- `/health` must stay independent from model readiness so process availability can be debugged separately.

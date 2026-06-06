@@ -11,3 +11,10 @@ The serving layer needed a minimal API foundation before model loading or predic
 ### Resolution
 Added a FastAPI app factory, shared constants, health route, Uvicorn entry point, focused tests, and version docs.
 
+## V7-C2: Readiness Endpoint
+
+### Issue
+FastAPI could not infer a valid response model from a route annotated as `dict | JSONResponse`.
+
+### Resolution
+Disabled response-model inference for `/ready` and let the route return either a normal dictionary or a `JSONResponse` with HTTP `503`.

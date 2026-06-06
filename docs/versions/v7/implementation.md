@@ -49,3 +49,57 @@ Expected response:
 }
 ```
 
+## V7-C2: Readiness Endpoint
+
+### Files Added
+
+```text
+app/serving/__init__.py
+app/serving/readiness.py
+tests/test_v7_c2_readiness_endpoint.py
+```
+
+### Files Updated
+
+```text
+app/api/routes.py
+docs/versions/v7/
+```
+
+### Behavior
+- Added serving readiness logic.
+- Added `GET /ready`.
+- Checks the local model registry for exactly one champion model.
+- Returns HTTP `200` when a champion model is available.
+- Returns HTTP `503` when no champion or multiple champions are found.
+- Keeps `/health` independent from `/ready`.
+
+### Readiness Check
+
+```text
+GET /ready
+```
+
+Ready response:
+
+```json
+{
+  "status": "ready",
+  "service": "modelopslab-serving",
+  "model_loaded": true,
+  "model_name": "customer_churn_model",
+  "model_version": "v1-example",
+  "mlflow_run_id": "run-example"
+}
+```
+
+Not-ready response:
+
+```json
+{
+  "status": "not_ready",
+  "service": "modelopslab-serving",
+  "model_loaded": false,
+  "reason": "No champion model found."
+}
+```

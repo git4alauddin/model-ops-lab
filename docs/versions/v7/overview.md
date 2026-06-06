@@ -10,6 +10,7 @@ V7 is in progress.
 
 Implemented chunks:
 - V7-C1: serving API foundation.
+- V7-C2: readiness endpoint.
 
 ## Components To Introduce
 - FastAPI application boundary
@@ -36,6 +37,7 @@ The first serving boundary proves the service can start and expose operational e
 
 ```text
 GET /health
+GET /ready
 ```
 
 Meaning:
@@ -46,6 +48,14 @@ the API process is alive and responding
 
 Health does not mean the model is ready. Readiness and prediction behavior will be added separately.
 
+Readiness means:
+
+```text
+the API can find exactly one champion model in the local registry
+```
+
+If no champion exists or multiple champions exist, `/ready` returns `503` with a `not_ready` response.
+
 ## Operational Objectives
 - expose model behavior through an HTTP API
 - separate API routes from prediction logic
@@ -54,4 +64,3 @@ Health does not mean the model is ready. Readiness and prediction behavior will 
 - return model version and request metadata with predictions
 - make inference failures observable
 - prepare for Dockerized serving in V8
-
