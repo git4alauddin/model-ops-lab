@@ -18,6 +18,11 @@
 - Verified local artifact paths and MLflow-run artifact URIs resolve to model files.
 - Verified model artifacts are loaded with registry metadata.
 - Verified unloadable artifacts fail safely.
+- Verified prediction request conversion to exact model input columns.
+- Verified prediction response includes model metadata, request ID, probability, and latency.
+- Verified prediction succeeds when `predict_proba()` is unavailable.
+- Verified invalid prediction and probability outputs fail safely.
+- Verified model prediction failures become controlled prediction errors.
 
 ## Commands Executed
 - `python -m pytest -q tests\test_v7_c1_serving_foundation.py`
@@ -26,6 +31,7 @@
 - `python -m pytest -q tests\test_v7_c1_serving_foundation.py tests\test_v7_c2_readiness_endpoint.py`
 - `python -m pytest -q tests\test_v7_c3_inference_schemas.py`
 - `python -m pytest -q tests\test_v7_c4_model_loader.py`
+- `python -m pytest -q tests\test_v7_c5_predictor.py`
 - PowerShell-expanded V7 suite command for `tests\test_v7_*.py`
 - `python -c "from app.serving.model_loader import load_champion_model; loaded = load_champion_model(); print(loaded.metadata['model_version']); print(loaded.artifact_path.name); print(type(loaded.model).__name__)"`
 - `python -m pytest -q`
@@ -43,6 +49,8 @@
 - Model loader resolves exactly one champion model.
 - Model loader resolves model artifact references.
 - Model loader raises controlled errors for unsafe serving states.
+- Prediction service returns structured prediction responses.
+- Prediction service raises controlled errors for invalid model behavior.
 - Existing test suite remains passing.
 
 ## Actual Output
@@ -58,6 +66,9 @@
 - PowerShell-expanded V7 suite command passed: `25 passed in 0.80s`.
 - `python -c "from app.serving.model_loader import load_champion_model; loaded = load_champion_model(); print(loaded.metadata['model_version']); print(loaded.artifact_path.name); print(type(loaded.model).__name__)"` printed `v1-7ab8f00a`, `model.pkl`, and `Pipeline`.
 - `python -m pytest -q` passed: `265 passed in 5.12s`.
+- `python -m pytest -q tests\test_v7_c5_predictor.py` passed: `7 passed in 1.37s`.
+- PowerShell-expanded V7 suite command passed: `32 passed in 1.95s`.
+- `python -m pytest -q` passed: `272 passed in 7.73s`.
 
 ## Outcome
 V7-C1 creates the first serving API boundary without adding model loading or prediction behavior yet.
@@ -67,3 +78,5 @@ V7-C2 adds readiness behavior based on champion model availability in the local 
 V7-C3 defines the inference API contract before adding prediction execution.
 
 V7-C4 adds registry-based model loading for the future `/predict` endpoint.
+
+V7-C5 adds pure prediction service logic before adding the HTTP `/predict` route.

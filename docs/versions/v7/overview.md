@@ -13,6 +13,7 @@ Implemented chunks:
 - V7-C2: readiness endpoint.
 - V7-C3: inference request and response schemas.
 - V7-C4: registry-based model loader.
+- V7-C5: prediction service.
 
 ## Components To Introduce
 - FastAPI application boundary
@@ -103,6 +104,22 @@ The loader currently supports:
 local model artifact file paths
 mlflow-run://<run_id>/artifacts/model references
 ```
+
+## Prediction Direction
+Prediction execution is separated from HTTP routing.
+
+Prediction flow:
+
+```text
+PredictionRequest
+-> exact model input dataframe
+-> loaded champion model
+-> prediction
+-> probability
+-> PredictionResponse
+```
+
+This keeps core inference behavior testable before wiring it into `POST /predict`.
 
 ## Operational Objectives
 - expose model behavior through an HTTP API

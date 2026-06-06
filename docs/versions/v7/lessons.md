@@ -14,3 +14,6 @@
 - Serving model loading should go through the registry so the API serves the selected champion, not a hardcoded artifact.
 - The loader should return lineage metadata with the model object because prediction responses and logs need model identity.
 - Artifact URI resolution should fail loudly when the artifact is missing instead of silently falling back to a different model.
+- Prediction logic should be testable without FastAPI so model behavior and HTTP behavior can fail independently.
+- Prediction responses should carry model version and request ID because inference outputs need lineage.
+- If a model lacks probability output, serving should use an explicit fallback instead of returning an unclear null.

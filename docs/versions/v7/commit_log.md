@@ -59,7 +59,7 @@
 - PowerShell-expanded V7 suite command passed: `17 passed in 0.59s`.
 - `python -m pytest -q` passed: `257 passed in 5.30s`.
 
-## Pending - v7-c4: add registry-based model loader
+## d12531a - v7-c4: add registry-based model loader
 
 ### What Changed
 - Added serving model loader.
@@ -80,3 +80,23 @@
 - PowerShell-expanded V7 suite command passed: `25 passed in 0.80s`.
 - `python -c "from app.serving.model_loader import load_champion_model; loaded = load_champion_model(); print(loaded.metadata['model_version']); print(loaded.artifact_path.name); print(type(loaded.model).__name__)"` printed `v1-7ab8f00a`, `model.pkl`, and `Pipeline`.
 - `python -m pytest -q` passed: `265 passed in 5.12s`.
+
+## Pending - v7-c5: add prediction service
+
+### What Changed
+- Added pure prediction service logic.
+- Converted validated prediction requests into model input dataframes.
+- Called `predict()` and `predict_proba()` when available.
+- Added hard-label probability fallback for models without `predict_proba()`.
+- Added controlled prediction errors.
+- Added focused predictor tests.
+- Updated V7 docs for implementation, verification, lessons, and issues.
+
+### What Problem It Solved
+- Enables tested inference behavior before exposing `POST /predict`.
+- Keeps model prediction behavior separate from FastAPI route behavior.
+
+### Verification
+- `python -m pytest -q tests\test_v7_c5_predictor.py` passed: `7 passed in 1.37s`.
+- PowerShell-expanded V7 suite command passed: `32 passed in 1.95s`.
+- `python -m pytest -q` passed: `272 passed in 7.73s`.

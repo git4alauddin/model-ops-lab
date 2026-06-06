@@ -34,3 +34,11 @@ Registry records can point to MLflow-style artifact references, while local arti
 
 ### Resolution
 Added artifact URI resolution that maps `mlflow-run://<run_id>/artifacts/model` to the local MLflow `model.pkl` artifact when available.
+
+## V7-C5: Prediction Service
+
+### Issue
+Prediction behavior needed to be implemented without coupling it directly to the HTTP route.
+
+### Resolution
+Added a pure serving predictor that accepts a validated request and a loaded model, then returns a structured prediction response.

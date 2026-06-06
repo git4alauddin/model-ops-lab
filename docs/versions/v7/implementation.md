@@ -211,3 +211,36 @@ missing artifact               -> ModelLoaderError
 invalid MLflow artifact URI    -> ModelLoaderError
 unloadable model artifact      -> ModelLoaderError
 ```
+
+## V7-C5: Prediction Service
+
+### Files Added
+
+```text
+app/serving/predictor.py
+tests/test_v7_c5_predictor.py
+```
+
+### Files Updated
+
+```text
+docs/versions/v7/
+```
+
+### Behavior
+- Converts `PredictionRequest` into the exact feature dataframe expected by the model.
+- Runs `predict()` on the loaded champion model.
+- Runs `predict_proba()` when available.
+- Falls back to hard-label probability when `predict_proba()` is unavailable.
+- Builds `PredictionResponse` with model name, model version, request ID, and latency.
+- Raises `PredictionError` for invalid prediction output, invalid probability output, missing request ID, or model failure.
+
+### Prediction Service Flow
+
+```text
+predict_customer_churn
+  -> build_model_input_frame
+  -> model.predict
+  -> model.predict_proba if available
+  -> PredictionResponse
+```
