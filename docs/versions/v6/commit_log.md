@@ -103,7 +103,7 @@ This file records meaningful V6 commits and the operational purpose of each chan
 - `python -m app.promote_model` promoted `customer_churn_model` version `v1-7ab8f00a` to champion.
 - `python -m pytest -q` passed: `219 passed in 4.46s`.
 
-## Pending - v6-c6: enforce single champion model
+## dba8fd5 - v6-c6: enforce single champion model
 
 ### What Changed
 - Added registry record listing.
@@ -127,3 +127,27 @@ This file records meaningful V6 commits and the operational purpose of each chan
 - `python -m app.register_model` registered `customer_churn_model` candidate version `v1-7ab8f00a`.
 - `python -m app.promote_model` promoted `customer_churn_model` version `v1-7ab8f00a` to champion.
 - `python -m pytest -q` passed: `224 passed in 4.59s`.
+
+## Pending - v6-c7: add model registry query command
+
+### What Changed
+- Added model registry query command.
+- Added compact registry summary formatting.
+- Added model-name record lookup helper.
+- Added current champion display.
+- Added focused query command tests.
+- Updated V6 docs for implementation, verification, lessons, and issues.
+
+### What Problem It Solved
+- Makes local registry state inspectable without manually opening JSON files.
+- Provides a command-level way to identify the current champion and registered versions.
+
+### Verification
+- `python -m pytest -q tests\test_v6_c7_model_registry_query.py` passed: `5 passed in 0.19s`.
+- `python -m pytest -q tests\test_v6_c2_model_registry_contract.py` passed: `5 passed in 0.15s`.
+- `python -m pytest -q tests\test_v6_c3_model_registry_persistence.py` passed: `6 passed in 0.19s`.
+- `python -m pytest -q tests\test_v6_c4_register_model_command.py` passed: `5 passed in 0.20s`.
+- `python -m pytest -q tests\test_v6_c5_promote_model_command.py` passed: `5 passed in 0.18s`.
+- `python -m pytest -q tests\test_v6_c6_single_champion.py` passed: `5 passed in 0.23s`.
+- `python -m app.query_model_registry` printed champion `v1-7ab8f00a` for `customer_churn_model`.
+- `python -m pytest -q` passed: `229 passed in 4.71s`.

@@ -12,6 +12,7 @@ Implemented chunks:
 - V6-C4: model registration command.
 - V6-C5: champion promotion command.
 - V6-C6: single champion enforcement.
+- V6-C7: model registry query command.
 
 ## V6-C1 Additions
 - `docs/versions/v6/`
@@ -108,6 +109,21 @@ Implemented chunks:
   - verifies the promoted candidate is the only champion for its model name
   - verifies unrelated model champions are not archived
   - verifies non-candidate promotion still fails without archiving
+
+## V6-C7 Additions
+- `app/model_registry.py`
+  - adds helper to return registry records for one model name
+- `app/query_model_registry.py`
+  - builds a compact registry summary
+  - identifies the current champion
+  - lists registered versions with status, run ID, candidate name, and F1 score
+  - fails clearly when the registry has no records
+- `tests/test_v6_c7_model_registry_query.py`
+  - verifies listing registry records
+  - verifies current champion detection
+  - verifies empty registry failure
+  - verifies non-registry JSON files are ignored
+  - verifies compact summary formatting
 
 ## Registry Boundary
 V6 should not replace MLflow experiment tracking.

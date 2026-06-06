@@ -14,3 +14,5 @@
 - Promotion should persist both the reason and the previous lifecycle state for auditability.
 - A registry should make the active champion unambiguous for each model name.
 - Promotion should scope champion replacement by model name so unrelated models are not affected.
+- Registry metadata should be queryable without manually opening JSON files.
+- Query commands should summarize the operational state instead of dumping raw metadata.

@@ -219,6 +219,19 @@ def find_champion_model_versions(
     ]
 
 
+def get_model_versions(
+    model_name: str,
+    output_dir: Path = DEFAULT_MODEL_REGISTRY_DIR,
+) -> list[dict[str, Any]]:
+    """Return registry records for one model name."""
+    _validate_safe_model_identifier(model_name, "model_name")
+    return [
+        metadata
+        for metadata in list_model_version_metadata(output_dir)
+        if metadata["model_name"] == model_name
+    ]
+
+
 def archive_existing_champions(
     model_name: str,
     *,

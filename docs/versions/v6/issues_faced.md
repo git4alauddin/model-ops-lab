@@ -106,3 +106,20 @@ Promotion now keeps one active champion per model name while leaving unrelated m
 
 ### Prevention Strategy
 Keep champion replacement scoped by model name and test lifecycle transitions with multiple records.
+
+## V6-C7 Manual Registry Inspection
+
+### Symptom
+Registry state existed locally, but checking it required opening JSON files manually.
+
+### Root Cause
+The registry had write and lifecycle operations, but no read-oriented command for operational inspection.
+
+### Fix Applied
+Added `app/query_model_registry.py` to validate records, find the current champion, and print a compact summary.
+
+### Why The Fix Worked
+Registry state can now be inspected through a command-level workflow that uses the same validation layer as persistence.
+
+### Prevention Strategy
+Keep future lifecycle operations paired with simple inspection commands or reports.
