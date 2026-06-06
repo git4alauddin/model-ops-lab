@@ -66,3 +66,11 @@ Batch prediction needed to reuse single prediction behavior without loading the 
 
 ### Resolution
 Added a batch route that loads the champion once, runs the existing prediction service for each instance, and logs each successful prediction event.
+
+## V7-C9: Serving Runtime Logging
+
+### Issue
+Prediction audit logs existed in `predictions.jsonl`, but the master runtime log did not show serving activity.
+
+### Resolution
+Added serving runtime logging to `logs/modelopslab.log` for request receipt, completion, and controlled failures.

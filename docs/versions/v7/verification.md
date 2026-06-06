@@ -38,6 +38,10 @@
 - Verified batch prediction rejects invalid instances.
 - Verified batch prediction maps model loading and prediction failures to controlled HTTP responses.
 - Verified batch prediction logs each successful instance prediction.
+- Verified serving runtime events are written to `modelopslab.log`.
+- Verified single prediction emits runtime received/completed events.
+- Verified model loading failure emits runtime failure event.
+- Verified batch prediction emits runtime received/completed events.
 
 ## Commands Executed
 - `python -m pytest -q tests\test_v7_c1_serving_foundation.py`
@@ -52,6 +56,8 @@
 - `python -m pytest -q tests\test_v7_c6_predict_endpoint.py tests\test_v7_c7_prediction_logging.py`
 - `python -m pytest -q tests\test_v7_c8_batch_prediction_endpoint.py`
 - `python -m pytest -q tests\test_v7_c6_predict_endpoint.py tests\test_v7_c7_prediction_logging.py tests\test_v7_c8_batch_prediction_endpoint.py`
+- `python -m pytest -q tests\test_v7_c9_serving_runtime_logging.py`
+- `python -m pytest -q tests\test_v7_c6_predict_endpoint.py tests\test_v7_c7_prediction_logging.py tests\test_v7_c8_batch_prediction_endpoint.py tests\test_v7_c9_serving_runtime_logging.py`
 - Command-level FastAPI `POST /predict` check using `TestClient`
 - PowerShell-expanded V7 suite command for `tests\test_v7_*.py`
 - `python -c "from app.serving.model_loader import load_champion_model; loaded = load_champion_model(); print(loaded.metadata['model_version']); print(loaded.artifact_path.name); print(type(loaded.model).__name__)"`
@@ -76,6 +82,7 @@
 - Prediction endpoint maps serving failures to controlled HTTP responses.
 - Prediction logs are written for success and controlled serving failures.
 - Batch prediction endpoint exposes multi-instance inference through HTTP.
+- Serving runtime activity is visible in the master runtime log.
 - Existing test suite remains passing.
 
 ## Actual Output
@@ -106,6 +113,10 @@
 - `python -m pytest -q tests\test_v7_c6_predict_endpoint.py tests\test_v7_c7_prediction_logging.py tests\test_v7_c8_batch_prediction_endpoint.py` passed: `18 passed in 0.97s`.
 - PowerShell-expanded V7 suite command passed: `50 passed in 1.25s`.
 - `python -m pytest -q` passed: `290 passed in 5.50s`.
+- `python -m pytest -q tests\test_v7_c9_serving_runtime_logging.py` passed: `4 passed in 0.95s`.
+- `python -m pytest -q tests\test_v7_c6_predict_endpoint.py tests\test_v7_c7_prediction_logging.py tests\test_v7_c8_batch_prediction_endpoint.py tests\test_v7_c9_serving_runtime_logging.py` passed: `22 passed in 1.17s`.
+- PowerShell-expanded V7 suite command passed: `54 passed in 1.73s`.
+- `python -m pytest -q` passed: `294 passed in 7.64s`.
 
 ## Outcome
 V7-C1 creates the first serving API boundary without adding model loading or prediction behavior yet.
@@ -123,3 +134,5 @@ V7-C6 exposes single-row model prediction through `POST /predict`.
 V7-C7 adds structured local prediction logging for successful and failed serving attempts.
 
 V7-C8 adds batch prediction support through `POST /predict/batch`.
+
+V7-C9 adds human-readable serving events to the master runtime log.

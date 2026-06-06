@@ -164,3 +164,24 @@
 - `python -m pytest -q tests\test_v7_c6_predict_endpoint.py tests\test_v7_c7_prediction_logging.py tests\test_v7_c8_batch_prediction_endpoint.py` passed: `18 passed in 0.97s`.
 - PowerShell-expanded V7 suite command passed: `50 passed in 1.25s`.
 - `python -m pytest -q` passed: `290 passed in 5.50s`.
+
+## Pending - v7-c9: add serving runtime logging
+
+### What Changed
+- Added serving runtime logging helpers.
+- Logged prediction request receipt.
+- Logged successful single and batch prediction completion.
+- Logged controlled serving failures.
+- Routed serving runtime events to `logs/modelopslab.log`.
+- Added focused serving runtime logging tests.
+- Updated V7 docs for implementation, verification, lessons, and issues.
+
+### What Problem It Solved
+- Makes serving activity visible in the master runtime log.
+- Keeps `modelopslab.log` human-readable while `predictions.jsonl` remains the structured prediction audit log.
+
+### Verification
+- `python -m pytest -q tests\test_v7_c9_serving_runtime_logging.py` passed: `4 passed in 0.95s`.
+- `python -m pytest -q tests\test_v7_c6_predict_endpoint.py tests\test_v7_c7_prediction_logging.py tests\test_v7_c8_batch_prediction_endpoint.py tests\test_v7_c9_serving_runtime_logging.py` passed: `22 passed in 1.17s`.
+- PowerShell-expanded V7 suite command passed: `54 passed in 1.73s`.
+- `python -m pytest -q` passed: `294 passed in 7.64s`.

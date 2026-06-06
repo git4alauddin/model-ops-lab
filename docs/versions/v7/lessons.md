@@ -26,3 +26,6 @@
 - Batch prediction should load the model once, not once per instance.
 - Batch responses need per-instance request IDs so individual prediction events remain traceable.
 - Empty batches should be rejected at schema validation because they do not represent useful inference work.
+- `modelopslab.log` should act as the human-readable master runtime timeline.
+- `predictions.jsonl` should remain the structured prediction audit log.
+- Serving logs should summarize operational events instead of duplicating full prediction JSON.

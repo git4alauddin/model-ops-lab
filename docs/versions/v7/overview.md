@@ -17,6 +17,7 @@ Implemented chunks:
 - V7-C6: prediction endpoint.
 - V7-C7: prediction logging.
 - V7-C8: batch prediction endpoint.
+- V7-C9: serving runtime logging.
 
 ## Components To Introduce
 - FastAPI application boundary
@@ -186,6 +187,25 @@ invalid instance        -> HTTP 422
 model unavailable       -> HTTP 503
 prediction failure      -> HTTP 500
 ```
+
+## Serving Runtime Logging
+Serving runtime events are written to the master application log.
+
+Master log:
+
+```text
+logs/modelopslab.log
+```
+
+Runtime events:
+
+```text
+prediction request received
+prediction request completed
+prediction request failed
+```
+
+The master log stays human-readable. Detailed prediction audit data stays in `logs/predictions.jsonl`.
 
 ## Operational Objectives
 - expose model behavior through an HTTP API

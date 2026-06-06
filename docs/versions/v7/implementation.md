@@ -385,3 +385,36 @@ docs/versions/v7/
   ]
 }
 ```
+
+## V7-C9: Serving Runtime Logging
+
+### Files Added
+
+```text
+app/serving/runtime_logging.py
+tests/test_v7_c9_serving_runtime_logging.py
+```
+
+### Files Updated
+
+```text
+app/api/routes.py
+docs/versions/v7/
+```
+
+### Behavior
+- Added human-readable serving runtime logging.
+- Logs prediction request receipt.
+- Logs successful prediction request completion.
+- Logs controlled model loading failures.
+- Logs controlled prediction failures.
+- Writes serving runtime events to `logs/modelopslab.log`.
+- Keeps detailed prediction audit records in `logs/predictions.jsonl`.
+
+### Runtime Log Shape
+
+```text
+Prediction request received. endpoint=/predict request_id=<id> instances=1
+Prediction request completed. endpoint=/predict request_id=<id> model_name=customer_churn_model model_version=<version> predictions=1
+Prediction request failed. endpoint=/predict request_id=<id> stage=model_loading error=<error>
+```

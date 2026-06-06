@@ -19,6 +19,11 @@ from app.serving.prediction_logging import (
 )
 from app.serving.predictor import predict_customer_churn, PredictionError
 from app.serving.readiness import build_readiness_status
+from app.serving.runtime_logging import (
+    log_prediction_completed,
+    log_prediction_failed,
+    log_prediction_received,
+)
 
 router = APIRouter()
 
@@ -46,6 +51,10 @@ def readiness_check():
 def predict(request: PredictionRequest):
     """Return a churn prediction from the active champion model."""
     request_id = str(uuid4())
+    log_prediction_received(
+        endpoint="/predict",
+        request_id=request_id,
+    )
     try:
         loaded_model = load_champion_model()
         prediction_response = predict_customer_churn(
@@ -61,6 +70,12 @@ def predict(request: PredictionRequest):
                 error=str(exc),
             )
         )
+        log_prediction_failed(
+            endpoint="/predict",
+            request_id=request_id,
+            stage="model_loading",
+            error=exc,
+        )
         return _error_response(
             status_code=503,
             request_id=request_id,
@@ -74,6 +89,12 @@ def predict(request: PredictionRequest):
                 error=str(exc),
             )
         )
+        log_prediction_failed(
+            endpoint="/predict",
+            request_id=request_id,
+            stage="prediction",
+            error=exc,
+        )
         return _error_response(
             status_code=500,
             request_id=request_id,
@@ -81,6 +102,13 @@ def predict(request: PredictionRequest):
         )
 
     write_prediction_log(build_prediction_success_log(request, prediction_response))
+    log_prediction_completed(
+        endpoint="/predict",
+        request_id=request_id,
+        model_name=prediction_response.model_name,
+        model_version=prediction_response.model_version,
+        prediction_count=1,
+    )
     return prediction_response
 
 
@@ -88,9 +116,20 @@ def predict(request: PredictionRequest):
 def predict_batch(request: BatchPredictionRequest):
     """Return churn predictions for multiple validated request instances."""
     batch_request_id = str(uuid4())
+    log_prediction_received(
+        endpoint="/predict/batch",
+        request_id=batch_request_id,
+        instances=len(request.instances),
+    )
     try:
         loaded_model = load_champion_model()
     except ModelLoaderError as exc:
+        log_prediction_failed(
+            endpoint="/predict/batch",
+            request_id=batch_request_id,
+            stage="model_loading",
+            error=exc,
+        )
         return _error_response(
             status_code=503,
             request_id=batch_request_id,
@@ -110,12 +149,26 @@ def predict_batch(request: BatchPredictionRequest):
             )
             predictions.append(prediction_response)
     except PredictionError as exc:
+        log_prediction_failed(
+            endpoint="/predict/batch",
+            request_id=batch_request_id,
+            stage="prediction",
+            error=exc,
+        )
         return _error_response(
             status_code=500,
             request_id=batch_request_id,
             error=str(exc),
         )
 
+    first_prediction = predictions[0]
+    log_prediction_completed(
+        endpoint="/predict/batch",
+        request_id=batch_request_id,
+        model_name=first_prediction.model_name,
+        model_version=first_prediction.model_version,
+        prediction_count=len(predictions),
+    )
     return BatchPredictionResponse(
         request_id=batch_request_id,
         predictions=predictions,
