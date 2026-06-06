@@ -152,7 +152,7 @@ This file records meaningful V6 commits and the operational purpose of each chan
 - `python -m app.query_model_registry` printed champion `v1-7ab8f00a` for `customer_churn_model`.
 - `python -m pytest -q` passed: `229 passed in 4.71s`.
 
-## Pending - v6-c8: add model registry flow diagram
+## 8c9a1a4 - v6-c8: add model registry flow diagram
 
 ### What Changed
 - Added V6 model registry Mermaid flow diagram.
@@ -171,3 +171,23 @@ This file records meaningful V6 commits and the operational purpose of each chan
 - `Select-String -Path docs\diagrams\v6_model_registry_flow.md -Pattern "flowchart TD|app.register_model|app.promote_model|app.query_model_registry|status=archived"` found the expected lifecycle nodes.
 - `git diff --check` passed with normal LF-to-CRLF working-copy warnings only.
 - No tests were run because V6-C8 is documentation-only.
+
+## Pending - v6-c9: define model rollback guardrails
+
+### What Changed
+- Added rollback ADR for V6 model registry.
+- Defined rollback as `archived -> champion`.
+- Defined current champion archival during rollback.
+- Required rollback reason.
+- Preserved single champion rule during rollback.
+- Updated V6 docs for implementation, verification, lessons, and issues.
+
+### What Problem It Solved
+- Defines rollback semantics before implementation.
+- Prevents ambiguous lifecycle behavior when rollback code is added.
+
+### Verification
+- `Get-Content docs\decisions\adr_model_registry_rollback_for_v6.md` confirmed the rollback ADR exists.
+- `Select-String -Path docs\decisions\adr_model_registry_rollback_for_v6.md -Pattern "archived -> champion|current champion -> archived|rollback reason|one active champion|python -m app.rollback_model"` found the expected rollback guardrails.
+- `git diff --check` passed with normal LF-to-CRLF working-copy warnings only.
+- No tests were run because V6-C9 is documentation-only.

@@ -18,3 +18,5 @@
 - Query commands should summarize the operational state instead of dumping raw metadata.
 - Diagrams should explain implemented lifecycle behavior, not future architecture guesses.
 - Registry diagrams need to show ownership boundaries: MLflow tracks experiments, the registry tracks model lifecycle.
+- Rollback is a lifecycle decision, not just a file update.
+- Rollback rules should be defined before code because rollback can change the active production-style model.

@@ -17,6 +17,7 @@ Implemented chunks:
 - V6-C6: single champion enforcement.
 - V6-C7: model registry query command.
 - V6-C8: model registry flow diagram.
+- V6-C9: rollback guardrails decision record.
 
 ## Components To Introduce
 - V6 documentation scaffold
@@ -29,6 +30,7 @@ Implemented chunks:
 - single champion enforcement
 - model registry query command
 - model registry flow diagram
+- rollback guardrails
 - promotion lifecycle states
 - registry output location
 - archived model handling

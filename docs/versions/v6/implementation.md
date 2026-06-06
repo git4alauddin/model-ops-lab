@@ -14,6 +14,7 @@ Implemented chunks:
 - V6-C6: single champion enforcement.
 - V6-C7: model registry query command.
 - V6-C8: model registry flow diagram.
+- V6-C9: rollback guardrails decision record.
 
 ## V6-C1 Additions
 - `docs/versions/v6/`
@@ -134,6 +135,14 @@ Implemented chunks:
   - documents registry query inspection
   - clarifies the boundary between MLflow tracking and local registry metadata
 
+## V6-C9 Additions
+- `docs/decisions/adr_model_registry_rollback_for_v6.md`
+  - defines rollback as `archived -> champion`
+  - defines current champion archival during rollback
+  - requires rollback reason
+  - preserves one active champion per model name
+  - keeps rollback manual before runtime implementation
+
 ## Registry Boundary
 V6 should not replace MLflow experiment tracking.
 
@@ -178,4 +187,4 @@ Start with explicit manual promotion.
 Do not automatically promote every champion report into a registry champion until the registry contract and rollback behavior are tested.
 
 ## Remaining V6 Gaps
-- Rollback behavior is not added yet.
+- Rollback command is not added yet.

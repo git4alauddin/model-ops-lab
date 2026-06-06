@@ -1,7 +1,7 @@
 # V6 Issues Faced
 
 ## Open
-- Rollback behavior is not added yet.
+- Rollback command is not added yet.
 
 ## Resolved
 
@@ -140,3 +140,20 @@ The diagram shows how champion reports become candidate records, how promotion c
 
 ### Prevention Strategy
 Add version-specific diagrams only after the behavior is stable enough to avoid speculative documentation.
+
+## V6-C9 Rollback Needed Guardrails Before Code
+
+### Symptom
+Rollback was still the remaining lifecycle gap, but implementing it directly would risk unclear behavior.
+
+### Root Cause
+Rollback changes which model is champion and which model is archived. Without explicit rules, rollback could create multiple champions or modify the wrong records.
+
+### Fix Applied
+Added an ADR defining rollback as an explicit manual transition from archived model version to champion.
+
+### Why The Fix Worked
+Rollback now has clear constraints before code is added: target must be archived, current champion must be archived, reason is required, and one champion remains active.
+
+### Prevention Strategy
+Implement rollback only after guardrails are documented and test cases are clear.
