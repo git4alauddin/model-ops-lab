@@ -81,7 +81,7 @@ This file records meaningful V6 commits and the operational purpose of each chan
 - `python -m app.register_model` registered `customer_churn_model` candidate version `v1-7ab8f00a`.
 - `python -m pytest -q` passed: `214 passed in 4.70s`.
 
-## Pending - v6-c5: add champion promotion command
+## 9911132 - v6-c5: add champion promotion command
 
 ### What Changed
 - Added lifecycle status update helper.
@@ -102,3 +102,28 @@ This file records meaningful V6 commits and the operational purpose of each chan
 - `python -m pytest -q tests\test_v6_c4_register_model_command.py` passed: `5 passed in 0.18s`.
 - `python -m app.promote_model` promoted `customer_churn_model` version `v1-7ab8f00a` to champion.
 - `python -m pytest -q` passed: `219 passed in 4.46s`.
+
+## Pending - v6-c6: enforce single champion model
+
+### What Changed
+- Added registry record listing.
+- Added champion lookup by model name.
+- Added archive behavior for existing champions.
+- Updated promotion to archive prior champions before promoting a new candidate.
+- Added focused single-champion tests.
+- Updated V6 docs for implementation, verification, lessons, and issues.
+
+### What Problem It Solved
+- Keeps the active champion unambiguous for each model name.
+- Prevents multiple champion records for the same model from staying active after promotion.
+
+### Verification
+- `python -m pytest -q tests\test_v6_c6_single_champion.py` passed: `4 passed in 0.23s`.
+- `python -m pytest -q tests\test_v6_c5_promote_model_command.py` passed: `5 passed in 0.21s`.
+- `python -m pytest -q tests\test_v6_c6_single_champion.py` passed: `5 passed in 0.23s`.
+- `python -m pytest -q tests\test_v6_c2_model_registry_contract.py` passed: `5 passed in 0.15s`.
+- `python -m pytest -q tests\test_v6_c3_model_registry_persistence.py` passed: `6 passed in 0.18s`.
+- `python -m pytest -q tests\test_v6_c4_register_model_command.py` passed: `5 passed in 0.16s`.
+- `python -m app.register_model` registered `customer_churn_model` candidate version `v1-7ab8f00a`.
+- `python -m app.promote_model` promoted `customer_churn_model` version `v1-7ab8f00a` to champion.
+- `python -m pytest -q` passed: `224 passed in 4.59s`.

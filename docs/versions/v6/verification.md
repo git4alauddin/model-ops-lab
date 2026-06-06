@@ -9,6 +9,7 @@
 - Verified V6-C3 model registry persistence tests.
 - Verified V6-C4 model registration command tests.
 - Verified V6-C5 champion promotion command tests.
+- Verified V6-C6 single champion enforcement tests.
 
 ## Commands Executed
 - `Get-ChildItem docs\versions\v6`
@@ -22,6 +23,7 @@
 - `python -m app.register_model`
 - `python -m pytest -q tests\test_v6_c5_promote_model_command.py`
 - `python -m app.promote_model`
+- `python -m pytest -q tests\test_v6_c6_single_champion.py`
 - `python -m pytest -q`
 
 ## Expected Output
@@ -34,6 +36,7 @@
 - V6-C3 saves and loads validated local registry metadata records.
 - V6-C4 registers the champion report as a local candidate model version.
 - V6-C5 promotes a registered candidate model version to champion.
+- V6-C6 archives previous champions when promoting a new champion for the same model name.
 
 ## Actual Output
 - `docs\versions\v6` contains overview, implementation, verification, issues, lessons, and commit log files.
@@ -57,6 +60,15 @@
 - `python -m pytest -q tests\test_v6_c4_register_model_command.py` passed: `5 passed in 0.18s`.
 - `python -m app.promote_model` promoted `customer_churn_model` version `v1-7ab8f00a` to champion.
 - `python -m pytest -q` passed: `219 passed in 4.46s`.
+- `python -m pytest -q tests\test_v6_c6_single_champion.py` passed: `4 passed in 0.23s`.
+- `python -m pytest -q tests\test_v6_c5_promote_model_command.py` passed: `5 passed in 0.21s`.
+- `python -m pytest -q tests\test_v6_c6_single_champion.py` passed: `5 passed in 0.23s`.
+- `python -m pytest -q tests\test_v6_c2_model_registry_contract.py` passed: `5 passed in 0.15s`.
+- `python -m pytest -q tests\test_v6_c3_model_registry_persistence.py` passed: `6 passed in 0.18s`.
+- `python -m pytest -q tests\test_v6_c4_register_model_command.py` passed: `5 passed in 0.16s`.
+- `python -m app.register_model` registered `customer_churn_model` candidate version `v1-7ab8f00a`.
+- `python -m app.promote_model` promoted `customer_churn_model` version `v1-7ab8f00a` to champion.
+- `python -m pytest -q` passed: `224 passed in 4.59s`.
 
 ## Outcome
 V6-C1 establishes model registry planning and documentation foundations before runtime registry code is added.
@@ -68,3 +80,5 @@ V6-C3 persists validated model registry metadata locally before registration and
 V6-C4 registers the current champion report as a local candidate model version.
 
 V6-C5 promotes a registered candidate model version to champion.
+
+V6-C6 keeps one active champion per model name by archiving prior champions during promotion.

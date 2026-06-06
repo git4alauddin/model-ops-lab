@@ -179,6 +179,68 @@ def load_model_version_metadata(
     return metadata
 
 
+def list_model_version_metadata(
+    output_dir: Path = DEFAULT_MODEL_REGISTRY_DIR,
+) -> list[dict[str, Any]]:
+    """Load and validate all model registry metadata records."""
+    registry_dir = Path(output_dir)
+    if not registry_dir.exists():
+        return []
+
+    records = []
+    for metadata_path in sorted(registry_dir.glob("*__*.json")):
+        try:
+            with metadata_path.open("r", encoding="utf-8") as file:
+                metadata = json.load(file)
+        except json.JSONDecodeError as exc:
+            raise ModelRegistryError(
+                f"Invalid JSON in model registry metadata: {metadata_path}"
+            ) from exc
+        except OSError as exc:
+            raise ModelRegistryError(
+                f"Unable to read model registry metadata: {metadata_path}"
+            ) from exc
+
+        validate_model_version_metadata(metadata)
+        records.append(metadata)
+    return records
+
+
+def find_champion_model_versions(
+    model_name: str,
+    output_dir: Path = DEFAULT_MODEL_REGISTRY_DIR,
+) -> list[dict[str, Any]]:
+    """Return champion records for one model name."""
+    _validate_safe_model_identifier(model_name, "model_name")
+    return [
+        metadata
+        for metadata in list_model_version_metadata(output_dir)
+        if metadata["model_name"] == model_name and metadata["status"] == "champion"
+    ]
+
+
+def archive_existing_champions(
+    model_name: str,
+    *,
+    exclude_model_version: str | None = None,
+    archive_reason: str = "Archived by new champion promotion.",
+    output_dir: Path = DEFAULT_MODEL_REGISTRY_DIR,
+) -> list[dict[str, Any]]:
+    """Archive current champions for a model, optionally excluding one version."""
+    archived_records = []
+    for champion in find_champion_model_versions(model_name, output_dir):
+        if champion["model_version"] == exclude_model_version:
+            continue
+        archived_metadata = update_model_lifecycle_status(
+            champion,
+            status="archived",
+            promotion_reason=archive_reason,
+        )
+        save_model_version_metadata(archived_metadata, output_dir=output_dir)
+        archived_records.append(archived_metadata)
+    return archived_records
+
+
 def update_model_lifecycle_status(
     metadata: dict[str, Any],
     *,

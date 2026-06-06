@@ -89,3 +89,20 @@ The project now separates candidate registration from champion promotion while k
 
 ### Prevention Strategy
 Reject promotion attempts for non-candidate records and keep rollback as a separate future behavior.
+
+## V6-C6 Multiple Champion Risk
+
+### Symptom
+The registry could promote a candidate to champion, but it did not prevent another champion for the same model name from staying active.
+
+### Root Cause
+Promotion updated only the selected model record. It did not inspect the registry for existing champions.
+
+### Fix Applied
+Added registry listing, champion lookup, and archive behavior before promoting the selected candidate.
+
+### Why The Fix Worked
+Promotion now keeps one active champion per model name while leaving unrelated model champions untouched.
+
+### Prevention Strategy
+Keep champion replacement scoped by model name and test lifecycle transitions with multiple records.

@@ -12,3 +12,5 @@
 - Registration should create a `candidate` first, not a `champion`, so promotion stays explicit.
 - Promotion should reject non-candidate records to prevent accidental lifecycle rewrites.
 - Promotion should persist both the reason and the previous lifecycle state for auditability.
+- A registry should make the active champion unambiguous for each model name.
+- Promotion should scope champion replacement by model name so unrelated models are not affected.

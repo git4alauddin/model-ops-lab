@@ -14,6 +14,7 @@ Implemented chunks:
 - V6-C3: model registry metadata persistence.
 - V6-C4: model registration command.
 - V6-C5: champion promotion command.
+- V6-C6: single champion enforcement.
 
 ## Components To Introduce
 - V6 documentation scaffold
@@ -23,6 +24,7 @@ Implemented chunks:
 - local registry JSON persistence
 - model registration command
 - champion promotion command
+- single champion enforcement
 - promotion lifecycle states
 - registry output location
 - archived model handling

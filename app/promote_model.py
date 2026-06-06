@@ -6,6 +6,7 @@ from typing import Any
 from app.model_registry import (
     DEFAULT_MODEL_REGISTRY_DIR,
     ModelRegistryError,
+    archive_existing_champions,
     load_model_version_metadata,
     save_model_version_metadata,
     update_model_lifecycle_status,
@@ -49,6 +50,11 @@ def promote_candidate_model(
             f"Current status is {metadata['status']}."
         )
 
+    archive_existing_champions(
+        model_name,
+        exclude_model_version=resolved_model_version,
+        output_dir=output_dir,
+    )
     promoted_metadata = update_model_lifecycle_status(
         metadata,
         status="champion",

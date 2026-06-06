@@ -11,6 +11,7 @@ Implemented chunks:
 - V6-C3: model registry metadata persistence.
 - V6-C4: model registration command.
 - V6-C5: champion promotion command.
+- V6-C6: single champion enforcement.
 
 ## V6-C1 Additions
 - `docs/versions/v6/`
@@ -91,6 +92,22 @@ Implemented chunks:
   - verifies missing model record failure
   - verifies non-candidate promotion is rejected
   - verifies default model version resolution from champion report
+
+## V6-C6 Additions
+- `app/model_registry.py`
+  - lists local model registry records
+  - finds champion records for a model name
+  - archives existing champions for the same model name
+  - validates registry records while listing them
+- `app/promote_model.py`
+  - archives existing champions before promoting the selected candidate
+  - keeps unrelated model champions unchanged
+  - keeps candidate-only promotion guard
+- `tests/test_v6_c6_single_champion.py`
+  - verifies promoting a candidate archives an existing champion
+  - verifies the promoted candidate is the only champion for its model name
+  - verifies unrelated model champions are not archived
+  - verifies non-candidate promotion still fails without archiving
 
 ## Registry Boundary
 V6 should not replace MLflow experiment tracking.
