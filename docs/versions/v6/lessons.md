@@ -22,3 +22,5 @@
 - Rollback rules should be defined before code because rollback can change the active production-style model.
 - Rollback should only restore archived versions, not candidates or current champions.
 - Rollback must preserve lineage and change only lifecycle state metadata.
+- Version closure checks make it explicit when a version is complete enough to move forward.
+- Closure should verify both runtime components and the documentation that explains them.

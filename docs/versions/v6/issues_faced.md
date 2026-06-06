@@ -1,7 +1,7 @@
 # V6 Issues Faced
 
 ## Open
-- V6 closure checks are not added yet.
+- No open V6 issues.
 
 ## Resolved
 
@@ -174,3 +174,20 @@ Rollback now follows the documented guardrails and preserves one active champion
 
 ### Prevention Strategy
 Keep rollback separate from promotion so candidate promotion and archived rollback stay distinct lifecycle operations.
+
+## V6-C11 Closure Needed Before V7
+
+### Symptom
+The V6 lifecycle was implemented, but the project needed an explicit closure check before moving to V7.
+
+### Root Cause
+Without closure checks, it is easy to move forward while missing a command, diagram, ADR, or completion status.
+
+### Fix Applied
+Added focused V6 closure tests and marked V6 complete in the version docs.
+
+### Why The Fix Worked
+The closure test verifies the lifecycle states, registry commands, support docs, and completion marker.
+
+### Prevention Strategy
+Close each major version with a small test that verifies the version's operational components and documentation anchors.

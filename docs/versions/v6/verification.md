@@ -14,6 +14,7 @@
 - Verified V6-C8 model registry flow diagram exists.
 - Verified V6-C9 rollback guardrails ADR exists.
 - Verified V6-C10 model rollback command tests.
+- Verified V6-C11 model registry closure tests.
 
 ## Commands Executed
 - `Get-ChildItem docs\versions\v6`
@@ -33,6 +34,7 @@
 - `Get-Content docs\diagrams\v6_model_registry_flow.md`
 - `Get-Content docs\decisions\adr_model_registry_rollback_for_v6.md`
 - `python -m pytest -q tests\test_v6_c10_rollback_model_command.py`
+- `python -m pytest -q tests\test_v6_c11_registry_closure.py`
 - `python -m pytest -q`
 
 ## Expected Output
@@ -50,6 +52,7 @@
 - V6-C8 documents the implemented registry lifecycle in a focused Mermaid diagram.
 - V6-C9 defines rollback guardrails before runtime rollback code is added.
 - V6-C10 rolls back an archived model version to champion while preserving one active champion.
+- V6-C11 verifies implemented V6 registry lifecycle components exist and V6 is marked complete.
 
 ## Actual Output
 - `docs\versions\v6` contains overview, implementation, verification, issues, lessons, and commit log files.
@@ -105,6 +108,10 @@
 - `python -m pytest -q tests\test_v6_c2_model_registry_contract.py tests\test_v6_c3_model_registry_persistence.py tests\test_v6_c4_register_model_command.py` passed: `16 passed in 0.28s`.
 - `python -m app.rollback_model --model-version v1-previous --reason "Command-level rollback check" --output-dir <temp>` rolled back a temporary archived model version to champion.
 - `python -m pytest -q` passed: `236 passed in 5.22s`.
+- `python -m pytest -q tests\test_v6_c11_registry_closure.py` passed: `4 passed in 0.14s`.
+- `python -m pytest -q tests\test_v6_*.py` failed in PowerShell because the wildcard was passed literally to pytest.
+- PowerShell-expanded V6 suite command passed: `42 passed in 0.42s`.
+- `python -m pytest -q` passed: `240 passed in 4.77s`.
 
 ## Outcome
 V6-C1 establishes model registry planning and documentation foundations before runtime registry code is added.
@@ -126,3 +133,5 @@ V6-C8 documents the registry lifecycle visually without adding runtime behavior.
 V6-C9 defines rollback guardrails without adding runtime rollback behavior.
 
 V6-C10 implements rollback from archived model version to champion.
+
+V6-C11 closes the model registry version with explicit component and documentation checks.

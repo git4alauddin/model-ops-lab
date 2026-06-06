@@ -6,7 +6,7 @@ Add model registry and promotion lifecycle foundations.
 V6 moves the project from selecting a champion run to managing model versions with explicit lifecycle states.
 
 ## Completion Status
-V6 is in progress.
+V6 is complete.
 
 Implemented chunks:
 - V6-C1: model registry foundation and decision record.
@@ -19,6 +19,7 @@ Implemented chunks:
 - V6-C8: model registry flow diagram.
 - V6-C9: rollback guardrails decision record.
 - V6-C10: model rollback command.
+- V6-C11: model registry version closure.
 
 ## Components To Introduce
 - V6 documentation scaffold
@@ -33,6 +34,7 @@ Implemented chunks:
 - model registry flow diagram
 - rollback guardrails
 - rollback command
+- V6 closure checks
 - promotion lifecycle states
 - registry output location
 - archived model handling
@@ -73,3 +75,17 @@ archived  = previously useful model version that is no longer current
 V6 starts with a local project registry first.
 
 MLflow remains the experiment tracking system. The local registry will store project-level model version and promotion records that are easy to inspect, test, and evolve. Direct MLflow Model Registry integration can be revisited after the local registry contract is stable.
+
+## Closure Summary
+V6 closes with a local, file-based model registry lifecycle:
+
+```text
+champion report
+-> registered candidate
+-> promoted champion
+-> previous champion archived
+-> registry query inspection
+-> archived model rollback to champion
+```
+
+The registry remains local project metadata. It does not replace MLflow experiment tracking.

@@ -192,7 +192,7 @@ This file records meaningful V6 commits and the operational purpose of each chan
 - `git diff --check` passed with normal LF-to-CRLF working-copy warnings only.
 - No tests were run because V6-C9 is documentation-only.
 
-## Pending - v6-c10: add model rollback command
+## 0782776 - v6-c10: add model rollback command
 
 ### What Changed
 - Added model rollback command.
@@ -215,3 +215,23 @@ This file records meaningful V6 commits and the operational purpose of each chan
 - `python -m pytest -q tests\test_v6_c2_model_registry_contract.py tests\test_v6_c3_model_registry_persistence.py tests\test_v6_c4_register_model_command.py` passed: `16 passed in 0.28s`.
 - `python -m app.rollback_model --model-version v1-previous --reason "Command-level rollback check" --output-dir <temp>` rolled back a temporary archived model version to champion.
 - `python -m pytest -q` passed: `236 passed in 5.22s`.
+
+## Pending - v6-c11: close model registry version
+
+### What Changed
+- Added V6 closure tests.
+- Verified registry lifecycle states exist.
+- Verified registry commands exist.
+- Verified V6 registry diagram and ADRs exist.
+- Marked V6 complete in version docs.
+- Updated V6 docs for implementation, verification, lessons, and issues.
+
+### What Problem It Solved
+- Provides explicit closure before moving to V7.
+- Confirms the local model registry lifecycle is implemented and documented.
+
+### Verification
+- `python -m pytest -q tests\test_v6_c11_registry_closure.py` passed: `4 passed in 0.14s`.
+- `python -m pytest -q tests\test_v6_*.py` failed in PowerShell because the wildcard was passed literally to pytest.
+- PowerShell-expanded V6 suite command passed: `42 passed in 0.42s`.
+- `python -m pytest -q` passed: `240 passed in 4.77s`.

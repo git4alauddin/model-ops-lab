@@ -16,6 +16,7 @@ Implemented chunks:
 - V6-C8: model registry flow diagram.
 - V6-C9: rollback guardrails decision record.
 - V6-C10: model rollback command.
+- V6-C11: model registry version closure.
 
 ## V6-C1 Additions
 - `docs/versions/v6/`
@@ -163,6 +164,13 @@ Implemented chunks:
   - verifies missing rollback reason is rejected
   - verifies unrelated model champion is unchanged
 
+## V6-C11 Additions
+- `tests/test_v6_c11_registry_closure.py`
+  - verifies lifecycle states exist
+  - verifies registry commands exist
+  - verifies V6 registry diagram and ADRs exist
+  - verifies V6 overview marks completion
+
 ## Registry Boundary
 V6 should not replace MLflow experiment tracking.
 
@@ -206,5 +214,7 @@ Start with explicit manual promotion.
 
 Do not automatically promote every champion report into a registry champion until the registry contract and rollback behavior are tested.
 
-## Remaining V6 Gaps
-- V6 closure checks are not added yet.
+## V6 Closure
+V6 is complete.
+
+The implemented scope is a local model registry lifecycle with registration, promotion, single champion enforcement, query inspection, rollback guardrails, rollback command, and version documentation.
