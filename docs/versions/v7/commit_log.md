@@ -81,7 +81,7 @@
 - `python -c "from app.serving.model_loader import load_champion_model; loaded = load_champion_model(); print(loaded.metadata['model_version']); print(loaded.artifact_path.name); print(type(loaded.model).__name__)"` printed `v1-7ab8f00a`, `model.pkl`, and `Pipeline`.
 - `python -m pytest -q` passed: `265 passed in 5.12s`.
 
-## Pending - v7-c5: add prediction service
+## 1df15fc - v7-c5: add prediction service
 
 ### What Changed
 - Added pure prediction service logic.
@@ -100,3 +100,25 @@
 - `python -m pytest -q tests\test_v7_c5_predictor.py` passed: `7 passed in 1.37s`.
 - PowerShell-expanded V7 suite command passed: `32 passed in 1.95s`.
 - `python -m pytest -q` passed: `272 passed in 7.73s`.
+
+## Pending - v7-c6: add prediction endpoint
+
+### What Changed
+- Added `POST /predict`.
+- Wired `PredictionRequest` into the model loader and prediction service.
+- Generated request IDs for prediction requests.
+- Returned structured success responses.
+- Mapped model loading failures to HTTP `503`.
+- Mapped prediction failures to HTTP `500`.
+- Added focused prediction endpoint tests.
+- Updated V7 docs for implementation, verification, lessons, and issues.
+
+### What Problem It Solved
+- Makes the serving API usable for single-row prediction.
+- Makes Swagger useful for interactive inference testing.
+
+### Verification
+- `python -m pytest -q tests\test_v7_c6_predict_endpoint.py` passed: `4 passed in 0.91s`.
+- Command-level FastAPI `POST /predict` check returned HTTP `200`, `success`, prediction `1`, and model version `v1-7ab8f00a`.
+- PowerShell-expanded V7 suite command passed: `36 passed in 1.19s`.
+- `python -m pytest -q` passed: `276 passed in 8.00s`.

@@ -42,3 +42,11 @@ Prediction behavior needed to be implemented without coupling it directly to the
 
 ### Resolution
 Added a pure serving predictor that accepts a validated request and a loaded model, then returns a structured prediction response.
+
+## V7-C6: Prediction Endpoint
+
+### Issue
+The prediction endpoint needed to expose model serving without duplicating loader or predictor logic inside the route.
+
+### Resolution
+Added a thin FastAPI route that delegates to the model loader and prediction service, then maps controlled failures to HTTP responses.

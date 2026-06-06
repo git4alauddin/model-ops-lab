@@ -244,3 +244,39 @@ predict_customer_churn
   -> model.predict_proba if available
   -> PredictionResponse
 ```
+
+## V7-C6: Prediction Endpoint
+
+### Files Added
+
+```text
+tests/test_v7_c6_predict_endpoint.py
+```
+
+### Files Updated
+
+```text
+app/api/routes.py
+docs/versions/v7/
+```
+
+### Behavior
+- Added `POST /predict`.
+- Accepts `PredictionRequest`.
+- Loads the active champion model.
+- Calls the prediction service.
+- Generates a request ID for each prediction request.
+- Returns `PredictionResponse` on success.
+- Returns HTTP `422` for invalid request payloads through FastAPI/Pydantic validation.
+- Returns HTTP `503` when the champion model cannot be loaded.
+- Returns HTTP `500` when prediction execution fails.
+
+### Swagger Flow
+
+```text
+uvicorn app.serve_api:app --reload
+open http://127.0.0.1:8000/docs
+expand POST /predict
+click Try it out
+submit a valid request body
+```

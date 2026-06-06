@@ -14,6 +14,7 @@ Implemented chunks:
 - V7-C3: inference request and response schemas.
 - V7-C4: registry-based model loader.
 - V7-C5: prediction service.
+- V7-C6: prediction endpoint.
 
 ## Components To Introduce
 - FastAPI application boundary
@@ -120,6 +121,27 @@ PredictionRequest
 ```
 
 This keeps core inference behavior testable before wiring it into `POST /predict`.
+
+## Prediction API
+`POST /predict` exposes the prediction service through FastAPI.
+
+Endpoint flow:
+
+```text
+POST /predict
+-> validate PredictionRequest
+-> load champion model
+-> run prediction service
+-> return PredictionResponse
+```
+
+Failure behavior:
+
+```text
+invalid request payload -> HTTP 422
+model unavailable       -> HTTP 503
+prediction failure      -> HTTP 500
+```
 
 ## Operational Objectives
 - expose model behavior through an HTTP API

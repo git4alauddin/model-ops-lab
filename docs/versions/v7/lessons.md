@@ -17,3 +17,6 @@
 - Prediction logic should be testable without FastAPI so model behavior and HTTP behavior can fail independently.
 - Prediction responses should carry model version and request ID because inference outputs need lineage.
 - If a model lacks probability output, serving should use an explicit fallback instead of returning an unclear null.
+- The HTTP prediction endpoint should be thin: validate request, load model, call prediction service, map errors.
+- Swagger becomes useful once request and response schemas are connected to `POST /predict`.
+- Model-unavailable failures should return `503` because the service is alive but not ready to serve predictions.
