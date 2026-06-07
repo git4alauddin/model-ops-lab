@@ -29,3 +29,6 @@
 - Registry publishing should be planned before credentials are introduced into CI.
 - Docker Hub tokens are safer than passwords because they can be revoked independently.
 - A no-push boundary is useful while validating image tags and secret requirements.
+- Secret setup should be documented before CI starts consuming those secrets.
+- GitHub repository secrets can confirm that a secret exists without revealing the value.
+- A CI workflow should never print Docker Hub tokens or rely on pasted credentials in files.

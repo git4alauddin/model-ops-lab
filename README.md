@@ -147,6 +147,12 @@ Docker Hub publishing plan:
 docs/deployment/dockerhub_publishing_plan.md
 ```
 
+Docker Hub secrets setup:
+
+```text
+docs/deployment/dockerhub_secrets_setup.md
+```
+
 ## Project Structure
 
 ```text

@@ -110,3 +110,11 @@ Adding Docker Hub login too early would mix secret handling with registry planni
 
 ### Resolution
 Kept CI unchanged for publishing and added tests that verify no Docker login or push exists yet.
+
+## V8-C9: Docker Hub Secrets Setup Guide
+
+### Issue
+Docker Hub publishing needs credentials, but adding `docker login` before documenting secret setup would make the workflow harder to operate safely.
+
+### Resolution
+Added a secrets setup guide that documents Docker Hub token creation, GitHub Actions repository secrets, safe verification, and the current no-push CI boundary.

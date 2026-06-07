@@ -51,6 +51,12 @@
 - Verified Docker Hub publishing plan documents image name format.
 - Verified Docker Hub publishing plan documents GitHub secret UI path.
 - Verified CI workflow still does not publish to Docker Hub.
+- Verified Docker Hub secrets setup guide exists.
+- Verified Docker Hub secrets setup guide documents access token creation.
+- Verified Docker Hub secrets setup guide documents GitHub Actions repository secrets.
+- Verified Docker Hub secrets setup guide documents safe secret verification.
+- Verified Docker Hub secrets setup guide discourages passwords and token exposure.
+- Verified CI workflow still has no Docker Hub login or push steps.
 
 ## Commands Executed
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py`
@@ -91,6 +97,8 @@
 - `python -m pytest -q tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py tests\test_v8_c7_ci_manual_run_guide.py`
 - `python -m pytest -q tests\test_v8_c8_dockerhub_publishing_plan.py`
 - `python -m pytest -q tests\test_v8_c7_ci_manual_run_guide.py tests\test_v8_c8_dockerhub_publishing_plan.py`
+- `python -m pytest -q tests\test_v8_c9_dockerhub_secrets_setup.py`
+- `python -m pytest -q tests\test_v8_c8_dockerhub_publishing_plan.py tests\test_v8_c9_dockerhub_secrets_setup.py`
 - `python -m pytest -q`
 - `git diff --check`
 
@@ -118,6 +126,7 @@
 - CI workflow no longer spends GitHub Actions minutes on every push.
 - Manual CI operation is documented for repeatable use from GitHub Actions.
 - Docker Hub publishing is planned before registry credentials or push steps are added.
+- Docker Hub secret setup is documented before Docker login or push steps are added to CI.
 
 ## Actual Output
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py` passed: `5 passed in 0.05s`.
@@ -168,7 +177,9 @@
 - `git diff --check` passed with CRLF normalization warnings only.
 - `python -m pytest -q tests\test_v8_c8_dockerhub_publishing_plan.py` passed: `6 passed in 0.05s`.
 - `python -m pytest -q tests\test_v8_c7_ci_manual_run_guide.py tests\test_v8_c8_dockerhub_publishing_plan.py` passed: `11 passed in 0.06s`.
-- `python -m pytest -q` passed: `345 passed in 5.92s`.
+- `python -m pytest -q tests\test_v8_c9_dockerhub_secrets_setup.py` passed: `6 passed in 0.05s`.
+- `python -m pytest -q tests\test_v8_c8_dockerhub_publishing_plan.py tests\test_v8_c9_dockerhub_secrets_setup.py` passed: `12 passed in 0.07s`.
+- `python -m pytest -q` passed: `351 passed in 5.99s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
 ## Outcome
@@ -189,3 +200,5 @@ V8-C6 adds the Docker image versioning contract and traceable CI image tags.
 V8-C7 documents how to run and interpret the manual CI workflow.
 
 V8-C8 documents Docker Hub publishing requirements while keeping CI free of registry login and push steps.
+
+V8-C9 documents Docker Hub secret setup while keeping CI free of registry login and push steps.

@@ -17,6 +17,7 @@ Implemented chunks:
 - V8-C6: Docker image versioning contract.
 - V8-C7: manual CI run guide.
 - V8-C8: Docker Hub publishing plan.
+- V8-C9: Docker Hub secrets setup guide.
 
 ## Components To Introduce
 - Docker serving image
@@ -56,6 +57,8 @@ The CI workflow uses manual execution during the current build phase to avoid sp
 V8-C7 documents how to trigger and read that manual workflow.
 
 V8-C8 documents Docker Hub publishing requirements before credentials or push steps are added.
+
+V8-C9 documents Docker Hub token and GitHub Actions secrets setup before CI login or push steps are added.
 
 ## Docker Boundary
 The V8-C1 image packages source code and Python dependencies.
@@ -206,3 +209,19 @@ docs/deployment/dockerhub_publishing_plan.md
 ```
 
 The plan defines required GitHub secrets, target image naming, token usage, planned push tags, and the current no-push boundary.
+
+## Docker Hub Secrets Setup
+Docker Hub credential setup is documented here:
+
+```text
+docs/deployment/dockerhub_secrets_setup.md
+```
+
+The guide explains how to create a Docker Hub access token and add these GitHub Actions repository secrets:
+
+```text
+DOCKERHUB_USERNAME
+DOCKERHUB_TOKEN
+```
+
+Current CI still does not login to Docker Hub or push images.

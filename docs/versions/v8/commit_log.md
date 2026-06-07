@@ -164,7 +164,7 @@
 - `python -m pytest -q` passed: `339 passed in 5.81s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - v8-c8: add Docker Hub publishing plan
+## 447e0b8 - v8-c8: add Docker Hub publishing plan
 
 ### What Changed
 - Added Docker Hub publishing plan.
@@ -184,4 +184,26 @@
 - `python -m pytest -q tests\test_v8_c8_dockerhub_publishing_plan.py` passed: `6 passed in 0.05s`.
 - `python -m pytest -q tests\test_v8_c7_ci_manual_run_guide.py tests\test_v8_c8_dockerhub_publishing_plan.py` passed: `11 passed in 0.06s`.
 - `python -m pytest -q` passed: `345 passed in 5.92s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - v8-c9: add Docker Hub secrets setup guide
+
+### What Changed
+- Added Docker Hub secrets setup guide.
+- Documented Docker Hub access token creation.
+- Documented GitHub Actions repository secret creation.
+- Documented required secret names.
+- Documented token usage instead of password.
+- Documented safe verification without exposing values.
+- Added focused tests for the secrets guide and no-push CI boundary.
+- Updated README and V8 docs.
+
+### What Problem It Solved
+- Makes credential setup safe and repeatable before CI consumes Docker Hub secrets.
+- Keeps Docker Hub publishing separate from secret preparation.
+
+### Verification
+- `python -m pytest -q tests\test_v8_c9_dockerhub_secrets_setup.py` passed: `6 passed in 0.05s`.
+- `python -m pytest -q tests\test_v8_c8_dockerhub_publishing_plan.py tests\test_v8_c9_dockerhub_secrets_setup.py` passed: `12 passed in 0.07s`.
+- `python -m pytest -q` passed: `351 passed in 5.99s`.
 - `git diff --check` passed with CRLF normalization warnings only.

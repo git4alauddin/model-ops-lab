@@ -374,3 +374,34 @@ DOCKERHUB_TOKEN
 V8-C8 plans Docker Hub publishing.
 
 It does not add Docker login, Docker push, registry credentials, or deployment automation.
+
+## V8-C9: Docker Hub Secrets Setup Guide
+
+### Files Added
+
+```text
+docs/deployment/dockerhub_secrets_setup.md
+tests/test_v8_c9_dockerhub_secrets_setup.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/versions/v8/
+```
+
+### Behavior
+- Added a Docker Hub secrets setup guide.
+- Documented Docker Hub access token creation from the Docker Hub UI.
+- Documented GitHub Actions repository secret creation from the GitHub UI.
+- Documented required secret names: `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`.
+- Documented token usage instead of account password.
+- Documented safe verification without exposing secret values.
+- Documented that tokens must not be printed, committed, or pasted into `.env` files.
+- Added tests that verify the guide and confirm CI still does not login or push.
+
+### Boundary
+V8-C9 prepares credential setup.
+
+It does not add Docker login, Docker push, or image publishing to CI.
