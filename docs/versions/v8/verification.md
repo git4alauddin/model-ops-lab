@@ -45,6 +45,12 @@
 - Verified manual CI run guide documents the GitHub Actions UI path.
 - Verified manual CI run guide explains `tests` and `docker-image` jobs.
 - Verified manual CI run guide states Docker Hub push is not implemented yet.
+- Verified Docker Hub publishing plan exists.
+- Verified Docker Hub publishing plan documents required secrets.
+- Verified Docker Hub publishing plan requires token instead of password.
+- Verified Docker Hub publishing plan documents image name format.
+- Verified Docker Hub publishing plan documents GitHub secret UI path.
+- Verified CI workflow still does not publish to Docker Hub.
 
 ## Commands Executed
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py`
@@ -83,6 +89,8 @@
 - `python -m pytest -q tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py`
 - `python -m pytest -q tests\test_v8_c7_ci_manual_run_guide.py`
 - `python -m pytest -q tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py tests\test_v8_c7_ci_manual_run_guide.py`
+- `python -m pytest -q tests\test_v8_c8_dockerhub_publishing_plan.py`
+- `python -m pytest -q tests\test_v8_c7_ci_manual_run_guide.py tests\test_v8_c8_dockerhub_publishing_plan.py`
 - `python -m pytest -q`
 - `git diff --check`
 
@@ -109,6 +117,7 @@
 - CI workflow can be run manually when validation is needed.
 - CI workflow no longer spends GitHub Actions minutes on every push.
 - Manual CI operation is documented for repeatable use from GitHub Actions.
+- Docker Hub publishing is planned before registry credentials or push steps are added.
 
 ## Actual Output
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py` passed: `5 passed in 0.05s`.
@@ -157,6 +166,10 @@
 - `python -m pytest -q tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py tests\test_v8_c7_ci_manual_run_guide.py` passed: `23 passed in 0.18s`.
 - `python -m pytest -q` passed: `339 passed in 5.81s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+- `python -m pytest -q tests\test_v8_c8_dockerhub_publishing_plan.py` passed: `6 passed in 0.05s`.
+- `python -m pytest -q tests\test_v8_c7_ci_manual_run_guide.py tests\test_v8_c8_dockerhub_publishing_plan.py` passed: `11 passed in 0.06s`.
+- `python -m pytest -q` passed: `345 passed in 5.92s`.
+- `git diff --check` passed with CRLF normalization warnings only.
 
 ## Outcome
 V8-C1 adds the first reproducible serving image boundary.
@@ -174,3 +187,5 @@ V8-C5 adds the CI Docker image build gate after the test gate.
 V8-C6 adds the Docker image versioning contract and traceable CI image tags.
 
 V8-C7 documents how to run and interpret the manual CI workflow.
+
+V8-C8 documents Docker Hub publishing requirements while keeping CI free of registry login and push steps.

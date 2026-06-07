@@ -96,3 +96,17 @@ After switching CI to manual execution, the project needed clear instructions fo
 
 ### Resolution
 Added a manual CI run guide that documents the GitHub Actions UI flow, the workflow jobs, failure inspection, and the current no-push boundary.
+
+## V8-C8: Docker Hub Publishing Plan
+
+### Issue
+The project was close to registry publishing, but Docker Hub credentials and image naming rules were not documented.
+
+### Resolution
+Added a Docker Hub publishing plan with target image names, required GitHub secrets, token guidance, planned tags, and the current no-push boundary.
+
+### Issue
+Adding Docker Hub login too early would mix secret handling with registry planning.
+
+### Resolution
+Kept CI unchanged for publishing and added tests that verify no Docker login or push exists yet.

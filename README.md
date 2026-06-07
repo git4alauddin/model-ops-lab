@@ -141,6 +141,12 @@ Manual CI run guide:
 docs/deployment/ci_manual_run_guide.md
 ```
 
+Docker Hub publishing plan:
+
+```text
+docs/deployment/dockerhub_publishing_plan.md
+```
+
 ## Project Structure
 
 ```text

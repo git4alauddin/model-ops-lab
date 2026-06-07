@@ -26,3 +26,6 @@
 - Manual CI should keep the same gates as automatic CI; only the trigger changes.
 - Manual CI needs a run guide because the workflow no longer starts automatically.
 - CI documentation should explain both successful runs and failure inspection.
+- Registry publishing should be planned before credentials are introduced into CI.
+- Docker Hub tokens are safer than passwords because they can be revoked independently.
+- A no-push boundary is useful while validating image tags and secret requirements.

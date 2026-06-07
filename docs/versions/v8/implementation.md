@@ -335,3 +335,42 @@ GitHub repo
 V8-C7 documents CI operation.
 
 It does not add Docker Hub push, deployment automation, or production secrets.
+
+## V8-C8: Docker Hub Publishing Plan
+
+### Files Added
+
+```text
+docs/deployment/dockerhub_publishing_plan.md
+tests/test_v8_c8_dockerhub_publishing_plan.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/versions/v8/
+```
+
+### Behavior
+- Added Docker Hub publishing plan.
+- Explained Docker Hub as the external image registry.
+- Defined target image naming format.
+- Documented required GitHub Actions secrets.
+- Documented why Docker Hub token should be used instead of password.
+- Documented planned Git SHA and CI push tags.
+- Documented GitHub UI path for adding repository secrets.
+- Documented that Docker Hub push is not enabled yet.
+- Added tests that verify the plan and confirm CI still does not publish images.
+
+### Required Secrets Later
+
+```text
+DOCKERHUB_USERNAME
+DOCKERHUB_TOKEN
+```
+
+### Boundary
+V8-C8 plans Docker Hub publishing.
+
+It does not add Docker login, Docker push, registry credentials, or deployment automation.

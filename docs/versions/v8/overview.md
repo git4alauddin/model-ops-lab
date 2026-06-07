@@ -16,6 +16,7 @@ Implemented chunks:
 - V8-C5: CI Docker image build gate.
 - V8-C6: Docker image versioning contract.
 - V8-C7: manual CI run guide.
+- V8-C8: Docker Hub publishing plan.
 
 ## Components To Introduce
 - Docker serving image
@@ -53,6 +54,8 @@ V8-C6 adds explicit image tagging rules before Docker Hub publishing.
 The CI workflow uses manual execution during the current build phase to avoid spending CI minutes on every small push.
 
 V8-C7 documents how to trigger and read that manual workflow.
+
+V8-C8 documents Docker Hub publishing requirements before credentials or push steps are added.
 
 ## Docker Boundary
 The V8-C1 image packages source code and Python dependencies.
@@ -194,3 +197,12 @@ docs/deployment/ci_manual_run_guide.md
 ```
 
 The guide explains when to run CI, how to trigger it from GitHub Actions, what each job means, and how to inspect failures.
+
+## Docker Hub Publishing Plan
+Docker Hub publishing is planned here:
+
+```text
+docs/deployment/dockerhub_publishing_plan.md
+```
+
+The plan defines required GitHub secrets, target image naming, token usage, planned push tags, and the current no-push boundary.

@@ -142,7 +142,7 @@
 - `python -m pytest -q` passed: `334 passed in 5.92s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - v8-c7: add manual CI run guide
+## 418b0a5 - v8-c7: add manual CI run guide
 
 ### What Changed
 - Added manual CI run guide.
@@ -162,4 +162,26 @@
 - `python -m pytest -q tests\test_v8_c7_ci_manual_run_guide.py` passed: `5 passed in 0.05s`.
 - `python -m pytest -q tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py tests\test_v8_c7_ci_manual_run_guide.py` passed: `23 passed in 0.18s`.
 - `python -m pytest -q` passed: `339 passed in 5.81s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - v8-c8: add Docker Hub publishing plan
+
+### What Changed
+- Added Docker Hub publishing plan.
+- Documented target image naming.
+- Documented required GitHub Actions secrets.
+- Documented Docker Hub token usage instead of password.
+- Documented planned CI and Git SHA push tags.
+- Documented GitHub UI path for adding repository secrets.
+- Added tests that verify CI still does not login or push.
+- Updated README and V8 docs.
+
+### What Problem It Solved
+- Prepares registry publishing safely before credentials are introduced.
+- Keeps Docker Hub push out of CI until the secret and naming contract is clear.
+
+### Verification
+- `python -m pytest -q tests\test_v8_c8_dockerhub_publishing_plan.py` passed: `6 passed in 0.05s`.
+- `python -m pytest -q tests\test_v8_c7_ci_manual_run_guide.py tests\test_v8_c8_dockerhub_publishing_plan.py` passed: `11 passed in 0.06s`.
+- `python -m pytest -q` passed: `345 passed in 5.92s`.
 - `git diff --check` passed with CRLF normalization warnings only.
