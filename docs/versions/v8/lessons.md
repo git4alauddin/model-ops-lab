@@ -12,3 +12,6 @@
 - Environment configuration should be explicit before CI/CD so automated pipelines validate the same runtime contract used locally.
 - Deployment-facing values must satisfy the tools that consume them; Uvicorn requires lowercase log levels.
 - Python can normalize environment values internally while Docker receives tool-compatible values.
+- CI should start with a test gate before adding image build, registry push, or deployment automation.
+- Static workflow tests are useful because CI YAML is easy to break without noticing locally.
+- A CI workflow should install from the same `requirements.txt` used by local development and Docker builds.

@@ -32,3 +32,17 @@ The first environment-aware Compose runtime check failed because Uvicorn rejecte
 
 ### Resolution
 Changed the deployment-facing `LOG_LEVEL` default to lowercase `info` while keeping Python settings normalized to uppercase internally.
+
+## V8-C4: CI Test Workflow
+
+### Issue
+Tests were still manually triggered after code changes.
+
+### Resolution
+Added a GitHub Actions workflow that installs dependencies and runs the full pytest suite on pushes and pull requests.
+
+### Issue
+CI YAML can silently drift from the intended quality gate.
+
+### Resolution
+Added static workflow tests that verify triggers, Python setup, dependency installation, and pytest execution.

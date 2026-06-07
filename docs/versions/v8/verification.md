@@ -22,6 +22,12 @@
 - Verified Docker Compose passes serving environment variables.
 - Verified Dockerfile uses serving environment variables for Uvicorn startup.
 - Verified API routes use configured registry, MLflow, prediction log, and app log paths.
+- Verified CI workflow exists.
+- Verified CI workflow runs on push and pull request.
+- Verified CI workflow checks out the repository.
+- Verified CI workflow sets up Python `3.11`.
+- Verified CI workflow installs `requirements.txt`.
+- Verified CI workflow runs `python -m pytest -q`.
 
 ## Commands Executed
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py`
@@ -46,6 +52,8 @@
 - `docker compose -f deployment/docker-compose.yaml --env-file .env.example up -d --build`
 - `Invoke-RestMethod http://127.0.0.1:8000/health`
 - `docker compose -f deployment/docker-compose.yaml --env-file .env.example down`
+- `python -m pytest -q tests\test_v8_c4_ci_workflow.py`
+- `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py tests\test_v8_c2_docker_compose_runtime.py tests\test_v8_c3_serving_environment_config.py tests\test_v8_c4_ci_workflow.py`
 - `python -m pytest -q`
 - `git diff --check`
 
@@ -64,6 +72,7 @@
 - Serving environment settings are explicit and test-covered.
 - Compose can resolve `.env.example` into container runtime settings.
 - The environment-aware container can start and serve `/health`.
+- CI workflow provides an automated test gate before Docker image build and deployment gates.
 
 ## Actual Output
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py` passed: `5 passed in 0.05s`.
@@ -88,6 +97,10 @@
 - Environment-aware Compose runtime `/health` check returned `{"status":"ok","service":"modelopslab-serving","api_version":"v7"}`.
 - `python -m pytest -q` passed: `316 passed in 5.85s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+- `python -m pytest -q tests\test_v8_c4_ci_workflow.py` passed: `7 passed in 0.07s`.
+- `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py tests\test_v8_c2_docker_compose_runtime.py tests\test_v8_c3_serving_environment_config.py tests\test_v8_c4_ci_workflow.py` passed: `24 passed in 0.16s`.
+- `python -m pytest -q` passed: `323 passed in 5.76s`.
+- `git diff --check` passed with CRLF normalization warnings only.
 
 ## Outcome
 V8-C1 adds the first reproducible serving image boundary.
@@ -97,3 +110,5 @@ The API can now be packaged separately from the local Python virtual environment
 V8-C2 adds a repeatable Docker Compose runtime for local serving with controlled mounts for model registry metadata, MLflow artifacts, and logs.
 
 V8-C3 adds explicit serving runtime configuration for Docker, Compose, and future CI/CD deployment validation.
+
+V8-C4 adds the first GitHub Actions CI test gate.

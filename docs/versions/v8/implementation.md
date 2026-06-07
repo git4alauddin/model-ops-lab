@@ -170,3 +170,45 @@ docker compose -f deployment/docker-compose.yaml --env-file .env.example down
 Uvicorn rejects uppercase log levels such as `INFO`.
 
 The deployment-facing default uses lowercase `info`, while Python settings normalize `LOG_LEVEL` to uppercase internally.
+
+## V8-C4: CI Test Workflow
+
+### Files Added
+
+```text
+.github/workflows/ci.yaml
+tests/test_v8_c4_ci_workflow.py
+```
+
+### Files Updated
+
+```text
+docs/versions/v8/
+```
+
+### Behavior
+- Added GitHub Actions CI workflow.
+- Runs on pushes to `main`.
+- Runs on pull requests targeting `main`.
+- Checks out the repository.
+- Sets up Python `3.11`.
+- Enables pip dependency caching from `requirements.txt`.
+- Installs dependencies from `requirements.txt`.
+- Runs the full test suite with `python -m pytest -q`.
+- Added static workflow tests to verify the CI contract.
+
+### CI Flow
+
+```text
+git push
+-> GitHub Actions starts ci workflow
+-> checkout repository
+-> setup Python
+-> install requirements
+-> run pytest
+```
+
+### Boundary
+V8-C4 only adds the test gate.
+
+Docker image build gates, registry push, and deployment validation are intentionally left for later V8 chunks.

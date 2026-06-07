@@ -46,7 +46,7 @@
 - `python -m pytest -q` passed: `310 passed in 20.96s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - v8-c3: add serving environment configuration
+## b1ab305 - v8-c3: add serving environment configuration
 
 ### What Changed
 - Added typed serving runtime settings.
@@ -71,4 +71,26 @@
 - Compose settings import check printed `local`, `0.0.0.0`, `8000`, `/app/model_registry`, `/app/mlruns`, `/app/logs/predictions.jsonl`, and `/app/logs/modelopslab.log`.
 - Environment-aware Compose runtime `/health` check returned `{"status":"ok","service":"modelopslab-serving","api_version":"v7"}`.
 - `python -m pytest -q` passed: `316 passed in 5.85s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - v8-c4: add CI test workflow
+
+### What Changed
+- Added GitHub Actions CI workflow.
+- Configured CI for pushes to `main`.
+- Configured CI for pull requests targeting `main`.
+- Set up Python `3.11`.
+- Installed dependencies from `requirements.txt`.
+- Ran the full test suite with `python -m pytest -q`.
+- Added focused static workflow tests.
+- Updated V8 docs.
+
+### What Problem It Solved
+- Creates the first automated quality gate before Docker image build and deployment automation.
+- Makes test execution visible on GitHub after pushes and pull requests.
+
+### Verification
+- `python -m pytest -q tests\test_v8_c4_ci_workflow.py` passed: `7 passed in 0.07s`.
+- `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py tests\test_v8_c2_docker_compose_runtime.py tests\test_v8_c3_serving_environment_config.py tests\test_v8_c4_ci_workflow.py` passed: `24 passed in 0.16s`.
+- `python -m pytest -q` passed: `323 passed in 5.76s`.
 - `git diff --check` passed with CRLF normalization warnings only.

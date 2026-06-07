@@ -12,6 +12,7 @@ Implemented chunks:
 - V8-C1: Docker serving image foundation.
 - V8-C2: Docker Compose serving runtime.
 - V8-C3: serving environment configuration.
+- V8-C4: CI test workflow.
 
 ## Components To Introduce
 - Docker serving image
@@ -39,6 +40,8 @@ The first V8 container should prove the API can run from a clean image with inst
 V8-C2 adds Docker Compose so the same serving image can be started with a repeatable local runtime definition.
 
 V8-C3 makes serving runtime behavior explicit through environment variables so Docker, Compose, and future CI/CD runs use the same configuration contract.
+
+V8-C4 adds the first automated CI quality gate through GitHub Actions.
 
 ## Docker Boundary
 The V8-C1 image packages source code and Python dependencies.
@@ -112,3 +115,19 @@ GET /ready depends on mounted or provided champion model runtime state
 - prepare for Docker Compose
 - prepare for CI image builds
 - prepare for deployment validation
+
+## CI Foundation
+The first CI workflow runs on:
+
+```text
+push to main
+pull requests targeting main
+```
+
+The workflow installs dependencies from `requirements.txt` and runs:
+
+```powershell
+python -m pytest -q
+```
+
+Docker image building and deployment gates will be added after the test gate is stable.
