@@ -95,7 +95,7 @@
 - `python -m pytest -q` passed: `323 passed in 5.76s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - v8-c5: add CI Docker image build gate
+## 6099ee6 - v8-c5: add CI Docker image build gate
 
 ### What Changed
 - Added a `docker-image` job to GitHub Actions CI.
@@ -116,4 +116,28 @@
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py tests\test_v8_c2_docker_compose_runtime.py tests\test_v8_c3_serving_environment_config.py tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py` passed: `29 passed in 0.18s`.
 - `docker build -f deployment/Dockerfile -t modelopslab-serving:ci .` built successfully.
 - `python -m pytest -q` passed: `328 passed in 5.55s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - v8-c6: add Docker image versioning contract
+
+### What Changed
+- Added Docker image tagging contract documentation.
+- Documented CI, Git SHA, semantic release, and optional `latest` tags.
+- Updated CI Docker build to tag `modelopslab-serving:ci`.
+- Updated CI Docker build to also tag `modelopslab-serving:${{ github.sha }}`.
+- Kept Docker Hub login and image push out of CI.
+- Added focused tests for image versioning behavior.
+- Updated V8 docs.
+
+### What Problem It Solved
+- Makes CI image builds traceable to source commits.
+- Prepares the project for rollback-safe Docker Hub publishing.
+- Avoids relying on `latest` as the only image identity.
+
+### Verification
+- `python -m pytest -q tests\test_v8_c6_image_versioning.py` passed: `6 passed in 0.06s`.
+- `python -m pytest -q tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py` passed: `11 passed in 0.10s`.
+- `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py tests\test_v8_c2_docker_compose_runtime.py tests\test_v8_c3_serving_environment_config.py tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py` passed: `35 passed in 0.19s`.
+- `docker build -f deployment/Dockerfile -t modelopslab-serving:ci -t modelopslab-serving:local-sha .` built both tags successfully.
+- `python -m pytest -q` passed: `334 passed in 5.92s`.
 - `git diff --check` passed with CRLF normalization warnings only.

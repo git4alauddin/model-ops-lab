@@ -251,3 +251,44 @@ push or pull request
 V8-C5 only verifies that the image can build in CI.
 
 Docker Hub authentication, image push, semantic image tags, and deployment automation remain separate later chunks.
+
+## V8-C6: Docker Image Versioning Contract
+
+### Files Added
+
+```text
+deployment/image_tags.md
+tests/test_v8_c6_image_versioning.py
+```
+
+### Files Updated
+
+```text
+.github/workflows/ci.yaml
+tests/test_v8_c5_ci_docker_build.py
+docs/versions/v8/
+```
+
+### Behavior
+- Added a Docker image tagging contract.
+- Documented CI, Git SHA, semantic release, and optional `latest` tags.
+- Warned against using `latest` as the only deployed or rollback tag.
+- Updated CI Docker build to tag images as `modelopslab-serving:ci`.
+- Updated CI Docker build to also tag images as `modelopslab-serving:${{ github.sha }}`.
+- Kept Docker Hub login and image push out of the workflow.
+- Added focused tests for image versioning and no-push behavior.
+
+### CI Build Command
+
+```text
+docker build \
+  -f deployment/Dockerfile \
+  -t modelopslab-serving:ci \
+  -t modelopslab-serving:${{ github.sha }} \
+  .
+```
+
+### Boundary
+V8-C6 defines traceable image tags.
+
+Docker Hub authentication, Docker Hub push, release tagging, and deployment automation remain separate later chunks.

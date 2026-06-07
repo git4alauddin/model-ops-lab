@@ -14,6 +14,7 @@ Implemented chunks:
 - V8-C3: serving environment configuration.
 - V8-C4: CI test workflow.
 - V8-C5: CI Docker image build gate.
+- V8-C6: Docker image versioning contract.
 
 ## Components To Introduce
 - Docker serving image
@@ -45,6 +46,8 @@ V8-C3 makes serving runtime behavior explicit through environment variables so D
 V8-C4 adds the first automated CI quality gate through GitHub Actions.
 
 V8-C5 adds a Docker image build gate after tests pass.
+
+V8-C6 adds explicit image tagging rules before Docker Hub publishing.
 
 ## Docker Boundary
 The V8-C1 image packages source code and Python dependencies.
@@ -151,3 +154,19 @@ tests pass
 ```
 
 This validates that the deployment image can be built in CI before any registry push or deployment automation exists.
+
+## Docker Image Versioning
+Docker image tagging is documented here:
+
+```text
+deployment/image_tags.md
+```
+
+CI builds use:
+
+```text
+modelopslab-serving:ci
+modelopslab-serving:${{ github.sha }}
+```
+
+The `ci` tag is a temporary validation tag. The Git SHA tag is traceable to an exact commit and prepares the project for rollback-safe registry publishing.

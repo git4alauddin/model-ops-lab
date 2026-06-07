@@ -33,7 +33,8 @@ def test_v8_ci_docker_build_checks_out_repository() -> None:
 def test_v8_ci_docker_build_uses_serving_dockerfile() -> None:
     workflow_text = WORKFLOW_PATH.read_text()
 
-    assert "docker build -f deployment/Dockerfile" in workflow_text
+    assert "docker build \\" in workflow_text
+    assert "-f deployment/Dockerfile" in workflow_text
     assert "-t modelopslab-serving:ci" in workflow_text
 
 

@@ -33,6 +33,11 @@
 - Verified CI Docker image build uses `deployment/Dockerfile`.
 - Verified CI Docker image build tags `modelopslab-serving:ci`.
 - Verified CI workflow does not log in to Docker Hub or push an image.
+- Verified Docker image tagging contract exists.
+- Verified image tagging contract documents CI, Git SHA, semantic release, and optional latest tags.
+- Verified image tagging contract warns against latest-only rollback.
+- Verified CI Docker image build also tags images with `${{ github.sha }}`.
+- Verified CI Docker image versioning still avoids Docker Hub login and push.
 
 ## Commands Executed
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py`
@@ -63,6 +68,10 @@
 - `python -m pytest -q tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py`
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py tests\test_v8_c2_docker_compose_runtime.py tests\test_v8_c3_serving_environment_config.py tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py`
 - `docker build -f deployment/Dockerfile -t modelopslab-serving:ci .`
+- `python -m pytest -q tests\test_v8_c6_image_versioning.py`
+- `python -m pytest -q tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py`
+- `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py tests\test_v8_c2_docker_compose_runtime.py tests\test_v8_c3_serving_environment_config.py tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py`
+- `docker build -f deployment/Dockerfile -t modelopslab-serving:ci -t modelopslab-serving:local-sha .`
 - `python -m pytest -q`
 - `git diff --check`
 
@@ -84,6 +93,8 @@
 - CI workflow provides an automated test gate before Docker image build and deployment gates.
 - CI workflow verifies the serving Docker image can build after tests pass.
 - CI workflow does not publish images yet.
+- CI workflow builds a traceable Git SHA image tag.
+- Image tagging contract is documented before Docker Hub publishing.
 
 ## Actual Output
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py` passed: `5 passed in 0.05s`.
@@ -118,6 +129,12 @@
 - `docker build -f deployment/Dockerfile -t modelopslab-serving:ci .` built successfully.
 - `python -m pytest -q` passed: `328 passed in 5.55s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+- `python -m pytest -q tests\test_v8_c6_image_versioning.py` passed: `6 passed in 0.06s`.
+- `python -m pytest -q tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py` passed: `11 passed in 0.10s`.
+- `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py tests\test_v8_c2_docker_compose_runtime.py tests\test_v8_c3_serving_environment_config.py tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py` passed: `35 passed in 0.19s`.
+- `docker build -f deployment/Dockerfile -t modelopslab-serving:ci -t modelopslab-serving:local-sha .` built both tags successfully.
+- `python -m pytest -q` passed: `334 passed in 5.92s`.
+- `git diff --check` passed with CRLF normalization warnings only.
 
 ## Outcome
 V8-C1 adds the first reproducible serving image boundary.
@@ -131,3 +148,5 @@ V8-C3 adds explicit serving runtime configuration for Docker, Compose, and futur
 V8-C4 adds the first GitHub Actions CI test gate.
 
 V8-C5 adds the CI Docker image build gate after the test gate.
+
+V8-C6 adds the Docker image versioning contract and traceable CI image tags.

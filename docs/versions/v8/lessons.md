@@ -18,3 +18,6 @@
 - Docker image build should run after tests, not before them.
 - CI image build validation is not the same as publishing to Docker Hub.
 - Registry login and image push should be added only after the image build gate is stable.
+- Docker images need traceable tags before they are pushed to a registry.
+- A Git SHA image tag links a built image back to exact source code.
+- The `latest` tag is convenient but weak for rollback because it can move over time.

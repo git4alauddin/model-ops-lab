@@ -60,3 +60,17 @@ Image publishing would require Docker Hub credentials and should not be mixed wi
 
 ### Resolution
 Kept V8-C5 limited to `docker build` only. Docker login and push are intentionally left for a later chunk.
+
+## V8-C6: Docker Image Versioning Contract
+
+### Issue
+CI could build a Docker image, but the image tag was only a generic `ci` tag.
+
+### Resolution
+Added a documented image tagging contract and updated CI to produce both `modelopslab-serving:ci` and `modelopslab-serving:${{ github.sha }}`.
+
+### Issue
+Using `latest` as the only tag would make rollback and source traceability weak.
+
+### Resolution
+Documented that `latest` is optional convenience only and must not be the only deployed or rollback tag.
