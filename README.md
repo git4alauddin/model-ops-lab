@@ -2,7 +2,7 @@
 
 Production-style, versioned MLOps project built incrementally.
 
-The project starts with a local ML training pipeline and gradually adds validation, reproducibility, experiment tracking, orchestration, and model lifecycle management.
+The project starts with a local ML training pipeline and gradually adds validation, reproducibility, experiment tracking, orchestration, model lifecycle management, serving, and deployment foundations.
 
 ## Current Scope
 
@@ -14,6 +14,8 @@ The project starts with a local ML training pipeline and gradually adds validati
 | V4 | MLflow experiment tracking and champion selection |
 | V5 | Local orchestration with Prefect |
 | V6 | Model registry and model lifecycle foundations |
+| V7 | FastAPI model serving |
+| V8 | Dockerization and deployment foundations |
 
 Detailed implementation history lives under `docs/versions/`.
 
@@ -63,10 +65,28 @@ Run the Prefect training pipeline locally:
 python -m app.run_prefect_pipeline
 ```
 
+Run the FastAPI serving API locally:
+
+```powershell
+uvicorn app.serve_api:app --reload
+```
+
 Check dataset reproducibility:
 
 ```powershell
 python -m app.check_reproducibility
+```
+
+Build the serving Docker image:
+
+```powershell
+docker build -f deployment/Dockerfile -t modelopslab-serving:v8-c1 .
+```
+
+Run the serving Docker image:
+
+```powershell
+docker run --rm -p 8000:8000 modelopslab-serving:v8-c1
 ```
 
 ## MLflow UI
@@ -118,6 +138,7 @@ modelOpsLab/
   schema_versions/     # validation schema versions
   tests/               # versioned test suite
   docs/                # project documentation
+  deployment/          # Docker and deployment assets
   artifacts/           # local runtime artifacts
   reports/             # local runtime reports
   logs/                # local logs

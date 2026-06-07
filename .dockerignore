@@ -1,0 +1,32 @@
+# Git and local tooling
+.git/
+.github/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Python runtime noise
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Local virtual environment
+vir_env/
+
+# Local secrets and environment files
+.env
+.env.*
+
+# Runtime artifacts stay outside the image by default
+artifacts/
+logs/
+mlruns/
+mlartifacts/
+model_registry/
+pipeline_runs/
+reports/
+mlflow.db*
+
+# OS files
+.DS_Store
+Thumbs.db
