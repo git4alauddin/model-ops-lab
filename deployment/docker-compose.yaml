@@ -1,0 +1,15 @@
+services:
+  modelopslab-serving:
+    build:
+      context: ..
+      dockerfile: deployment/Dockerfile
+    image: modelopslab-serving:v8-c2
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../model_registry:/app/model_registry:ro
+      - ../mlruns:/app/mlruns:ro
+      - ../logs:/app/logs
+    environment:
+      MODELOPSLAB_ENV: local
+    restart: unless-stopped

@@ -89,6 +89,12 @@ Run the serving Docker image:
 docker run --rm -p 8000:8000 modelopslab-serving:v8-c1
 ```
 
+Run the serving API with Docker Compose:
+
+```powershell
+docker compose -f deployment/docker-compose.yaml up --build
+```
+
 ## MLflow UI
 
 Start the local MLflow UI:

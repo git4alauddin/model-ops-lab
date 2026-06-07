@@ -6,3 +6,6 @@
 - Secrets should never be copied into an image.
 - Local MLflow artifacts and model registry records are runtime inputs, not source code.
 - A first Docker chunk should prove packaging before adding Compose, CI/CD, registry push, or deployment workflows.
+- Docker Compose should describe how the image runs locally, not redefine the application startup already owned by the Dockerfile.
+- Runtime model metadata and MLflow artifacts can be mounted read-only because serving should consume them, not mutate them.
+- Logs should remain writable because serving runtime events and prediction audit records are outputs.

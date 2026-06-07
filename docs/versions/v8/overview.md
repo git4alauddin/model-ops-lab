@@ -10,6 +10,7 @@ V8 is in progress.
 
 Implemented chunks:
 - V8-C1: Docker serving image foundation.
+- V8-C2: Docker Compose serving runtime.
 
 ## Components To Introduce
 - Docker serving image
@@ -34,6 +35,8 @@ app.serve_api:app
 
 The first V8 container should prove the API can run from a clean image with installed dependencies before adding Compose, CI/CD, registry push, or deployment automation.
 
+V8-C2 adds Docker Compose so the same serving image can be started with a repeatable local runtime definition.
+
 ## Docker Boundary
 The V8-C1 image packages source code and Python dependencies.
 
@@ -56,6 +59,22 @@ Those are environment/runtime concerns. They should be mounted, generated, or pr
 ```powershell
 docker build -f deployment/Dockerfile -t modelopslab-serving:v8-c1 .
 docker run --rm -p 8000:8000 modelopslab-serving:v8-c1
+```
+
+## Docker Compose Runtime
+
+```powershell
+docker compose -f deployment/docker-compose.yaml up --build
+```
+
+Compose provides:
+
+```text
+serving container build
+localhost:8000 port mapping
+read-only model_registry mount
+read-only mlruns mount
+writable logs mount
 ```
 
 Expected initial behavior:
