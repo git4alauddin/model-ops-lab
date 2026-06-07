@@ -87,8 +87,14 @@ def test_failure_log_record_contains_error_metadata():
 
 def test_predict_endpoint_logs_success(monkeypatch):
     records = []
-    monkeypatch.setattr("app.api.routes.write_prediction_log", records.append)
-    monkeypatch.setattr("app.api.routes.load_champion_model", lambda: _loaded_model())
+    monkeypatch.setattr(
+        "app.api.routes.write_prediction_log",
+        lambda record, **kwargs: records.append(record),
+    )
+    monkeypatch.setattr(
+        "app.api.routes.load_champion_model",
+        lambda **kwargs: _loaded_model(),
+    )
     monkeypatch.setattr(
         "app.api.routes.predict_customer_churn",
         lambda request, loaded_model, *, request_id: PredictionResponse(
@@ -114,10 +120,13 @@ def test_predict_endpoint_logs_success(monkeypatch):
 def test_predict_endpoint_logs_model_loader_failure(monkeypatch):
     records = []
 
-    def fail_load():
+    def fail_load(**kwargs):
         raise ModelLoaderError("No champion model found.")
 
-    monkeypatch.setattr("app.api.routes.write_prediction_log", records.append)
+    monkeypatch.setattr(
+        "app.api.routes.write_prediction_log",
+        lambda record, **kwargs: records.append(record),
+    )
     monkeypatch.setattr("app.api.routes.load_champion_model", fail_load)
     client = TestClient(create_app())
 
@@ -136,8 +145,14 @@ def test_predict_endpoint_logs_prediction_failure(monkeypatch):
     def fail_predict(request, loaded_model, *, request_id: str):
         raise PredictionError("Prediction failed.")
 
-    monkeypatch.setattr("app.api.routes.write_prediction_log", records.append)
-    monkeypatch.setattr("app.api.routes.load_champion_model", lambda: _loaded_model())
+    monkeypatch.setattr(
+        "app.api.routes.write_prediction_log",
+        lambda record, **kwargs: records.append(record),
+    )
+    monkeypatch.setattr(
+        "app.api.routes.load_champion_model",
+        lambda **kwargs: _loaded_model(),
+    )
     monkeypatch.setattr("app.api.routes.predict_customer_churn", fail_predict)
     client = TestClient(create_app())
 
@@ -152,7 +167,10 @@ def test_predict_endpoint_logs_prediction_failure(monkeypatch):
 
 def test_predict_endpoint_does_not_log_invalid_payload(monkeypatch):
     records = []
-    monkeypatch.setattr("app.api.routes.write_prediction_log", records.append)
+    monkeypatch.setattr(
+        "app.api.routes.write_prediction_log",
+        lambda record, **kwargs: records.append(record),
+    )
     client = TestClient(create_app())
 
     response = client.post(

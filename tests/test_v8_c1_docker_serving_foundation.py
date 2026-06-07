@@ -19,9 +19,10 @@ def test_v8_dockerfile_packages_serving_api() -> None:
     assert "python -m pip install --no-cache-dir -r requirements.txt" in dockerfile
     assert "COPY . ." in dockerfile
     assert "EXPOSE 8000" in dockerfile
-    assert '"app.serve_api:app"' in dockerfile
-    assert '"--host", "0.0.0.0"' in dockerfile
-    assert '"--port", "8000"' in dockerfile
+    assert "uvicorn app.serve_api:app" in dockerfile
+    assert "${SERVING_HOST:-0.0.0.0}" in dockerfile
+    assert "${SERVING_PORT:-8000}" in dockerfile
+    assert "${LOG_LEVEL:-info}" in dockerfile
 
 
 def test_v8_dockerignore_exists() -> None:

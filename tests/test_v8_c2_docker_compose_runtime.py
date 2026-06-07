@@ -27,7 +27,7 @@ def test_v8_docker_compose_builds_from_serving_dockerfile() -> None:
 
     assert service["build"]["context"] == ".."
     assert service["build"]["dockerfile"] == "deployment/Dockerfile"
-    assert service["image"] == "modelopslab-serving:v8-c2"
+    assert service["image"] == "modelopslab-serving:v8-c3"
 
 
 def test_v8_docker_compose_exposes_serving_port() -> None:

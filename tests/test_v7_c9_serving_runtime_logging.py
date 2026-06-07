@@ -55,8 +55,14 @@ def test_serving_runtime_log_writes_human_readable_events(tmp_path):
 
 def test_predict_endpoint_emits_runtime_logs_on_success(monkeypatch):
     events = _capture_route_runtime_logs(monkeypatch)
-    monkeypatch.setattr("app.api.routes.write_prediction_log", lambda record: None)
-    monkeypatch.setattr("app.api.routes.load_champion_model", lambda: _loaded_model())
+    monkeypatch.setattr(
+        "app.api.routes.write_prediction_log",
+        lambda record, **kwargs: None,
+    )
+    monkeypatch.setattr(
+        "app.api.routes.load_champion_model",
+        lambda **kwargs: _loaded_model(),
+    )
     monkeypatch.setattr(
         "app.api.routes.predict_customer_churn",
         lambda request, loaded_model, *, request_id: PredictionResponse(
@@ -80,9 +86,12 @@ def test_predict_endpoint_emits_runtime_logs_on_success(monkeypatch):
 
 def test_predict_endpoint_emits_runtime_logs_on_model_loader_failure(monkeypatch):
     events = _capture_route_runtime_logs(monkeypatch)
-    monkeypatch.setattr("app.api.routes.write_prediction_log", lambda record: None)
+    monkeypatch.setattr(
+        "app.api.routes.write_prediction_log",
+        lambda record, **kwargs: None,
+    )
 
-    def fail_load():
+    def fail_load(**kwargs):
         raise ModelLoaderError("No champion model found.")
 
     monkeypatch.setattr("app.api.routes.load_champion_model", fail_load)
@@ -97,8 +106,14 @@ def test_predict_endpoint_emits_runtime_logs_on_model_loader_failure(monkeypatch
 
 def test_batch_predict_endpoint_emits_runtime_logs_on_success(monkeypatch):
     events = _capture_route_runtime_logs(monkeypatch)
-    monkeypatch.setattr("app.api.routes.write_prediction_log", lambda record: None)
-    monkeypatch.setattr("app.api.routes.load_champion_model", lambda: _loaded_model())
+    monkeypatch.setattr(
+        "app.api.routes.write_prediction_log",
+        lambda record, **kwargs: None,
+    )
+    monkeypatch.setattr(
+        "app.api.routes.load_champion_model",
+        lambda **kwargs: _loaded_model(),
+    )
     monkeypatch.setattr(
         "app.api.routes.predict_customer_churn",
         lambda request, loaded_model, *, request_id: PredictionResponse(

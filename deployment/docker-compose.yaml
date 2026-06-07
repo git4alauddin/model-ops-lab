@@ -3,7 +3,9 @@ services:
     build:
       context: ..
       dockerfile: deployment/Dockerfile
-    image: modelopslab-serving:v8-c2
+    image: modelopslab-serving:v8-c3
+    env_file:
+      - ../.env.example
     ports:
       - "8000:8000"
     volumes:
@@ -11,5 +13,12 @@ services:
       - ../mlruns:/app/mlruns:ro
       - ../logs:/app/logs
     environment:
-      MODELOPSLAB_ENV: local
+      MODELOPSLAB_ENV: ${MODELOPSLAB_ENV:-local}
+      SERVING_HOST: ${SERVING_HOST:-0.0.0.0}
+      SERVING_PORT: ${SERVING_PORT:-8000}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      MODEL_REGISTRY_DIR: /app/model_registry
+      MLFLOW_RUNS_DIR: /app/mlruns
+      PREDICTION_LOG_PATH: /app/logs/predictions.jsonl
+      APP_LOG_PATH: /app/logs/modelopslab.log
     restart: unless-stopped

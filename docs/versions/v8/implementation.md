@@ -102,3 +102,71 @@ Compose supplies the local runtime state that the image intentionally excludes.
 ../mlruns         -> /app/mlruns:ro
 ../logs           -> /app/logs
 ```
+
+## V8-C3: Serving Environment Configuration
+
+### Files Added
+
+```text
+app/serving/settings.py
+tests/test_v8_c3_serving_environment_config.py
+```
+
+### Files Updated
+
+```text
+.env.example
+deployment/Dockerfile
+deployment/docker-compose.yaml
+app/api/routes.py
+tests/test_v7_c2_readiness_endpoint.py
+tests/test_v7_c6_predict_endpoint.py
+tests/test_v7_c7_prediction_logging.py
+tests/test_v7_c8_batch_prediction_endpoint.py
+tests/test_v7_c9_serving_runtime_logging.py
+tests/test_v8_c1_docker_serving_foundation.py
+tests/test_v8_c2_docker_compose_runtime.py
+docs/versions/v8/
+```
+
+### Behavior
+- Added typed serving runtime settings.
+- Added local-safe defaults for host, port, log level, registry path, MLflow path, prediction log path, and app log path.
+- Added validation for serving port values.
+- Documented serving environment variables in `.env.example`.
+- Updated Docker startup to read `SERVING_HOST`, `SERVING_PORT`, and `LOG_LEVEL`.
+- Updated Docker Compose to pass explicit serving environment variables.
+- Updated API routes to use configured registry, MLflow, prediction log, and app log paths.
+- Kept model registry and MLflow mounts read-only while keeping logs writable.
+
+### Environment Keys
+
+```text
+MODELOPSLAB_ENV=local
+SERVING_HOST=0.0.0.0
+SERVING_PORT=8000
+LOG_LEVEL=info
+MODEL_REGISTRY_DIR=model_registry
+MLFLOW_RUNS_DIR=mlruns
+PREDICTION_LOG_PATH=logs/predictions.jsonl
+APP_LOG_PATH=logs/modelopslab.log
+```
+
+### Compose Config Check
+
+```powershell
+docker compose -f deployment/docker-compose.yaml --env-file .env.example config
+```
+
+### Compose Runtime Check
+
+```powershell
+docker compose -f deployment/docker-compose.yaml --env-file .env.example up -d --build
+Invoke-RestMethod http://127.0.0.1:8000/health
+docker compose -f deployment/docker-compose.yaml --env-file .env.example down
+```
+
+### Issue Found During Verification
+Uvicorn rejects uppercase log levels such as `INFO`.
+
+The deployment-facing default uses lowercase `info`, while Python settings normalize `LOG_LEVEL` to uppercase internally.

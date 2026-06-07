@@ -52,8 +52,14 @@ def test_batch_prediction_response_contains_prediction_list():
 
 def test_batch_predict_endpoint_returns_predictions(monkeypatch):
     records = []
-    monkeypatch.setattr("app.api.routes.write_prediction_log", records.append)
-    monkeypatch.setattr("app.api.routes.load_champion_model", lambda: _loaded_model())
+    monkeypatch.setattr(
+        "app.api.routes.write_prediction_log",
+        lambda record, **kwargs: records.append(record),
+    )
+    monkeypatch.setattr(
+        "app.api.routes.load_champion_model",
+        lambda **kwargs: _loaded_model(),
+    )
 
     def fake_predict_customer_churn(request, loaded_model, *, request_id: str):
         return PredictionResponse(
@@ -104,7 +110,7 @@ def test_batch_predict_endpoint_rejects_invalid_instance():
 
 
 def test_batch_predict_endpoint_returns_503_when_model_cannot_load(monkeypatch):
-    def fail_load():
+    def fail_load(**kwargs):
         raise ModelLoaderError("No champion model found.")
 
     monkeypatch.setattr("app.api.routes.load_champion_model", fail_load)
@@ -122,7 +128,10 @@ def test_batch_predict_endpoint_returns_503_when_model_cannot_load(monkeypatch):
 
 
 def test_batch_predict_endpoint_returns_500_when_prediction_fails(monkeypatch):
-    monkeypatch.setattr("app.api.routes.load_champion_model", lambda: _loaded_model())
+    monkeypatch.setattr(
+        "app.api.routes.load_champion_model",
+        lambda **kwargs: _loaded_model(),
+    )
 
     def fail_predict(request, loaded_model, *, request_id: str):
         raise PredictionError("Prediction failed.")

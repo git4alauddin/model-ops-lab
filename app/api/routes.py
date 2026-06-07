@@ -24,6 +24,7 @@ from app.serving.runtime_logging import (
     log_prediction_failed,
     log_prediction_received,
 )
+from app.serving.settings import get_serving_settings
 
 router = APIRouter()
 
@@ -41,7 +42,8 @@ def health_check() -> dict[str, str]:
 @router.get("/ready", response_model=None)
 def readiness_check():
     """Return whether the service is ready to serve a champion model."""
-    readiness = build_readiness_status()
+    settings = get_serving_settings()
+    readiness = build_readiness_status(registry_dir=settings.model_registry_dir)
     if readiness["status"] != "ready":
         return JSONResponse(status_code=503, content=readiness)
     return readiness
@@ -50,13 +52,18 @@ def readiness_check():
 @router.post("/predict", response_model=None)
 def predict(request: PredictionRequest):
     """Return a churn prediction from the active champion model."""
+    settings = get_serving_settings()
     request_id = str(uuid4())
     log_prediction_received(
         endpoint="/predict",
         request_id=request_id,
+        log_path=settings.app_log_path,
     )
     try:
-        loaded_model = load_champion_model()
+        loaded_model = load_champion_model(
+            registry_dir=settings.model_registry_dir,
+            mlruns_dir=settings.mlflow_runs_dir,
+        )
         prediction_response = predict_customer_churn(
             request,
             loaded_model,
@@ -68,13 +75,15 @@ def predict(request: PredictionRequest):
                 request,
                 request_id=request_id,
                 error=str(exc),
-            )
+            ),
+            log_path=settings.prediction_log_path,
         )
         log_prediction_failed(
             endpoint="/predict",
             request_id=request_id,
             stage="model_loading",
             error=exc,
+            log_path=settings.app_log_path,
         )
         return _error_response(
             status_code=503,
@@ -87,13 +96,15 @@ def predict(request: PredictionRequest):
                 request,
                 request_id=request_id,
                 error=str(exc),
-            )
+            ),
+            log_path=settings.prediction_log_path,
         )
         log_prediction_failed(
             endpoint="/predict",
             request_id=request_id,
             stage="prediction",
             error=exc,
+            log_path=settings.app_log_path,
         )
         return _error_response(
             status_code=500,
@@ -101,13 +112,17 @@ def predict(request: PredictionRequest):
             error=str(exc),
         )
 
-    write_prediction_log(build_prediction_success_log(request, prediction_response))
+    write_prediction_log(
+        build_prediction_success_log(request, prediction_response),
+        log_path=settings.prediction_log_path,
+    )
     log_prediction_completed(
         endpoint="/predict",
         request_id=request_id,
         model_name=prediction_response.model_name,
         model_version=prediction_response.model_version,
         prediction_count=1,
+        log_path=settings.app_log_path,
     )
     return prediction_response
 
@@ -115,20 +130,26 @@ def predict(request: PredictionRequest):
 @router.post("/predict/batch", response_model=None)
 def predict_batch(request: BatchPredictionRequest):
     """Return churn predictions for multiple validated request instances."""
+    settings = get_serving_settings()
     batch_request_id = str(uuid4())
     log_prediction_received(
         endpoint="/predict/batch",
         request_id=batch_request_id,
         instances=len(request.instances),
+        log_path=settings.app_log_path,
     )
     try:
-        loaded_model = load_champion_model()
+        loaded_model = load_champion_model(
+            registry_dir=settings.model_registry_dir,
+            mlruns_dir=settings.mlflow_runs_dir,
+        )
     except ModelLoaderError as exc:
         log_prediction_failed(
             endpoint="/predict/batch",
             request_id=batch_request_id,
             stage="model_loading",
             error=exc,
+            log_path=settings.app_log_path,
         )
         return _error_response(
             status_code=503,
@@ -145,7 +166,8 @@ def predict_batch(request: BatchPredictionRequest):
                 request_id=f"{batch_request_id}-{index}",
             )
             write_prediction_log(
-                build_prediction_success_log(instance, prediction_response)
+                build_prediction_success_log(instance, prediction_response),
+                log_path=settings.prediction_log_path,
             )
             predictions.append(prediction_response)
     except PredictionError as exc:
@@ -154,6 +176,7 @@ def predict_batch(request: BatchPredictionRequest):
             request_id=batch_request_id,
             stage="prediction",
             error=exc,
+            log_path=settings.app_log_path,
         )
         return _error_response(
             status_code=500,
@@ -168,6 +191,7 @@ def predict_batch(request: BatchPredictionRequest):
         model_name=first_prediction.model_name,
         model_version=first_prediction.model_version,
         prediction_count=len(predictions),
+        log_path=settings.app_log_path,
     )
     return BatchPredictionResponse(
         request_id=batch_request_id,

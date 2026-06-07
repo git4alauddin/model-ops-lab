@@ -11,6 +11,7 @@ V8 is in progress.
 Implemented chunks:
 - V8-C1: Docker serving image foundation.
 - V8-C2: Docker Compose serving runtime.
+- V8-C3: serving environment configuration.
 
 ## Components To Introduce
 - Docker serving image
@@ -36,6 +37,8 @@ app.serve_api:app
 The first V8 container should prove the API can run from a clean image with installed dependencies before adding Compose, CI/CD, registry push, or deployment automation.
 
 V8-C2 adds Docker Compose so the same serving image can be started with a repeatable local runtime definition.
+
+V8-C3 makes serving runtime behavior explicit through environment variables so Docker, Compose, and future CI/CD runs use the same configuration contract.
 
 ## Docker Boundary
 The V8-C1 image packages source code and Python dependencies.
@@ -76,6 +79,24 @@ read-only model_registry mount
 read-only mlruns mount
 writable logs mount
 ```
+
+## Serving Environment Configuration
+Serving runtime settings are documented in `.env.example`.
+
+Current keys:
+
+```text
+MODELOPSLAB_ENV
+SERVING_HOST
+SERVING_PORT
+LOG_LEVEL
+MODEL_REGISTRY_DIR
+MLFLOW_RUNS_DIR
+PREDICTION_LOG_PATH
+APP_LOG_PATH
+```
+
+These settings control container startup, model registry lookup, MLflow artifact lookup, prediction audit logs, and master app logs.
 
 Expected initial behavior:
 

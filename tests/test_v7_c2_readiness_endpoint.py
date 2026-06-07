@@ -58,7 +58,7 @@ def test_readiness_status_rejects_multiple_champions(tmp_path):
 def test_ready_endpoint_returns_ready_response(monkeypatch):
     monkeypatch.setattr(
         "app.api.routes.build_readiness_status",
-        lambda: {
+        lambda **kwargs: {
             "status": "ready",
             "service": "modelopslab-serving",
             "model_loaded": True,
@@ -79,7 +79,7 @@ def test_ready_endpoint_returns_ready_response(monkeypatch):
 def test_ready_endpoint_returns_503_when_not_ready(monkeypatch):
     monkeypatch.setattr(
         "app.api.routes.build_readiness_status",
-        lambda: {
+        lambda **kwargs: {
             "status": "not_ready",
             "service": "modelopslab-serving",
             "model_loaded": False,
@@ -102,7 +102,7 @@ def test_ready_endpoint_returns_503_when_not_ready(monkeypatch):
 def test_health_endpoint_remains_independent_from_readiness(monkeypatch):
     monkeypatch.setattr(
         "app.api.routes.build_readiness_status",
-        lambda: {
+        lambda **kwargs: {
             "status": "not_ready",
             "service": "modelopslab-serving",
             "model_loaded": False,

@@ -20,7 +20,7 @@ from app.serving.predictor import PredictionError
 def test_predict_endpoint_returns_prediction_response(monkeypatch):
     monkeypatch.setattr(
         "app.api.routes.load_champion_model",
-        lambda: _loaded_model(),
+        lambda **kwargs: _loaded_model(),
     )
 
     def fake_predict_customer_churn(request, loaded_model, *, request_id: str):
@@ -61,7 +61,7 @@ def test_predict_endpoint_returns_422_for_invalid_payload():
 
 
 def test_predict_endpoint_returns_503_when_model_cannot_load(monkeypatch):
-    def fail_load():
+    def fail_load(**kwargs):
         raise ModelLoaderError("No champion model found.")
 
     monkeypatch.setattr("app.api.routes.load_champion_model", fail_load)
@@ -78,7 +78,7 @@ def test_predict_endpoint_returns_503_when_model_cannot_load(monkeypatch):
 def test_predict_endpoint_returns_500_when_prediction_fails(monkeypatch):
     monkeypatch.setattr(
         "app.api.routes.load_champion_model",
-        lambda: _loaded_model(),
+        lambda **kwargs: _loaded_model(),
     )
 
     def fail_predict(request, loaded_model, *, request_id: str):

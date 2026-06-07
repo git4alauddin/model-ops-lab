@@ -92,8 +92,10 @@ docker run --rm -p 8000:8000 modelopslab-serving:v8-c1
 Run the serving API with Docker Compose:
 
 ```powershell
-docker compose -f deployment/docker-compose.yaml up --build
+docker compose -f deployment/docker-compose.yaml --env-file .env.example up --build
 ```
+
+Serving environment defaults live in `.env.example`.
 
 ## MLflow UI
 

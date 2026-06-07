@@ -9,3 +9,6 @@
 - Docker Compose should describe how the image runs locally, not redefine the application startup already owned by the Dockerfile.
 - Runtime model metadata and MLflow artifacts can be mounted read-only because serving should consume them, not mutate them.
 - Logs should remain writable because serving runtime events and prediction audit records are outputs.
+- Environment configuration should be explicit before CI/CD so automated pipelines validate the same runtime contract used locally.
+- Deployment-facing values must satisfy the tools that consume them; Uvicorn requires lowercase log levels.
+- Python can normalize environment values internally while Docker receives tool-compatible values.

@@ -1,6 +1,6 @@
 # V8 Commit Log
 
-## Pending - v8-c1: add Docker serving image foundation
+## cfb518a - v8-c1: add Docker serving image foundation
 
 ### What Changed
 - Added Dockerfile for the FastAPI serving API.
@@ -21,7 +21,7 @@
 - `docker run --rm modelopslab-serving:v8-c1 python -c "from app.serve_api import app; print(app.title); print(app.version)"` printed `ModelOpsLab Serving API` and `v7`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - v8-c2: add Docker Compose serving runtime
+## 5150b87 - v8-c2: add Docker Compose serving runtime
 
 ### What Changed
 - Added Docker Compose runtime for the serving API.
@@ -44,4 +44,31 @@
 - `docker compose -f deployment/docker-compose.yaml run --rm modelopslab-serving python -c "from app.serve_api import app; print(app.title); print(app.version)"` printed `ModelOpsLab Serving API` and `v7`.
 - Compose runtime `/health` check returned `{"status":"ok","service":"modelopslab-serving","api_version":"v7"}`.
 - `python -m pytest -q` passed: `310 passed in 20.96s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - v8-c3: add serving environment configuration
+
+### What Changed
+- Added typed serving runtime settings.
+- Documented serving environment variables in `.env.example`.
+- Updated Docker startup to use `SERVING_HOST`, `SERVING_PORT`, and `LOG_LEVEL`.
+- Updated Docker Compose to pass serving environment variables.
+- Updated API routes to use configured registry, MLflow, prediction log, and app log paths.
+- Added focused serving environment configuration tests.
+- Updated affected V7 route tests for configured route calls.
+- Updated V8 docs.
+
+### What Problem It Solved
+- Makes local, Docker, Compose, and future CI/CD serving runtime behavior explicit.
+- Prevents hidden environment assumptions around registry paths, MLflow paths, and log paths.
+
+### Verification
+- `python -m pytest -q tests\test_v8_c3_serving_environment_config.py` passed: `6 passed in 0.08s`.
+- `python -m pytest -q tests\test_v7_c2_readiness_endpoint.py tests\test_v7_c6_predict_endpoint.py tests\test_v7_c7_prediction_logging.py tests\test_v7_c8_batch_prediction_endpoint.py tests\test_v7_c9_serving_runtime_logging.py` passed: `28 passed in 1.22s`.
+- `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py tests\test_v8_c2_docker_compose_runtime.py tests\test_v8_c3_serving_environment_config.py` passed: `17 passed in 0.12s`.
+- `docker compose -f deployment/docker-compose.yaml --env-file .env.example config` resolved environment variables, port mapping, and runtime mounts successfully.
+- `docker compose -f deployment/docker-compose.yaml --env-file .env.example build` built `modelopslab-serving:v8-c3` successfully.
+- Compose settings import check printed `local`, `0.0.0.0`, `8000`, `/app/model_registry`, `/app/mlruns`, `/app/logs/predictions.jsonl`, and `/app/logs/modelopslab.log`.
+- Environment-aware Compose runtime `/health` check returned `{"status":"ok","service":"modelopslab-serving","api_version":"v7"}`.
+- `python -m pytest -q` passed: `316 passed in 5.85s`.
 - `git diff --check` passed with CRLF normalization warnings only.
