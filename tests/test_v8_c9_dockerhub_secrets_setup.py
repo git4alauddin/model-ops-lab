@@ -49,6 +49,7 @@ def test_v8_dockerhub_secrets_setup_discourages_passwords_and_exposure() -> None
 def test_v8_ci_workflow_uses_secrets_only_when_publish_is_enabled() -> None:
     workflow = WORKFLOW_PATH.read_text()
 
+    assert "Validate Docker Hub secrets" in workflow
     assert "docker/login-action@v3" in workflow
     assert "secrets.DOCKERHUB_USERNAME" in workflow
     assert "secrets.DOCKERHUB_TOKEN" in workflow

@@ -18,6 +18,12 @@ Secret setup guide:
 docs/deployment/dockerhub_secrets_setup.md
 ```
 
+Complete credentials walkthrough:
+
+```text
+docs/deployment/dockerhub_credentials_walkthrough.md
+```
+
 ## Normal Validation Run
 Use this when you only want tests and Docker image build validation.
 
@@ -108,3 +114,34 @@ ci
 - Do not publish if tests fail.
 - Do not print Docker Hub secrets in logs.
 - Prefer the Git SHA tag for traceability and rollback.
+
+## Troubleshooting
+If Docker Hub login fails with a username or password required error, the usual cause is missing GitHub Actions secrets.
+
+Check this path:
+
+```text
+GitHub repository
+-> Settings
+-> Secrets and variables
+-> Actions
+-> Repository secrets
+```
+
+Required names:
+
+```text
+DOCKERHUB_USERNAME
+DOCKERHUB_TOKEN
+```
+
+Important checks:
+
+```text
+DOCKERHUB_USERNAME is the Docker Hub username, not email
+DOCKERHUB_TOKEN is a Docker Hub access token, not account password
+secret names match exactly
+secrets are repository secrets available to Actions
+```
+
+The CI workflow validates these secrets before Docker Hub login so missing values fail with a clear message.

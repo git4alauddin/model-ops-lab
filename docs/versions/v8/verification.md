@@ -60,6 +60,7 @@
 - Verified CI workflow keeps manual trigger only.
 - Verified `publish_image` input defaults to `false`.
 - Verified Docker Hub login uses GitHub Actions secrets.
+- Verified Docker Hub secrets are validated before Docker Hub login.
 - Verified Docker Hub login runs only when `publish_image` is `true`.
 - Verified Docker Hub push runs only when `publish_image` is `true`.
 - Verified Docker Hub push includes Git SHA and `ci` tags.
@@ -195,6 +196,12 @@
 - `python -m pytest -q tests\test_v8_c10_dockerhub_publish_gate.py` passed: `7 passed in 0.08s`.
 - `python -m pytest -q tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py tests\test_v8_c8_dockerhub_publishing_plan.py tests\test_v8_c9_dockerhub_secrets_setup.py tests\test_v8_c10_dockerhub_publish_gate.py` passed: `37 passed in 0.26s`.
 - `python -m pytest -q` passed: `358 passed in 5.68s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+- `python -m pytest -q tests\test_v8_c9_dockerhub_secrets_setup.py tests\test_v8_c10_dockerhub_publish_gate.py` passed: `14 passed in 0.11s`.
+- `python -m pytest -q` passed: `359 passed in 6.04s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+- `python -m pytest -q tests\test_v8_c10_dockerhub_publish_gate.py tests\test_v8_c9_dockerhub_secrets_setup.py` passed: `15 passed in 0.13s`.
+- `python -m pytest -q` passed: `360 passed in 5.84s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
 ## Outcome

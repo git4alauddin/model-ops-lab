@@ -132,3 +132,9 @@ Existing tests asserted that no Docker Hub publish steps existed anywhere in CI.
 
 ### Resolution
 Updated those tests to verify the new guarded-publish contract instead of the old no-push boundary.
+
+### Issue
+Manual publishing reached Docker Hub login, but GitHub Actions raised a username/password required error when secrets were missing or unavailable.
+
+### Resolution
+Added a Docker Hub secret preflight step before login. The workflow now fails with a clear message when `DOCKERHUB_USERNAME` or `DOCKERHUB_TOKEN` is missing.

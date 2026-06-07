@@ -228,3 +228,23 @@
 - `python -m pytest -q tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py tests\test_v8_c8_dockerhub_publishing_plan.py tests\test_v8_c9_dockerhub_secrets_setup.py tests\test_v8_c10_dockerhub_publish_gate.py` passed: `37 passed in 0.26s`.
 - `python -m pytest -q` passed: `358 passed in 5.68s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - fix: validate Docker Hub secrets before login
+
+### What Changed
+- Added a Docker Hub secret validation step before Docker Hub login.
+- Added clear missing-secret errors for `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`.
+- Added troubleshooting guidance to the Docker Hub publish run guide.
+- Added a complete Docker Hub credentials walkthrough.
+- Updated tests for the preflight behavior.
+
+### What Problem It Solved
+- Replaces the generic Docker login username/password required error with a project-specific missing-secret message.
+
+### Verification
+- `python -m pytest -q tests\test_v8_c9_dockerhub_secrets_setup.py tests\test_v8_c10_dockerhub_publish_gate.py` passed: `14 passed in 0.11s`.
+- `python -m pytest -q` passed: `359 passed in 6.04s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+- `python -m pytest -q tests\test_v8_c10_dockerhub_publish_gate.py tests\test_v8_c9_dockerhub_secrets_setup.py` passed: `15 passed in 0.13s`.
+- `python -m pytest -q` passed: `360 passed in 5.84s`.
+- `git diff --check` passed with CRLF normalization warnings only.

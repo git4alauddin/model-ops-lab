@@ -6,6 +6,7 @@ import yaml
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW_PATH = PROJECT_ROOT / ".github" / "workflows" / "ci.yaml"
 GUIDE_PATH = PROJECT_ROOT / "docs" / "deployment" / "dockerhub_publish_run_guide.md"
+WALKTHROUGH_PATH = PROJECT_ROOT / "docs" / "deployment" / "dockerhub_credentials_walkthrough.md"
 
 
 def _load_workflow() -> dict:
@@ -50,6 +51,15 @@ def test_v8_ci_workflow_pushes_ci_and_git_sha_tags() -> None:
     assert "docker push ${{ secrets.DOCKERHUB_USERNAME }}/modelopslab-serving:ci" in workflow
 
 
+def test_v8_ci_workflow_validates_dockerhub_secrets_before_login() -> None:
+    workflow = WORKFLOW_PATH.read_text()
+
+    assert "Validate Docker Hub secrets" in workflow
+    assert "Missing GitHub Actions secret: DOCKERHUB_USERNAME" in workflow
+    assert "Missing GitHub Actions secret: DOCKERHUB_TOKEN" in workflow
+    assert workflow.index("Validate Docker Hub secrets") < workflow.index("Login to Docker Hub")
+
+
 def test_v8_ci_workflow_tests_gate_image_build_and_publish() -> None:
     workflow = _load_workflow()
     docker_job = workflow["jobs"]["docker-image"]
@@ -65,3 +75,16 @@ def test_v8_dockerhub_publish_run_guide_documents_gui_flow() -> None:
     assert "Run workflow" in guide
     assert "publish_image" in guide
     assert "Docker Hub" in guide
+
+
+def test_v8_dockerhub_credentials_walkthrough_documents_end_to_end_setup() -> None:
+    walkthrough = WALKTHROUGH_PATH.read_text()
+
+    assert "https://hub.docker.com/" in walkthrough
+    assert "DOCKERHUB_USERNAME" in walkthrough
+    assert "DOCKERHUB_TOKEN" in walkthrough
+    assert "Account Settings" in walkthrough
+    assert "Access Tokens" in walkthrough
+    assert "New repository secret" in walkthrough
+    assert "publish_image: true" in walkthrough
+    assert "not account password" in walkthrough

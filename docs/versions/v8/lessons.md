@@ -35,3 +35,4 @@
 - Publishing should be explicitly gated during early deployment work.
 - A manual workflow input can separate validation runs from image publishing runs.
 - Docker Hub push should happen only after tests and image build succeed.
+- Secret-dependent workflow steps should have a preflight check before the external action consumes them.
