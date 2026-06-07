@@ -143,7 +143,7 @@
 - PowerShell-expanded V7 suite command passed: `43 passed in 1.13s`.
 - `python -m pytest -q` passed: `283 passed in 5.64s`.
 
-## Pending - v7-c8: add batch prediction endpoint
+## 853bba4 - v7-c8: add batch prediction endpoint
 
 ### What Changed
 - Added batch prediction request schema.
@@ -165,7 +165,7 @@
 - PowerShell-expanded V7 suite command passed: `50 passed in 1.25s`.
 - `python -m pytest -q` passed: `290 passed in 5.50s`.
 
-## Pending - v7-c9: add serving runtime logging
+## 87fc58b - v7-c9: add serving runtime logging
 
 ### What Changed
 - Added serving runtime logging helpers.
@@ -185,3 +185,41 @@
 - `python -m pytest -q tests\test_v7_c6_predict_endpoint.py tests\test_v7_c7_prediction_logging.py tests\test_v7_c8_batch_prediction_endpoint.py tests\test_v7_c9_serving_runtime_logging.py` passed: `22 passed in 1.17s`.
 - PowerShell-expanded V7 suite command passed: `54 passed in 1.73s`.
 - `python -m pytest -q` passed: `294 passed in 7.64s`.
+
+## Pending - v7-c10: add serving flow diagram
+
+### What Changed
+- Added V7 serving Mermaid diagram.
+- Documented health and readiness paths.
+- Documented single and batch prediction paths.
+- Documented schema validation, registry lookup, model loading, prediction service, prediction audit logs, and runtime logs.
+- Updated V7 docs for implementation, verification, and lessons.
+
+### What Problem It Solved
+- Makes the V7 serving architecture explainable from one visual reference.
+- Clarifies how request flow, model loading, prediction outputs, and logs connect.
+
+### Verification
+- `Get-Content docs\diagrams\v7_serving_flow.md` confirmed the V7 serving flow diagram exists.
+- `Select-String -Path docs\diagrams\v7_serving_flow.md -Pattern "flowchart TD|POST /predict|POST /predict/batch|logs/predictions.jsonl|logs/modelopslab.log|model_loader"` found the expected implemented serving nodes.
+
+## Pending - v7-c11: close serving API version
+
+### What Changed
+- Added V7 serving closure tests.
+- Verified serving routes exist.
+- Verified inference schema surface exists.
+- Verified serving module files exist.
+- Verified V7 docs and serving diagram exist.
+- Marked V7 complete in the overview.
+- Updated V7 docs for implementation, verification, lessons, and issues.
+
+### What Problem It Solved
+- Confirms V7 is complete before moving to V8 Docker packaging.
+- Prevents the version from being closed with missing routes, schemas, serving modules, docs, or diagram references.
+
+### Verification
+- `python -m pytest -q tests\test_v7_c11_serving_closure.py` passed: `5 passed in 0.84s`.
+- PowerShell-expanded V7 suite command passed: `59 passed in 1.32s`.
+- `python -m pytest -q` passed: `299 passed in 6.18s`.
+- `git diff --check` passed with CRLF normalization warnings only.

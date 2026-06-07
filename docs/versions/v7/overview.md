@@ -6,7 +6,7 @@ Add model serving API and inference infrastructure.
 V7 moves the project from managed model lifecycle records to an API layer that can serve predictions from the selected model.
 
 ## Completion Status
-V7 is in progress.
+V7 is complete.
 
 Implemented chunks:
 - V7-C1: serving API foundation.
@@ -18,6 +18,8 @@ Implemented chunks:
 - V7-C7: prediction logging.
 - V7-C8: batch prediction endpoint.
 - V7-C9: serving runtime logging.
+- V7-C10: serving flow diagram.
+- V7-C11: serving version closure.
 
 ## Components To Introduce
 - FastAPI application boundary
@@ -39,6 +41,15 @@ Implemented chunks:
 V7 starts with a minimal API foundation first.
 
 The first serving boundary proves the service can start and expose operational endpoints before adding model loading and prediction behavior.
+
+## Serving Flow Diagram
+The V7 serving flow is documented here:
+
+```text
+docs/diagrams/v7_serving_flow.md
+```
+
+It shows the implemented request paths for health, readiness, single prediction, batch prediction, model loading, prediction audit logging, and serving runtime logging.
 
 ## Initial API Surface
 
@@ -215,3 +226,22 @@ The master log stays human-readable. Detailed prediction audit data stays in `lo
 - return model version and request metadata with predictions
 - make inference failures observable
 - prepare for Dockerized serving in V8
+
+## V7 Closure Summary
+V7 now has a local FastAPI serving boundary that can expose health, readiness, single prediction, and batch prediction behavior from the local champion model.
+
+The serving layer includes:
+
+```text
+API routes
+strict inference schemas
+registry-based model loading
+single prediction service
+batch prediction endpoint
+prediction audit logs
+master runtime logs
+serving flow diagram
+closure verification
+```
+
+V7 deliberately stops at local serving. Docker packaging and container runtime behavior belong to V8.

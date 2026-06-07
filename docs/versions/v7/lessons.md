@@ -29,3 +29,8 @@
 - `modelopslab.log` should act as the human-readable master runtime timeline.
 - `predictions.jsonl` should remain the structured prediction audit log.
 - Serving logs should summarize operational events instead of duplicating full prediction JSON.
+- Serving diagrams should show actual implemented request paths, not future Docker or monitoring assumptions.
+- The serving flow is easier to explain when health, readiness, single prediction, and batch prediction are visually separated.
+- Version closure should verify the implemented surface, not add new behavior.
+- A closure test is useful when a version spans API routes, schemas, services, logs, and docs because it catches missing final pieces before moving on.
+- V7 should end at local serving because Docker packaging is a separate operational concern for V8.

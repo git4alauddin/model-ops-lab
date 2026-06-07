@@ -418,3 +418,47 @@ Prediction request received. endpoint=/predict request_id=<id> instances=1
 Prediction request completed. endpoint=/predict request_id=<id> model_name=customer_churn_model model_version=<version> predictions=1
 Prediction request failed. endpoint=/predict request_id=<id> stage=model_loading error=<error>
 ```
+
+## V7-C10: Serving Flow Diagram
+
+### Files Added
+
+```text
+docs/diagrams/v7_serving_flow.md
+```
+
+### Files Updated
+
+```text
+docs/versions/v7/
+```
+
+### Behavior
+- Added a Mermaid diagram for the implemented V7 serving flow.
+- Documented `/health`.
+- Documented `/ready`.
+- Documented `/predict`.
+- Documented `/predict/batch`.
+- Documented schema validation, registry lookup, model artifact loading, prediction service execution, prediction audit logging, and serving runtime logging.
+
+## V7-C11: Serving Version Closure
+
+### Files Added
+
+```text
+tests/test_v7_c11_serving_closure.py
+```
+
+### Files Updated
+
+```text
+docs/versions/v7/
+```
+
+### Behavior
+- Added closure checks for the implemented V7 serving routes.
+- Added closure checks for inference schema availability.
+- Added closure checks for serving module files.
+- Added closure checks for V7 documentation and serving diagram files.
+- Marked V7 complete in the overview.
+- Confirmed V7 stops at local FastAPI serving before V8 Docker packaging.

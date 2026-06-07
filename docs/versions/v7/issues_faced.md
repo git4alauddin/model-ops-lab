@@ -74,3 +74,19 @@ Prediction audit logs existed in `predictions.jsonl`, but the master runtime log
 
 ### Resolution
 Added serving runtime logging to `logs/modelopslab.log` for request receipt, completion, and controlled failures.
+
+## V7-C10: Serving Flow Diagram
+
+### Issue
+Serving behavior had multiple paths across API routes, schema validation, model loading, prediction service logic, and logs.
+
+### Resolution
+Added a focused Mermaid diagram that documents only the implemented V7 local serving flow.
+
+## V7-C11: Serving Version Closure
+
+### Issue
+V7 needed a final proof that the serving API version was complete before moving to Docker packaging.
+
+### Resolution
+Added closure checks for routes, schemas, modules, docs, diagram, and the V7 completion marker.
