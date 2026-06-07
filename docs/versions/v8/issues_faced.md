@@ -118,3 +118,17 @@ Docker Hub publishing needs credentials, but adding `docker login` before docume
 
 ### Resolution
 Added a secrets setup guide that documents Docker Hub token creation, GitHub Actions repository secrets, safe verification, and the current no-push CI boundary.
+
+## V8-C10: Manual Docker Hub Publish Gate
+
+### Issue
+Adding Docker Hub push directly to the workflow could publish images on every manual validation run.
+
+### Resolution
+Added a `publish_image` workflow input that defaults to `false`, and guarded Docker Hub login, tag, and push steps behind `publish_image == true`.
+
+### Issue
+Existing tests asserted that no Docker Hub publish steps existed anywhere in CI.
+
+### Resolution
+Updated those tests to verify the new guarded-publish contract instead of the old no-push boundary.

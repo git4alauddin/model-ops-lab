@@ -38,9 +38,9 @@ def test_v8_ci_docker_build_uses_serving_dockerfile() -> None:
     assert "-t modelopslab-serving:ci" in workflow_text
 
 
-def test_v8_ci_docker_build_does_not_push_image() -> None:
-    workflow_text = WORKFLOW_PATH.read_text().lower()
+def test_v8_ci_docker_build_keeps_publish_behind_manual_input() -> None:
+    workflow_text = WORKFLOW_PATH.read_text()
 
-    assert "docker login" not in workflow_text
-    assert "docker push" not in workflow_text
-    assert "docker/login-action" not in workflow_text
+    assert "publish_image" in workflow_text
+    assert "docker push" in workflow_text
+    assert "if: ${{ inputs.publish_image == 'true' }}" in workflow_text

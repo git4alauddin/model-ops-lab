@@ -153,6 +153,12 @@ Docker Hub secrets setup:
 docs/deployment/dockerhub_secrets_setup.md
 ```
 
+Docker Hub publish run guide:
+
+```text
+docs/deployment/dockerhub_publish_run_guide.md
+```
+
 ## Project Structure
 
 ```text

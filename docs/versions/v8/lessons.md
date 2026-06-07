@@ -32,3 +32,6 @@
 - Secret setup should be documented before CI starts consuming those secrets.
 - GitHub repository secrets can confirm that a secret exists without revealing the value.
 - A CI workflow should never print Docker Hub tokens or rely on pasted credentials in files.
+- Publishing should be explicitly gated during early deployment work.
+- A manual workflow input can separate validation runs from image publishing runs.
+- Docker Hub push should happen only after tests and image build succeed.

@@ -42,10 +42,10 @@ def test_v8_dockerhub_publishing_plan_documents_github_secret_ui_path() -> None:
     assert "New repository secret" in plan
 
 
-def test_v8_ci_workflow_still_does_not_publish_to_dockerhub() -> None:
-    workflow = WORKFLOW_PATH.read_text().lower()
+def test_v8_ci_workflow_publishes_to_dockerhub_only_when_enabled() -> None:
+    workflow = WORKFLOW_PATH.read_text()
 
-    assert "docker login" not in workflow
-    assert "docker push" not in workflow
-    assert "docker/login-action" not in workflow
-    assert "dockerhub_token" not in workflow
+    assert "docker/login-action@v3" in workflow
+    assert "docker push" in workflow
+    assert "DOCKERHUB_TOKEN" in workflow
+    assert "if: ${{ inputs.publish_image == 'true' }}" in workflow

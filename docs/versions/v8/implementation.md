@@ -405,3 +405,41 @@ docs/versions/v8/
 V8-C9 prepares credential setup.
 
 It does not add Docker login, Docker push, or image publishing to CI.
+
+## V8-C10: Manual Docker Hub Publish Gate
+
+### Files Added
+
+```text
+docs/deployment/dockerhub_publish_run_guide.md
+tests/test_v8_c10_dockerhub_publish_gate.py
+```
+
+### Files Updated
+
+```text
+.github/workflows/ci.yaml
+README.md
+docs/deployment/README.md
+docs/versions/v8/
+tests/test_v8_c5_ci_docker_build.py
+tests/test_v8_c6_image_versioning.py
+tests/test_v8_c8_dockerhub_publishing_plan.py
+tests/test_v8_c9_dockerhub_secrets_setup.py
+```
+
+### Behavior
+- Kept CI manual-only through `workflow_dispatch`.
+- Added manual `publish_image` input with default value `false`.
+- Kept Docker image build running after tests.
+- Added Docker Hub login only when `publish_image` is `true`.
+- Added Docker Hub tag steps only when `publish_image` is `true`.
+- Added Docker Hub push steps only when `publish_image` is `true`.
+- Pushes the Git SHA tag and `ci` tag.
+- Added a Docker Hub publish run guide for GitHub Actions UI operation.
+- Updated earlier no-push tests to assert the new guarded-publish contract.
+
+### Boundary
+V8-C10 adds manual Docker Hub publishing.
+
+It does not add automatic publish on push, production deployment, release tags, or cloud hosting.

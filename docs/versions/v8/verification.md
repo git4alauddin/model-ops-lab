@@ -57,6 +57,14 @@
 - Verified Docker Hub secrets setup guide documents safe secret verification.
 - Verified Docker Hub secrets setup guide discourages passwords and token exposure.
 - Verified CI workflow still has no Docker Hub login or push steps.
+- Verified CI workflow keeps manual trigger only.
+- Verified `publish_image` input defaults to `false`.
+- Verified Docker Hub login uses GitHub Actions secrets.
+- Verified Docker Hub login runs only when `publish_image` is `true`.
+- Verified Docker Hub push runs only when `publish_image` is `true`.
+- Verified Docker Hub push includes Git SHA and `ci` tags.
+- Verified tests still gate Docker image build and publish.
+- Verified Docker Hub publish run guide documents the GitHub Actions UI flow.
 
 ## Commands Executed
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py`
@@ -99,6 +107,8 @@
 - `python -m pytest -q tests\test_v8_c7_ci_manual_run_guide.py tests\test_v8_c8_dockerhub_publishing_plan.py`
 - `python -m pytest -q tests\test_v8_c9_dockerhub_secrets_setup.py`
 - `python -m pytest -q tests\test_v8_c8_dockerhub_publishing_plan.py tests\test_v8_c9_dockerhub_secrets_setup.py`
+- `python -m pytest -q tests\test_v8_c10_dockerhub_publish_gate.py`
+- `python -m pytest -q tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py tests\test_v8_c8_dockerhub_publishing_plan.py tests\test_v8_c9_dockerhub_secrets_setup.py tests\test_v8_c10_dockerhub_publish_gate.py`
 - `python -m pytest -q`
 - `git diff --check`
 
@@ -127,6 +137,7 @@
 - Manual CI operation is documented for repeatable use from GitHub Actions.
 - Docker Hub publishing is planned before registry credentials or push steps are added.
 - Docker Hub secret setup is documented before Docker login or push steps are added to CI.
+- Docker Hub publishing is manually gated and disabled by default.
 
 ## Actual Output
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py` passed: `5 passed in 0.05s`.
@@ -181,6 +192,10 @@
 - `python -m pytest -q tests\test_v8_c8_dockerhub_publishing_plan.py tests\test_v8_c9_dockerhub_secrets_setup.py` passed: `12 passed in 0.07s`.
 - `python -m pytest -q` passed: `351 passed in 5.99s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+- `python -m pytest -q tests\test_v8_c10_dockerhub_publish_gate.py` passed: `7 passed in 0.08s`.
+- `python -m pytest -q tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py tests\test_v8_c8_dockerhub_publishing_plan.py tests\test_v8_c9_dockerhub_secrets_setup.py tests\test_v8_c10_dockerhub_publish_gate.py` passed: `37 passed in 0.26s`.
+- `python -m pytest -q` passed: `358 passed in 5.68s`.
+- `git diff --check` passed with CRLF normalization warnings only.
 
 ## Outcome
 V8-C1 adds the first reproducible serving image boundary.
@@ -202,3 +217,5 @@ V8-C7 documents how to run and interpret the manual CI workflow.
 V8-C8 documents Docker Hub publishing requirements while keeping CI free of registry login and push steps.
 
 V8-C9 documents Docker Hub secret setup while keeping CI free of registry login and push steps.
+
+V8-C10 adds manually gated Docker Hub publishing while keeping normal validation runs non-publishing by default.

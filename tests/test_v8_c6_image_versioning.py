@@ -40,9 +40,9 @@ def test_v8_ci_build_uses_single_docker_build_command() -> None:
     assert "-f deployment/Dockerfile" in workflow
 
 
-def test_v8_ci_image_versioning_still_does_not_push_image() -> None:
-    workflow = WORKFLOW_PATH.read_text().lower()
+def test_v8_ci_image_versioning_pushes_traceable_tags_only_when_enabled() -> None:
+    workflow = WORKFLOW_PATH.read_text()
 
-    assert "docker login" not in workflow
-    assert "docker push" not in workflow
-    assert "docker/login-action" not in workflow
+    assert "docker push ${{ secrets.DOCKERHUB_USERNAME }}/modelopslab-serving:${{ github.sha }}" in workflow
+    assert "docker push ${{ secrets.DOCKERHUB_USERNAME }}/modelopslab-serving:ci" in workflow
+    assert "if: ${{ inputs.publish_image == 'true' }}" in workflow

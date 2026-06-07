@@ -186,7 +186,7 @@
 - `python -m pytest -q` passed: `345 passed in 5.92s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - v8-c9: add Docker Hub secrets setup guide
+## fbd97c3 - v8-c9: add Docker Hub secrets setup guide
 
 ### What Changed
 - Added Docker Hub secrets setup guide.
@@ -206,4 +206,25 @@
 - `python -m pytest -q tests\test_v8_c9_dockerhub_secrets_setup.py` passed: `6 passed in 0.05s`.
 - `python -m pytest -q tests\test_v8_c8_dockerhub_publishing_plan.py tests\test_v8_c9_dockerhub_secrets_setup.py` passed: `12 passed in 0.07s`.
 - `python -m pytest -q` passed: `351 passed in 5.99s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - v8-c10: add manual Docker Hub publish gate
+
+### What Changed
+- Added manual `publish_image` workflow input.
+- Kept `publish_image` default as `false`.
+- Added Docker Hub login, tag, and push steps behind the manual publish condition.
+- Pushes Git SHA and `ci` image tags when publishing is enabled.
+- Added Docker Hub publish run guide.
+- Updated related V8 tests for the guarded-publish contract.
+- Updated README, deployment docs, and V8 docs.
+
+### What Problem It Solved
+- Enables Docker Hub publishing without making every CI validation run publish an image.
+- Keeps publishing explicit and manual during the deployment learning phase.
+
+### Verification
+- `python -m pytest -q tests\test_v8_c10_dockerhub_publish_gate.py` passed: `7 passed in 0.08s`.
+- `python -m pytest -q tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py tests\test_v8_c8_dockerhub_publishing_plan.py tests\test_v8_c9_dockerhub_secrets_setup.py tests\test_v8_c10_dockerhub_publish_gate.py` passed: `37 passed in 0.26s`.
+- `python -m pytest -q` passed: `358 passed in 5.68s`.
 - `git diff --check` passed with CRLF normalization warnings only.

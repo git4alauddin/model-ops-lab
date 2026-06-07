@@ -46,10 +46,10 @@ def test_v8_dockerhub_secrets_setup_discourages_passwords_and_exposure() -> None
     assert ".env" in guide
 
 
-def test_v8_ci_workflow_still_has_no_dockerhub_publish_steps() -> None:
-    workflow = WORKFLOW_PATH.read_text().lower()
+def test_v8_ci_workflow_uses_secrets_only_when_publish_is_enabled() -> None:
+    workflow = WORKFLOW_PATH.read_text()
 
-    assert "docker login" not in workflow
-    assert "docker push" not in workflow
-    assert "docker/login-action" not in workflow
-    assert "dockerhub_token" not in workflow
+    assert "docker/login-action@v3" in workflow
+    assert "secrets.DOCKERHUB_USERNAME" in workflow
+    assert "secrets.DOCKERHUB_TOKEN" in workflow
+    assert "if: ${{ inputs.publish_image == 'true' }}" in workflow

@@ -18,6 +18,7 @@ Implemented chunks:
 - V8-C7: manual CI run guide.
 - V8-C8: Docker Hub publishing plan.
 - V8-C9: Docker Hub secrets setup guide.
+- V8-C10: manual Docker Hub publish gate.
 
 ## Components To Introduce
 - Docker serving image
@@ -59,6 +60,8 @@ V8-C7 documents how to trigger and read that manual workflow.
 V8-C8 documents Docker Hub publishing requirements before credentials or push steps are added.
 
 V8-C9 documents Docker Hub token and GitHub Actions secrets setup before CI login or push steps are added.
+
+V8-C10 adds a manually controlled Docker Hub publish gate while keeping publishing disabled by default.
 
 ## Docker Boundary
 The V8-C1 image packages source code and Python dependencies.
@@ -225,3 +228,26 @@ DOCKERHUB_TOKEN
 ```
 
 Current CI still does not login to Docker Hub or push images.
+
+## Manual Docker Hub Publish Gate
+Docker Hub publishing is now available from the manual CI workflow only when explicitly enabled.
+
+Default manual run:
+
+```text
+publish_image: false
+```
+
+Publish run:
+
+```text
+publish_image: true
+```
+
+Publish operation is documented here:
+
+```text
+docs/deployment/dockerhub_publish_run_guide.md
+```
+
+The workflow still runs tests before image build and publish.
