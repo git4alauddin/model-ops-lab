@@ -15,6 +15,7 @@ Implemented chunks:
 - V8-C4: CI test workflow.
 - V8-C5: CI Docker image build gate.
 - V8-C6: Docker image versioning contract.
+- V8-C7: manual CI run guide.
 
 ## Components To Introduce
 - Docker serving image
@@ -48,6 +49,10 @@ V8-C4 adds the first automated CI quality gate through GitHub Actions.
 V8-C5 adds a Docker image build gate after tests pass.
 
 V8-C6 adds explicit image tagging rules before Docker Hub publishing.
+
+The CI workflow uses manual execution during the current build phase to avoid spending CI minutes on every small push.
+
+V8-C7 documents how to trigger and read that manual workflow.
 
 ## Docker Boundary
 The V8-C1 image packages source code and Python dependencies.
@@ -123,11 +128,10 @@ GET /ready depends on mounted or provided champion model runtime state
 - prepare for deployment validation
 
 ## CI Foundation
-The first CI workflow runs on:
+The CI workflow is triggered manually:
 
 ```text
-push to main
-pull requests targeting main
+workflow_dispatch
 ```
 
 The workflow installs dependencies from `requirements.txt` and runs:
@@ -136,7 +140,18 @@ The workflow installs dependencies from `requirements.txt` and runs:
 python -m pytest -q
 ```
 
-Docker image building and deployment gates will be added after the test gate is stable.
+Manual trigger is intentional during the learning/build phase to avoid spending CI minutes on every small push.
+
+Run from GitHub UI:
+
+```text
+GitHub repo
+-> Actions
+-> ci
+-> Run workflow
+-> select main
+-> Run workflow
+```
 
 ## CI Docker Build Gate
 The CI workflow now has two jobs:
@@ -170,3 +185,12 @@ modelopslab-serving:${{ github.sha }}
 ```
 
 The `ci` tag is a temporary validation tag. The Git SHA tag is traceable to an exact commit and prepares the project for rollback-safe registry publishing.
+
+## Manual CI Run Guide
+Manual CI operation is documented here:
+
+```text
+docs/deployment/ci_manual_run_guide.md
+```
+
+The guide explains when to run CI, how to trigger it from GitHub Actions, what each job means, and how to inspect failures.

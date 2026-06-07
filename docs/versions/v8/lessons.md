@@ -21,3 +21,8 @@
 - Docker images need traceable tags before they are pushed to a registry.
 - A Git SHA image tag links a built image back to exact source code.
 - The `latest` tag is convenient but weak for rollback because it can move over time.
+- CI trigger strategy is part of release governance, not just automation.
+- During early learning and rapid iteration, manual CI can conserve resources while keeping validation available.
+- Manual CI should keep the same gates as automatic CI; only the trigger changes.
+- Manual CI needs a run guide because the workflow no longer starts automatically.
+- CI documentation should explain both successful runs and failure inspection.

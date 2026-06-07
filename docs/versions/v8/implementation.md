@@ -292,3 +292,46 @@ docker build \
 V8-C6 defines traceable image tags.
 
 Docker Hub authentication, Docker Hub push, release tagging, and deployment automation remain separate later chunks.
+
+## V8-C7: Manual CI Run Guide
+
+### Files Added
+
+```text
+docs/deployment/ci_manual_run_guide.md
+tests/test_v8_c7_ci_manual_run_guide.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/versions/v8/
+```
+
+### Behavior
+- Added manual CI run guide.
+- Documented when to run CI manually.
+- Documented GitHub Actions UI trigger path.
+- Explained the `tests` job.
+- Explained the `docker-image` job.
+- Explained how to inspect pytest failures.
+- Explained how to inspect Docker build failures.
+- Documented that Docker Hub login, image push, and cloud deployment are not implemented yet.
+- Added tests for the guide.
+
+### Manual Run Flow
+
+```text
+GitHub repo
+-> Actions
+-> ci
+-> Run workflow
+-> select main
+-> Run workflow
+```
+
+### Boundary
+V8-C7 documents CI operation.
+
+It does not add Docker Hub push, deployment automation, or production secrets.

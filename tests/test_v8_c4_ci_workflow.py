@@ -15,14 +15,13 @@ def test_v8_ci_workflow_exists() -> None:
     assert WORKFLOW_PATH.is_file()
 
 
-def test_v8_ci_workflow_runs_on_push_and_pull_request() -> None:
+def test_v8_ci_workflow_uses_manual_trigger_only() -> None:
     workflow_text = WORKFLOW_PATH.read_text()
 
     assert "on:" in workflow_text
-    assert "push:" in workflow_text
-    assert "pull_request:" in workflow_text
-    assert "branches:" in workflow_text
-    assert "- main" in workflow_text
+    assert "workflow_dispatch:" in workflow_text
+    assert "push:" not in workflow_text
+    assert "pull_request:" not in workflow_text
 
 
 def test_v8_ci_workflow_has_pytest_job() -> None:

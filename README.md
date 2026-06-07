@@ -135,6 +135,12 @@ Generated runtime files are intentionally local and ignored by git:
 | Deployment notes | `docs/deployment/` |
 | Flow diagrams | `docs/diagrams/` |
 
+Manual CI run guide:
+
+```text
+docs/deployment/ci_manual_run_guide.md
+```
+
 ## Project Structure
 
 ```text

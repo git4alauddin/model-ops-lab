@@ -74,3 +74,25 @@ Using `latest` as the only tag would make rollback and source traceability weak.
 
 ### Resolution
 Documented that `latest` is optional convenience only and must not be the only deployed or rollback tag.
+
+## CI Trigger Strategy
+
+### Issue
+The CI workflow was running on every push, which is wasteful during small iterative learning commits.
+
+### Resolution
+Changed the workflow trigger to `workflow_dispatch` so CI runs only when manually requested from GitHub Actions.
+
+### Issue
+Changing the trigger could accidentally weaken CI coverage.
+
+### Resolution
+Kept the existing test and Docker image build jobs unchanged, and updated workflow tests to verify only the trigger strategy changed.
+
+## V8-C7: Manual CI Run Guide
+
+### Issue
+After switching CI to manual execution, the project needed clear instructions for when and how to run the workflow.
+
+### Resolution
+Added a manual CI run guide that documents the GitHub Actions UI flow, the workflow jobs, failure inspection, and the current no-push boundary.

@@ -118,7 +118,7 @@
 - `python -m pytest -q` passed: `328 passed in 5.55s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - v8-c6: add Docker image versioning contract
+## 5a00187 - v8-c6: add Docker image versioning contract
 
 ### What Changed
 - Added Docker image tagging contract documentation.
@@ -140,4 +140,26 @@
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py tests\test_v8_c2_docker_compose_runtime.py tests\test_v8_c3_serving_environment_config.py tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py` passed: `35 passed in 0.19s`.
 - `docker build -f deployment/Dockerfile -t modelopslab-serving:ci -t modelopslab-serving:local-sha .` built both tags successfully.
 - `python -m pytest -q` passed: `334 passed in 5.92s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - v8-c7: add manual CI run guide
+
+### What Changed
+- Added manual CI run guide.
+- Documented when to run CI manually.
+- Documented GitHub Actions UI trigger path.
+- Explained the `tests` job and `docker-image` job.
+- Explained how to inspect pytest and Docker build failures.
+- Documented that Docker Hub push and deployment are not implemented yet.
+- Added focused guide tests.
+- Updated V8 docs.
+
+### What Problem It Solved
+- Makes manual CI operation repeatable and clear.
+- Prevents the manual trigger strategy from becoming tribal knowledge.
+
+### Verification
+- `python -m pytest -q tests\test_v8_c7_ci_manual_run_guide.py` passed: `5 passed in 0.05s`.
+- `python -m pytest -q tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py tests\test_v8_c7_ci_manual_run_guide.py` passed: `23 passed in 0.18s`.
+- `python -m pytest -q` passed: `339 passed in 5.81s`.
 - `git diff --check` passed with CRLF normalization warnings only.

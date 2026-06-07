@@ -23,7 +23,7 @@
 - Verified Dockerfile uses serving environment variables for Uvicorn startup.
 - Verified API routes use configured registry, MLflow, prediction log, and app log paths.
 - Verified CI workflow exists.
-- Verified CI workflow runs on push and pull request.
+- Verified CI workflow uses manual trigger only.
 - Verified CI workflow checks out the repository.
 - Verified CI workflow sets up Python `3.11`.
 - Verified CI workflow installs `requirements.txt`.
@@ -38,6 +38,13 @@
 - Verified image tagging contract warns against latest-only rollback.
 - Verified CI Docker image build also tags images with `${{ github.sha }}`.
 - Verified CI Docker image versioning still avoids Docker Hub login and push.
+- Verified CI workflow no longer runs automatically on push.
+- Verified CI workflow no longer runs automatically on pull request.
+- Verified manual CI run guide exists.
+- Verified manual CI run guide documents `workflow_dispatch`.
+- Verified manual CI run guide documents the GitHub Actions UI path.
+- Verified manual CI run guide explains `tests` and `docker-image` jobs.
+- Verified manual CI run guide states Docker Hub push is not implemented yet.
 
 ## Commands Executed
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py`
@@ -72,6 +79,10 @@
 - `python -m pytest -q tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py`
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py tests\test_v8_c2_docker_compose_runtime.py tests\test_v8_c3_serving_environment_config.py tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py`
 - `docker build -f deployment/Dockerfile -t modelopslab-serving:ci -t modelopslab-serving:local-sha .`
+- `python -m pytest -q tests\test_v8_c4_ci_workflow.py`
+- `python -m pytest -q tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py`
+- `python -m pytest -q tests\test_v8_c7_ci_manual_run_guide.py`
+- `python -m pytest -q tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py tests\test_v8_c7_ci_manual_run_guide.py`
 - `python -m pytest -q`
 - `git diff --check`
 
@@ -95,6 +106,9 @@
 - CI workflow does not publish images yet.
 - CI workflow builds a traceable Git SHA image tag.
 - Image tagging contract is documented before Docker Hub publishing.
+- CI workflow can be run manually when validation is needed.
+- CI workflow no longer spends GitHub Actions minutes on every push.
+- Manual CI operation is documented for repeatable use from GitHub Actions.
 
 ## Actual Output
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py` passed: `5 passed in 0.05s`.
@@ -135,6 +149,14 @@
 - `docker build -f deployment/Dockerfile -t modelopslab-serving:ci -t modelopslab-serving:local-sha .` built both tags successfully.
 - `python -m pytest -q` passed: `334 passed in 5.92s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+- `python -m pytest -q tests\test_v8_c4_ci_workflow.py` passed: `7 passed in 0.08s`.
+- `python -m pytest -q tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py` passed: `18 passed in 0.12s`.
+- `python -m pytest -q` passed: `334 passed in 6.39s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+- `python -m pytest -q tests\test_v8_c7_ci_manual_run_guide.py` passed: `5 passed in 0.05s`.
+- `python -m pytest -q tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py tests\test_v8_c6_image_versioning.py tests\test_v8_c7_ci_manual_run_guide.py` passed: `23 passed in 0.18s`.
+- `python -m pytest -q` passed: `339 passed in 5.81s`.
+- `git diff --check` passed with CRLF normalization warnings only.
 
 ## Outcome
 V8-C1 adds the first reproducible serving image boundary.
@@ -150,3 +172,5 @@ V8-C4 adds the first GitHub Actions CI test gate.
 V8-C5 adds the CI Docker image build gate after the test gate.
 
 V8-C6 adds the Docker image versioning contract and traceable CI image tags.
+
+V8-C7 documents how to run and interpret the manual CI workflow.
