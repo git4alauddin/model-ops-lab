@@ -1,6 +1,7 @@
 """Tests for V2 validation report persistence."""
 
 import json
+from pathlib import Path
 
 from app.validation.reports import (
     ValidationIssue,
@@ -25,8 +26,8 @@ def test_build_report_paths_from_config():
 
     paths = build_report_paths(config)
 
-    assert str(paths["json"]) == "reports\\validation_report.json"
-    assert str(paths["summary"]) == "reports\\validation_summary.txt"
+    assert paths["json"] == Path("reports") / "validation_report.json"
+    assert paths["summary"] == Path("reports") / "validation_summary.txt"
 
 
 def test_save_validation_report_writes_json(tmp_path):

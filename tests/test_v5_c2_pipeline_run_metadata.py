@@ -31,7 +31,7 @@ def test_build_pipeline_run_metadata_uses_expected_contract():
         config_path=Path("configs/training.yaml"),
     )
 
-    assert metadata == {
+    expected_metadata = {
         "pipeline_run_id": "pipeline_test_001",
         "pipeline_version": PIPELINE_VERSION,
         "started_at": "2026-06-04T10:30:00+00:00",
@@ -40,10 +40,11 @@ def test_build_pipeline_run_metadata_uses_expected_contract():
         "stage_statuses": {},
         "failed_stage": None,
         "dataset_version": {"dataset_name": "customer_churn", "version": "v1"},
-        "config_path": "configs\\training.yaml",
+        "config_path": str(Path("configs") / "training.yaml"),
         "mlflow_run_ids": [],
         "champion_run_id": None,
     }
+    assert metadata == expected_metadata
 
 
 def test_update_stage_status_returns_updated_copy():

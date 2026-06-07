@@ -1,6 +1,7 @@
 """Tests for V1 file-based logging."""
 
 import logging
+from pathlib import Path
 
 from app.train import LOGGER_NAME, _format_log_section
 from app.utils.logger import build_log_path, get_logger
@@ -48,7 +49,7 @@ def test_build_log_path_from_config():
 
     log_path = build_log_path(config)
 
-    assert str(log_path) == "logs\\modelopslab.log"
+    assert log_path == Path("logs") / "modelopslab.log"
 
 
 def test_build_log_path_missing_config_returns_none():

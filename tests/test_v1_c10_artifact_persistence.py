@@ -1,6 +1,7 @@
 """Tests for V1 artifact persistence."""
 
 import json
+from pathlib import Path
 
 import joblib
 import pandas as pd
@@ -80,11 +81,11 @@ def test_build_artifact_paths_from_config():
 
     paths = build_artifact_paths(config)
 
-    assert str(paths["model"]) == "artifacts\\model.pkl"
-    assert str(paths["metrics"]) == "artifacts\\metrics.json"
-    assert str(paths["confusion_matrix"]) == "artifacts\\confusion_matrix.json"
-    assert str(paths["config_snapshot"]) == "artifacts\\config_snapshot.json"
-    assert str(paths["metadata"]) == "artifacts\\training_metadata.json"
+    assert paths["model"] == Path("artifacts") / "model.pkl"
+    assert paths["metrics"] == Path("artifacts") / "metrics.json"
+    assert paths["confusion_matrix"] == Path("artifacts") / "confusion_matrix.json"
+    assert paths["config_snapshot"] == Path("artifacts") / "config_snapshot.json"
+    assert paths["metadata"] == Path("artifacts") / "training_metadata.json"
 
 
 def test_save_json_invalid_path_raises_artifact_error(tmp_path):
