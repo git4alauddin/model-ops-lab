@@ -46,3 +46,17 @@ CI YAML can silently drift from the intended quality gate.
 
 ### Resolution
 Added static workflow tests that verify triggers, Python setup, dependency installation, and pytest execution.
+
+## V8-C5: CI Docker Image Build Gate
+
+### Issue
+CI could run tests, but it did not yet prove that the Docker serving image can build from the repository state.
+
+### Resolution
+Added a Docker image build job that runs after the test job and builds `deployment/Dockerfile`.
+
+### Issue
+Image publishing would require Docker Hub credentials and should not be mixed with the first build gate.
+
+### Resolution
+Kept V8-C5 limited to `docker build` only. Docker login and push are intentionally left for a later chunk.

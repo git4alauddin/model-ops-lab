@@ -13,6 +13,7 @@ Implemented chunks:
 - V8-C2: Docker Compose serving runtime.
 - V8-C3: serving environment configuration.
 - V8-C4: CI test workflow.
+- V8-C5: CI Docker image build gate.
 
 ## Components To Introduce
 - Docker serving image
@@ -42,6 +43,8 @@ V8-C2 adds Docker Compose so the same serving image can be started with a repeat
 V8-C3 makes serving runtime behavior explicit through environment variables so Docker, Compose, and future CI/CD runs use the same configuration contract.
 
 V8-C4 adds the first automated CI quality gate through GitHub Actions.
+
+V8-C5 adds a Docker image build gate after tests pass.
 
 ## Docker Boundary
 The V8-C1 image packages source code and Python dependencies.
@@ -131,3 +134,20 @@ python -m pytest -q
 ```
 
 Docker image building and deployment gates will be added after the test gate is stable.
+
+## CI Docker Build Gate
+The CI workflow now has two jobs:
+
+```text
+tests
+docker-image
+```
+
+The Docker image job depends on the test job:
+
+```text
+tests pass
+-> build serving Docker image
+```
+
+This validates that the deployment image can be built in CI before any registry push or deployment automation exists.

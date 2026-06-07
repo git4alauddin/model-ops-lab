@@ -28,6 +28,11 @@
 - Verified CI workflow sets up Python `3.11`.
 - Verified CI workflow installs `requirements.txt`.
 - Verified CI workflow runs `python -m pytest -q`.
+- Verified CI Docker image build job exists.
+- Verified CI Docker image build job runs after tests.
+- Verified CI Docker image build uses `deployment/Dockerfile`.
+- Verified CI Docker image build tags `modelopslab-serving:ci`.
+- Verified CI workflow does not log in to Docker Hub or push an image.
 
 ## Commands Executed
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py`
@@ -54,6 +59,10 @@
 - `docker compose -f deployment/docker-compose.yaml --env-file .env.example down`
 - `python -m pytest -q tests\test_v8_c4_ci_workflow.py`
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py tests\test_v8_c2_docker_compose_runtime.py tests\test_v8_c3_serving_environment_config.py tests\test_v8_c4_ci_workflow.py`
+- `python -m pytest -q tests\test_v8_c5_ci_docker_build.py`
+- `python -m pytest -q tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py`
+- `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py tests\test_v8_c2_docker_compose_runtime.py tests\test_v8_c3_serving_environment_config.py tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py`
+- `docker build -f deployment/Dockerfile -t modelopslab-serving:ci .`
 - `python -m pytest -q`
 - `git diff --check`
 
@@ -73,6 +82,8 @@
 - Compose can resolve `.env.example` into container runtime settings.
 - The environment-aware container can start and serve `/health`.
 - CI workflow provides an automated test gate before Docker image build and deployment gates.
+- CI workflow verifies the serving Docker image can build after tests pass.
+- CI workflow does not publish images yet.
 
 ## Actual Output
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py` passed: `5 passed in 0.05s`.
@@ -101,6 +112,12 @@
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py tests\test_v8_c2_docker_compose_runtime.py tests\test_v8_c3_serving_environment_config.py tests\test_v8_c4_ci_workflow.py` passed: `24 passed in 0.16s`.
 - `python -m pytest -q` passed: `323 passed in 5.76s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+- `python -m pytest -q tests\test_v8_c5_ci_docker_build.py` passed: `5 passed in 0.06s`.
+- `python -m pytest -q tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py` passed: `12 passed in 0.11s`.
+- `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py tests\test_v8_c2_docker_compose_runtime.py tests\test_v8_c3_serving_environment_config.py tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py` passed: `29 passed in 0.18s`.
+- `docker build -f deployment/Dockerfile -t modelopslab-serving:ci .` built successfully.
+- `python -m pytest -q` passed: `328 passed in 5.55s`.
+- `git diff --check` passed with CRLF normalization warnings only.
 
 ## Outcome
 V8-C1 adds the first reproducible serving image boundary.
@@ -112,3 +129,5 @@ V8-C2 adds a repeatable Docker Compose runtime for local serving with controlled
 V8-C3 adds explicit serving runtime configuration for Docker, Compose, and future CI/CD deployment validation.
 
 V8-C4 adds the first GitHub Actions CI test gate.
+
+V8-C5 adds the CI Docker image build gate after the test gate.

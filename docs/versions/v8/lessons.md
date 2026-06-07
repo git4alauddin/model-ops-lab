@@ -15,3 +15,6 @@
 - CI should start with a test gate before adding image build, registry push, or deployment automation.
 - Static workflow tests are useful because CI YAML is easy to break without noticing locally.
 - A CI workflow should install from the same `requirements.txt` used by local development and Docker builds.
+- Docker image build should run after tests, not before them.
+- CI image build validation is not the same as publishing to Docker Hub.
+- Registry login and image push should be added only after the image build gate is stable.

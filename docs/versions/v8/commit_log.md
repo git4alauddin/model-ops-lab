@@ -73,7 +73,7 @@
 - `python -m pytest -q` passed: `316 passed in 5.85s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - v8-c4: add CI test workflow
+## 4bd5652 - v8-c4: add CI test workflow
 
 ### What Changed
 - Added GitHub Actions CI workflow.
@@ -93,4 +93,27 @@
 - `python -m pytest -q tests\test_v8_c4_ci_workflow.py` passed: `7 passed in 0.07s`.
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py tests\test_v8_c2_docker_compose_runtime.py tests\test_v8_c3_serving_environment_config.py tests\test_v8_c4_ci_workflow.py` passed: `24 passed in 0.16s`.
 - `python -m pytest -q` passed: `323 passed in 5.76s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - v8-c5: add CI Docker image build gate
+
+### What Changed
+- Added a `docker-image` job to GitHub Actions CI.
+- Made the Docker image job depend on the test job.
+- Built the serving image from `deployment/Dockerfile`.
+- Tagged the CI build as `modelopslab-serving:ci`.
+- Avoided Docker Hub login and image push.
+- Added focused static workflow tests for the Docker build gate.
+- Updated V8 docs.
+
+### What Problem It Solved
+- Proves the Docker serving image can build in CI after tests pass.
+- Adds the next deployment safety gate before image publishing or deployment automation.
+
+### Verification
+- `python -m pytest -q tests\test_v8_c5_ci_docker_build.py` passed: `5 passed in 0.06s`.
+- `python -m pytest -q tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py` passed: `12 passed in 0.11s`.
+- `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py tests\test_v8_c2_docker_compose_runtime.py tests\test_v8_c3_serving_environment_config.py tests\test_v8_c4_ci_workflow.py tests\test_v8_c5_ci_docker_build.py` passed: `29 passed in 0.18s`.
+- `docker build -f deployment/Dockerfile -t modelopslab-serving:ci .` built successfully.
+- `python -m pytest -q` passed: `328 passed in 5.55s`.
 - `git diff --check` passed with CRLF normalization warnings only.

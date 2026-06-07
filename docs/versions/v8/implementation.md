@@ -212,3 +212,42 @@ git push
 V8-C4 only adds the test gate.
 
 Docker image build gates, registry push, and deployment validation are intentionally left for later V8 chunks.
+
+## V8-C5: CI Docker Image Build Gate
+
+### Files Added
+
+```text
+tests/test_v8_c5_ci_docker_build.py
+```
+
+### Files Updated
+
+```text
+.github/workflows/ci.yaml
+docs/versions/v8/
+```
+
+### Behavior
+- Added a `docker-image` job to the CI workflow.
+- Made the Docker image job depend on the `tests` job.
+- Checked out the repository before building the image.
+- Built the serving image with `deployment/Dockerfile`.
+- Tagged the CI-built image as `modelopslab-serving:ci`.
+- Did not add Docker Hub login.
+- Did not push the image to any registry.
+- Added static workflow tests for the Docker build gate.
+
+### CI Flow
+
+```text
+push or pull request
+-> tests job
+-> docker-image job
+-> docker build -f deployment/Dockerfile -t modelopslab-serving:ci .
+```
+
+### Boundary
+V8-C5 only verifies that the image can build in CI.
+
+Docker Hub authentication, image push, semantic image tags, and deployment automation remain separate later chunks.
