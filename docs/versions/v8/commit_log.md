@@ -249,7 +249,7 @@
 - `python -m pytest -q` passed: `360 passed in 5.84s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - v8-c11: record Docker Hub publish validation
+## 1f870b0 - v8-c11: record Docker Hub publish validation
 
 ### What Changed
 - Added Docker Hub publish validation record.
@@ -268,4 +268,25 @@
 - `python -m pytest -q tests\test_v8_c11_dockerhub_publish_validation.py` passed: `5 passed in 0.05s`.
 - `python -m pytest -q tests\test_v8_c9_dockerhub_secrets_setup.py tests\test_v8_c10_dockerhub_publish_gate.py tests\test_v8_c11_dockerhub_publish_validation.py` passed: `20 passed in 0.13s`.
 - `python -m pytest -q` passed: `365 passed in 8.68s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - v8-c12: add Docker rollback guide
+
+### What Changed
+- Added Docker rollback guide.
+- Documented rollback with exact Git SHA image tags.
+- Warned against using the moving `ci` tag for rollback.
+- Documented how to find previous known-good image tags.
+- Documented local `docker pull`, `docker run`, and `/health` rollback checks.
+- Clarified that live Cloud Run rollback is outside current V8 scope.
+- Added focused rollback guide tests.
+
+### What Problem It Solved
+- Gives V8 a clear rollback rule for published Docker images.
+- Separates image-level rollback readiness from future live service rollback.
+
+### Verification
+- `python -m pytest -q tests\test_v8_c12_docker_rollback_guide.py` passed: `5 passed in 0.04s`.
+- `python -m pytest -q tests\test_v8_c11_dockerhub_publish_validation.py tests\test_v8_c12_docker_rollback_guide.py` passed: `10 passed in 0.06s`.
+- `python -m pytest -q` passed: `370 passed in 5.33s`.
 - `git diff --check` passed with CRLF normalization warnings only.

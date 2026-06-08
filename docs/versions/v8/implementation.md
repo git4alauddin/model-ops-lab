@@ -472,3 +472,32 @@ docs/versions/v8/
 V8-C11 closes the Docker Hub publishing validation loop.
 
 Cloud Run deployment remains a later deployment chunk.
+
+## V8-C12: Docker Rollback Guide
+
+### Files Added
+
+```text
+docs/deployment/docker_rollback_guide.md
+tests/test_v8_c12_docker_rollback_guide.py
+```
+
+### Files Updated
+
+```text
+docs/deployment/README.md
+docs/versions/v8/
+```
+
+### Behavior
+- Added Docker rollback guide.
+- Documented rollback with exact Git SHA image tags.
+- Warned against using the moving `ci` tag as a rollback target.
+- Documented how to find previous known-good image tags in Docker Hub.
+- Documented local `docker pull` and `docker run` rollback checks.
+- Clarified that Cloud Run rollback is outside the current V8 scope.
+
+### Boundary
+V8-C12 documents image-level rollback readiness.
+
+Live service rollback will be handled when Cloud Run deployment exists.

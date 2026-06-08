@@ -146,3 +146,11 @@ The project had the Docker Hub publish workflow implemented, but the repo did no
 
 ### Resolution
 Added a Docker Hub publish validation record that documents the completed external configuration, successful manual publish path, expected tags, and V8's no-cloud-deployment boundary.
+
+## V8-C12: Docker Rollback Guide
+
+### Issue
+Docker images were being published with both Git SHA and `ci` tags, but rollback behavior was not documented.
+
+### Resolution
+Added a Docker rollback guide that makes Git SHA tags the rollback target, warns against using the moving `ci` tag, and documents local rollback verification before live Cloud Run deployment exists.

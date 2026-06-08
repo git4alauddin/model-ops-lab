@@ -9,4 +9,5 @@ Track deployment setup, commands, failures, and rollback steps.
 - `dockerhub_credentials_walkthrough.md`
 - `dockerhub_publish_run_guide.md`
 - `dockerhub_publish_validation.md`
+- `docker_rollback_guide.md`
 - `prefect_local_deployment.md`

@@ -20,6 +20,7 @@ Implemented chunks:
 - V8-C9: Docker Hub secrets setup guide.
 - V8-C10: manual Docker Hub publish gate.
 - V8-C11: Docker Hub publish validation.
+- V8-C12: Docker rollback guide.
 
 ## Components To Introduce
 - Docker serving image
@@ -65,6 +66,8 @@ V8-C9 documents Docker Hub token and GitHub Actions secrets setup before CI logi
 V8-C10 adds a manually controlled Docker Hub publish gate while keeping publishing disabled by default.
 
 V8-C11 records that the Docker Hub repository, GitHub Actions secrets, and manual publish workflow were configured and validated.
+
+V8-C12 documents rollback behavior for Docker images using exact Git SHA image tags.
 
 ## Docker Boundary
 The V8-C1 image packages source code and Python dependencies.
@@ -274,3 +277,21 @@ tests
 ```
 
 V8 still does not deploy to a live cloud runtime.
+
+## Docker Rollback
+Docker image rollback is documented here:
+
+```text
+docs/deployment/docker_rollback_guide.md
+```
+
+Rollback rule:
+
+```text
+use <git-sha>
+do not use ci
+```
+
+The `ci` tag is a moving tag. Git SHA tags are stable rollback targets.
+
+Cloud Run rollback is intentionally left for the later live deployment chunk.

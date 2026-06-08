@@ -38,3 +38,5 @@
 - Secret-dependent workflow steps should have a preflight check before the external action consumes them.
 - Publishing an image to a registry is not the same as deploying a live service.
 - External configuration should be recorded after it is validated so the repo matches operational reality.
+- Rollback should target immutable Git SHA image tags, not moving convenience tags.
+- A registry rollback plan can exist before live cloud deployment exists.
