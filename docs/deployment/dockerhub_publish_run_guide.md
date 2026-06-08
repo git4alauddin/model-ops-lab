@@ -108,6 +108,12 @@ Expected tags:
 ci
 ```
 
+Completed validation record:
+
+```text
+docs/deployment/dockerhub_publish_validation.md
+```
+
 ## Safety Rules
 - Keep `publish_image` as `false` for normal validation.
 - Use `publish_image: true` only when the image should be published.

@@ -36,3 +36,5 @@
 - A manual workflow input can separate validation runs from image publishing runs.
 - Docker Hub push should happen only after tests and image build succeed.
 - Secret-dependent workflow steps should have a preflight check before the external action consumes them.
+- Publishing an image to a registry is not the same as deploying a live service.
+- External configuration should be recorded after it is validated so the repo matches operational reality.

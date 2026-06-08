@@ -443,3 +443,32 @@ tests/test_v8_c9_dockerhub_secrets_setup.py
 V8-C10 adds manual Docker Hub publishing.
 
 It does not add automatic publish on push, production deployment, release tags, or cloud hosting.
+
+## V8-C11: Docker Hub Publish Validation
+
+### Files Added
+
+```text
+docs/deployment/dockerhub_publish_validation.md
+tests/test_v8_c11_dockerhub_publish_validation.py
+```
+
+### Files Updated
+
+```text
+docs/deployment/README.md
+docs/deployment/dockerhub_publish_run_guide.md
+docs/versions/v8/
+```
+
+### Behavior
+- Recorded completed Docker Hub repository configuration.
+- Recorded completed GitHub Actions secret configuration.
+- Recorded successful manual publish workflow behavior.
+- Documented expected Docker Hub image tags.
+- Clarified that V8 validates Docker Hub publishing but does not deploy to Cloud Run or another live cloud runtime.
+
+### Boundary
+V8-C11 closes the Docker Hub publishing validation loop.
+
+Cloud Run deployment remains a later deployment chunk.

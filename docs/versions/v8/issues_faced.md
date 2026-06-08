@@ -138,3 +138,11 @@ Manual publishing reached Docker Hub login, but GitHub Actions raised a username
 
 ### Resolution
 Added a Docker Hub secret preflight step before login. The workflow now fails with a clear message when `DOCKERHUB_USERNAME` or `DOCKERHUB_TOKEN` is missing.
+
+## V8-C11: Docker Hub Publish Validation
+
+### Issue
+The project had the Docker Hub publish workflow implemented, but the repo did not yet record that the external Docker Hub repository, GitHub secrets, and manual publish run were validated.
+
+### Resolution
+Added a Docker Hub publish validation record that documents the completed external configuration, successful manual publish path, expected tags, and V8's no-cloud-deployment boundary.

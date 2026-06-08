@@ -208,7 +208,7 @@
 - `python -m pytest -q` passed: `351 passed in 5.99s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - v8-c10: add manual Docker Hub publish gate
+## 624c69f - v8-c10: add manual Docker Hub publish gate
 
 ### What Changed
 - Added manual `publish_image` workflow input.
@@ -229,7 +229,7 @@
 - `python -m pytest -q` passed: `358 passed in 5.68s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - fix: validate Docker Hub secrets before login
+## 1640824 - fix: validate Docker Hub secrets before login
 
 ### What Changed
 - Added a Docker Hub secret validation step before Docker Hub login.
@@ -247,4 +247,25 @@
 - `git diff --check` passed with CRLF normalization warnings only.
 - `python -m pytest -q tests\test_v8_c10_dockerhub_publish_gate.py tests\test_v8_c9_dockerhub_secrets_setup.py` passed: `15 passed in 0.13s`.
 - `python -m pytest -q` passed: `360 passed in 5.84s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - v8-c11: record Docker Hub publish validation
+
+### What Changed
+- Added Docker Hub publish validation record.
+- Documented completed Docker Hub repository configuration.
+- Documented completed GitHub Actions secret configuration.
+- Documented successful manual publish path.
+- Documented expected Docker Hub tags.
+- Clarified that V8 validates image publishing but does not deploy to a live cloud runtime.
+- Added focused validation tests.
+
+### What Problem It Solved
+- Records the external Docker Hub configuration and publish validation inside the project docs.
+- Separates registry publishing from actual cloud deployment.
+
+### Verification
+- `python -m pytest -q tests\test_v8_c11_dockerhub_publish_validation.py` passed: `5 passed in 0.05s`.
+- `python -m pytest -q tests\test_v8_c9_dockerhub_secrets_setup.py tests\test_v8_c10_dockerhub_publish_gate.py tests\test_v8_c11_dockerhub_publish_validation.py` passed: `20 passed in 0.13s`.
+- `python -m pytest -q` passed: `365 passed in 8.68s`.
 - `git diff --check` passed with CRLF normalization warnings only.
