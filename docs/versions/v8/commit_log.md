@@ -270,7 +270,7 @@
 - `python -m pytest -q` passed: `365 passed in 8.68s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - v8-c12: add Docker rollback guide
+## 31e6373 - v8-c12: add Docker rollback guide
 
 ### What Changed
 - Added Docker rollback guide.
@@ -289,4 +289,26 @@
 - `python -m pytest -q tests\test_v8_c12_docker_rollback_guide.py` passed: `5 passed in 0.04s`.
 - `python -m pytest -q tests\test_v8_c11_dockerhub_publish_validation.py tests\test_v8_c12_docker_rollback_guide.py` passed: `10 passed in 0.06s`.
 - `python -m pytest -q` passed: `370 passed in 5.33s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - v8-c13: add Cloud Run deployment foundation guide
+
+### What Changed
+- Added Cloud Run deployment foundation guide.
+- Documented why Cloud Run is the first GCP deployment target.
+- Documented Docker Hub versus Artifact Registry tradeoff.
+- Documented Google Cloud Console deployment flow.
+- Documented service name, region, port, access, and environment variable guidance.
+- Documented `/health` validation after deployment.
+- Documented that GitHub Actions GCP deployment automation is later scope.
+- Added focused Cloud Run guide tests.
+
+### What Problem It Solved
+- Defines where the V8 Docker image can run on GCP.
+- Separates manual Cloud Run deployment learning from later CI/CD deployment automation.
+
+### Verification
+- `python -m pytest -q tests\test_v8_c13_cloud_run_deployment_foundation.py` passed: `6 passed in 0.06s`.
+- `python -m pytest -q tests\test_v8_c12_docker_rollback_guide.py tests\test_v8_c13_cloud_run_deployment_foundation.py` passed: `11 passed in 0.06s`.
+- `python -m pytest -q` passed: `376 passed in 7.35s`.
 - `git diff --check` passed with CRLF normalization warnings only.

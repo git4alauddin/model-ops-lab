@@ -154,3 +154,11 @@ Docker images were being published with both Git SHA and `ci` tags, but rollback
 
 ### Resolution
 Added a Docker rollback guide that makes Git SHA tags the rollback target, warns against using the moving `ci` tag, and documents local rollback verification before live Cloud Run deployment exists.
+
+## V8-C13: Cloud Run Deployment Foundation
+
+### Issue
+Docker Hub publishing was validated, but the project did not yet document where the container would actually run on GCP.
+
+### Resolution
+Added a Cloud Run deployment foundation guide that documents the manual Google Cloud Console path, service settings, Docker Hub versus Artifact Registry tradeoff, `/health` validation, and the boundary before CI-based GCP deployment automation.

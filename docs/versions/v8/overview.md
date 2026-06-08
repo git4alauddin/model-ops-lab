@@ -21,6 +21,7 @@ Implemented chunks:
 - V8-C10: manual Docker Hub publish gate.
 - V8-C11: Docker Hub publish validation.
 - V8-C12: Docker rollback guide.
+- V8-C13: Cloud Run deployment foundation.
 
 ## Components To Introduce
 - Docker serving image
@@ -68,6 +69,8 @@ V8-C10 adds a manually controlled Docker Hub publish gate while keeping publishi
 V8-C11 records that the Docker Hub repository, GitHub Actions secrets, and manual publish workflow were configured and validated.
 
 V8-C12 documents rollback behavior for Docker images using exact Git SHA image tags.
+
+V8-C13 documents the manual Google Cloud Run deployment foundation and keeps CI-based GCP deployment automation for later.
 
 ## Docker Boundary
 The V8-C1 image packages source code and Python dependencies.
@@ -295,3 +298,26 @@ do not use ci
 The `ci` tag is a moving tag. Git SHA tags are stable rollback targets.
 
 Cloud Run rollback is intentionally left for the later live deployment chunk.
+
+## Cloud Run Deployment Foundation
+Cloud Run deployment foundation is documented here:
+
+```text
+docs/deployment/cloud_run_deployment_foundation.md
+```
+
+Current target:
+
+```text
+Docker Hub image
+-> manual Cloud Run deployment
+-> /health check
+```
+
+Current boundary:
+
+```text
+Cloud Run GUI walkthrough exists
+GitHub Actions does not deploy to GCP yet
+Artifact Registry migration remains later scope
+```

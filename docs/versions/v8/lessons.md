@@ -40,3 +40,6 @@
 - External configuration should be recorded after it is validated so the repo matches operational reality.
 - Rollback should target immutable Git SHA image tags, not moving convenience tags.
 - A registry rollback plan can exist before live cloud deployment exists.
+- Cloud Run is a practical first GCP target for a containerized FastAPI service.
+- Docker Hub can support first deployment exposure, but Artifact Registry is the stronger GCP-native registry direction.
+- GCP deployment automation should use short-lived identity patterns such as Workload Identity Federation instead of long-lived key files.

@@ -501,3 +501,34 @@ docs/versions/v8/
 V8-C12 documents image-level rollback readiness.
 
 Live service rollback will be handled when Cloud Run deployment exists.
+
+## V8-C13: Cloud Run Deployment Foundation
+
+### Files Added
+
+```text
+docs/deployment/cloud_run_deployment_foundation.md
+tests/test_v8_c13_cloud_run_deployment_foundation.py
+```
+
+### Files Updated
+
+```text
+docs/deployment/README.md
+docs/versions/v8/
+```
+
+### Behavior
+- Added Cloud Run deployment foundation guide.
+- Documented why Cloud Run is the first GCP deployment target.
+- Documented Docker Hub versus Artifact Registry tradeoff.
+- Documented Google Cloud Console deployment flow.
+- Documented service name, region, port, access, and environment variable guidance.
+- Documented `/health` validation after deployment.
+- Documented that GitHub Actions GCP deployment automation is not enabled yet.
+- Documented Workload Identity Federation as the later preferred authentication path.
+
+### Boundary
+V8-C13 prepares manual Cloud Run deployment.
+
+It does not add GitHub Actions deployment to GCP, Artifact Registry publishing, post-deploy CI health checks, or live Cloud Run rollback.

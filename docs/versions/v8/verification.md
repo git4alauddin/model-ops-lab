@@ -76,6 +76,13 @@
 - Verified Docker rollback guide warns against `ci` rollback.
 - Verified Docker rollback guide documents local pull and run commands.
 - Verified Docker rollback guide keeps Cloud Run rollback out of V8 scope.
+- Verified Cloud Run deployment foundation guide exists.
+- Verified Cloud Run guide documents Cloud Run as target.
+- Verified Cloud Run guide documents Docker Hub versus Artifact Registry tradeoff.
+- Verified Cloud Run guide documents Google Cloud Console deployment flow.
+- Verified Cloud Run guide documents service settings and environment variables.
+- Verified Cloud Run guide documents `/health` validation.
+- Verified current CI workflow does not deploy to GCP yet.
 
 ## Commands Executed
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py`
@@ -124,6 +131,8 @@
 - `python -m pytest -q tests\test_v8_c9_dockerhub_secrets_setup.py tests\test_v8_c10_dockerhub_publish_gate.py tests\test_v8_c11_dockerhub_publish_validation.py`
 - `python -m pytest -q tests\test_v8_c12_docker_rollback_guide.py`
 - `python -m pytest -q tests\test_v8_c11_dockerhub_publish_validation.py tests\test_v8_c12_docker_rollback_guide.py`
+- `python -m pytest -q tests\test_v8_c13_cloud_run_deployment_foundation.py`
+- `python -m pytest -q tests\test_v8_c12_docker_rollback_guide.py tests\test_v8_c13_cloud_run_deployment_foundation.py`
 - `python -m pytest -q`
 - `git diff --check`
 
@@ -155,6 +164,7 @@
 - Docker Hub publishing is manually gated and disabled by default.
 - Docker Hub publishing has been externally configured and manually validated.
 - Docker image rollback is documented around exact Git SHA image tags.
+- Cloud Run deployment foundation is documented while CI-based GCP deployment remains later scope.
 
 ## Actual Output
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py` passed: `5 passed in 0.05s`.
@@ -227,6 +237,10 @@
 - `python -m pytest -q tests\test_v8_c11_dockerhub_publish_validation.py tests\test_v8_c12_docker_rollback_guide.py` passed: `10 passed in 0.06s`.
 - `python -m pytest -q` passed: `370 passed in 5.33s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+- `python -m pytest -q tests\test_v8_c13_cloud_run_deployment_foundation.py` passed: `6 passed in 0.06s`.
+- `python -m pytest -q tests\test_v8_c12_docker_rollback_guide.py tests\test_v8_c13_cloud_run_deployment_foundation.py` passed: `11 passed in 0.06s`.
+- `python -m pytest -q` passed: `376 passed in 7.35s`.
+- `git diff --check` passed with CRLF normalization warnings only.
 
 ## Outcome
 V8-C1 adds the first reproducible serving image boundary.
@@ -254,3 +268,5 @@ V8-C10 adds manually gated Docker Hub publishing while keeping normal validation
 V8-C11 records successful Docker Hub publish validation and clarifies that live Cloud Run deployment remains out of V8 scope.
 
 V8-C12 documents Docker image rollback using exact Git SHA image tags and keeps Cloud Run rollback for a later live deployment chunk.
+
+V8-C13 documents the manual Cloud Run deployment foundation and keeps GitHub Actions GCP deployment automation for a later chunk.
