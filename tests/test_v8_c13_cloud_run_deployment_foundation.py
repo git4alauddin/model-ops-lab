@@ -45,12 +45,15 @@ def test_v8_cloud_run_deployment_foundation_documents_health_check() -> None:
     assert "service is modelopslab-serving" in guide
 
 
-def test_v8_cloud_run_deployment_foundation_marks_automation_as_later_scope() -> None:
+def test_v8_cloud_run_deployment_foundation_points_to_automation_boundary() -> None:
     guide = GUIDE_PATH.read_text()
     workflow = WORKFLOW_PATH.read_text()
 
-    assert "Not automated yet" in guide
+    assert "Deployment Automation Boundary" in guide
+    assert "cloud_run_github_actions_deploy.md" in guide
     assert "google-github-actions/deploy-cloudrun" in guide
     assert "Workload Identity Federation" in guide
-    assert "google-github-actions/deploy-cloudrun" not in workflow
-    assert "google-github-actions/auth" not in workflow
+    assert "Cloud Run revision rollback" in guide
+    assert "Artifact Registry publishing" in guide
+    assert "google-github-actions/deploy-cloudrun" in workflow
+    assert "google-github-actions/auth" in workflow

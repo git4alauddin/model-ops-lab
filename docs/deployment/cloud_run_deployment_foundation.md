@@ -171,8 +171,8 @@ service is modelopslab-serving
 
 Readiness may depend on whether model registry and MLflow artifact state are available inside the deployed container.
 
-## Current Manual Boundary
-Current deployment flow is manual:
+## Deployment Automation Boundary
+Initial deployment foundation flow:
 
 ```text
 Docker Hub image
@@ -181,18 +181,13 @@ Docker Hub image
 -> manual /health check
 ```
 
-Not automated yet:
+GitHub Actions deployment automation now lives in:
 
 ```text
-GitHub Actions authentication to GCP
-automatic Cloud Run deploy
-post-deploy health check in CI
-Cloud Run revision rollback
-Artifact Registry publishing
+docs/deployment/cloud_run_github_actions_deploy.md
 ```
 
-## Later Automation Path
-Later GitHub Actions deployment should add:
+The automated path adds:
 
 ```text
 google-github-actions/auth
@@ -200,10 +195,17 @@ google-github-actions/deploy-cloudrun
 deploy_cloud_run workflow input
 Cloud Run service URL output
 post-deploy /health check
-Cloud Run rollback guide
 ```
 
-Recommended authentication direction:
+Still not automated:
+
+```text
+Cloud Run revision rollback
+Artifact Registry publishing
+authenticated private-service health checks
+```
+
+Authentication direction:
 
 ```text
 Workload Identity Federation

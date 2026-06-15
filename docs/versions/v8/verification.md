@@ -165,6 +165,12 @@
 - Docker Hub publishing has been externally configured and manually validated.
 - Docker image rollback is documented around exact Git SHA image tags.
 - Cloud Run deployment foundation is documented while CI-based GCP deployment remains later scope.
+- Cloud Run deployment is manually gated behind `deploy_cloud_run`.
+- Cloud Run deployment requires `publish_image=true` so the deployed image exists in Docker Hub.
+- Cloud Run deployment uses Workload Identity Federation instead of service account key JSON.
+- Cloud Run deployment uses the exact Git SHA Docker Hub image tag.
+- Cloud Run deployment validates `/health` after deployment.
+- Temporary GitHub auth credential files are ignored by Git and Docker.
 
 ## Actual Output
 - `python -m pytest -q tests\test_v8_c1_docker_serving_foundation.py` passed: `5 passed in 0.05s`.
@@ -241,6 +247,16 @@
 - `python -m pytest -q tests\test_v8_c12_docker_rollback_guide.py tests\test_v8_c13_cloud_run_deployment_foundation.py` passed: `11 passed in 0.06s`.
 - `python -m pytest -q` passed: `376 passed in 7.35s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+- `python -m pytest -q tests\test_v8_c14_cloud_run_deploy_gate.py` initially failed because `.github/workflows/ci.yaml` used an inline `run` value with a colon in `Cloud Run URL: ...`; the workflow was changed to block-style `run` syntax.
+- `python -m pytest -q tests\test_v8_c10_dockerhub_publish_gate.py tests\test_v8_c13_cloud_run_deployment_foundation.py tests\test_v8_c14_cloud_run_deploy_gate.py` initially failed because the V8-C13 test still asserted that Cloud Run automation was absent; the foundation doc and test were updated to reflect the new V8-C14 automation boundary.
+- `python -m pytest -q tests\test_v8_c14_cloud_run_deploy_gate.py` passed: `11 passed in 0.07s`.
+- `python -m pytest -q tests\test_v8_c10_dockerhub_publish_gate.py tests\test_v8_c13_cloud_run_deployment_foundation.py tests\test_v8_c14_cloud_run_deploy_gate.py` passed: `26 passed in 0.16s`.
+- `python -m pytest -q` passed: `387 passed in 7.70s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+- Final post-documentation focused check `python -m pytest -q tests\test_v8_c14_cloud_run_deploy_gate.py` passed: `11 passed in 0.08s`.
+- Final post-documentation related workflow check `python -m pytest -q tests\test_v8_c10_dockerhub_publish_gate.py tests\test_v8_c13_cloud_run_deployment_foundation.py tests\test_v8_c14_cloud_run_deploy_gate.py` passed: `26 passed in 0.15s`.
+- Final post-documentation full suite `python -m pytest -q` passed: `387 passed in 5.20s`.
+- Final `git diff --check` passed with CRLF normalization warnings only.
 
 ## Outcome
 V8-C1 adds the first reproducible serving image boundary.
@@ -270,3 +286,5 @@ V8-C11 records successful Docker Hub publish validation and clarifies that live 
 V8-C12 documents Docker image rollback using exact Git SHA image tags and keeps Cloud Run rollback for a later live deployment chunk.
 
 V8-C13 documents the manual Cloud Run deployment foundation and keeps GitHub Actions GCP deployment automation for a later chunk.
+
+V8-C14 adds a manually gated GitHub Actions Cloud Run deployment path using Workload Identity Federation, the exact Git SHA Docker Hub image, and post-deploy `/health` validation.

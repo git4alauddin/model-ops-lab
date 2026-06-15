@@ -43,3 +43,9 @@
 - Cloud Run is a practical first GCP target for a containerized FastAPI service.
 - Docker Hub can support first deployment exposure, but Artifact Registry is the stronger GCP-native registry direction.
 - GCP deployment automation should use short-lived identity patterns such as Workload Identity Federation instead of long-lived key files.
+- Deployment automation should remain manually gated until the deployment path is validated end to end.
+- A deployment gate should fail before cloud calls when required inputs or secrets are missing.
+- Deploying a Git SHA image preserves source-to-runtime traceability better than deploying a moving convenience tag.
+- Post-deploy health checks convert deployment success from "revision accepted" into "service can answer a basic request."
+- Public unauthenticated health validation is useful for a first demo gate, but private authenticated service checks need a separate operational design.
+- Temporary GitHub auth credential files should be ignored by both Git and Docker so CI authentication artifacts cannot leak into commits or images.

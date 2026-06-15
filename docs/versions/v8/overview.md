@@ -318,6 +318,36 @@ Current boundary:
 
 ```text
 Cloud Run GUI walkthrough exists
-GitHub Actions does not deploy to GCP yet
+GitHub Actions manual deployment gate exists
 Artifact Registry migration remains later scope
+```
+
+## Cloud Run GitHub Actions Deployment
+Cloud Run deployment automation is documented here:
+
+```text
+docs/deployment/cloud_run_github_actions_deploy.md
+```
+
+Deployment flow:
+
+```text
+workflow_dispatch
+-> tests
+-> Docker image build
+-> Docker Hub publish
+-> Workload Identity Federation auth
+-> Cloud Run deploy
+-> /health check
+```
+
+Current boundary:
+
+```text
+deploy_cloud_run defaults to false
+publish_image must be true before deployment
+the Git SHA image tag is deployed
+post-deploy /health is checked from GitHub Actions
+Cloud Run revision rollback remains later scope
+Artifact Registry remains later scope
 ```

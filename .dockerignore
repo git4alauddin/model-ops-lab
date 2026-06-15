@@ -16,6 +16,7 @@ vir_env/
 # Local secrets and environment files
 .env
 .env.*
+gha-creds-*.json
 
 # Runtime artifacts stay outside the image by default
 artifacts/

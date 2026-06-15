@@ -531,4 +531,48 @@ docs/versions/v8/
 ### Boundary
 V8-C13 prepares manual Cloud Run deployment.
 
-It does not add GitHub Actions deployment to GCP, Artifact Registry publishing, post-deploy CI health checks, or live Cloud Run rollback.
+The first GitHub Actions deployment gate is handled in V8-C14.
+
+It does not add Artifact Registry publishing, authenticated private-service health checks, or live Cloud Run rollback.
+
+## V8-C14: Manual Cloud Run Deployment Gate
+
+### Files Added
+
+```text
+docs/deployment/cloud_run_github_actions_deploy.md
+tests/test_v8_c14_cloud_run_deploy_gate.py
+```
+
+### Files Updated
+
+```text
+.dockerignore
+.github/workflows/ci.yaml
+.gitignore
+README.md
+docs/deployment/README.md
+docs/deployment/cloud_run_deployment_foundation.md
+docs/versions/v8/
+tests/test_v8_c13_cloud_run_deployment_foundation.py
+```
+
+### Behavior
+- Added manual `deploy_cloud_run` workflow input with default value `false`.
+- Added Cloud Run project, service, and region workflow inputs.
+- Added a `cloud-run-deploy` job that runs only when `deploy_cloud_run` is `true`.
+- Kept deployment gated behind the existing Docker image job.
+- Added an early failure when `deploy_cloud_run=true` but `publish_image=false`.
+- Added preflight checks for Docker Hub username, GCP Workload Identity provider, GCP service account, project ID, service name, and region.
+- Added `google-github-actions/auth@v3` using Workload Identity Federation.
+- Added `google-github-actions/deploy-cloudrun@v3`.
+- Deployed the exact Git SHA Docker Hub image rather than the moving `ci` tag.
+- Set Cloud Run runtime environment variables used by the serving container.
+- Set Cloud Run to port `8000` and unauthenticated access for first demo health validation.
+- Added a post-deploy `/health` check against the Cloud Run service URL.
+- Ignored `gha-creds-*.json` in Git and Docker build context.
+
+### Boundary
+V8-C14 adds manually gated Cloud Run deployment automation.
+
+It does not add automatic deployment on push, Artifact Registry publishing, private authenticated health checks, live Cloud Run rollback automation, or production traffic strategy.

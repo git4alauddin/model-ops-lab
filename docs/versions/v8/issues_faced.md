@@ -162,3 +162,17 @@ Docker Hub publishing was validated, but the project did not yet document where 
 
 ### Resolution
 Added a Cloud Run deployment foundation guide that documents the manual Google Cloud Console path, service settings, Docker Hub versus Artifact Registry tradeoff, `/health` validation, and the boundary before CI-based GCP deployment automation.
+
+## V8-C14: Manual Cloud Run Deployment Gate
+
+### Issue
+Adding Cloud Run deployment automation changed the V8-C13 boundary, which previously documented GitHub Actions GCP deployment as later scope.
+
+### Resolution
+Updated the Cloud Run foundation guide and its test to point to the new automated deployment guide while keeping Artifact Registry, authenticated private health checks, and live rollback outside the current chunk.
+
+### Issue
+The first workflow edit used an inline YAML `run` value containing a colon inside the Cloud Run URL report command.
+
+### Resolution
+Changed the report step to block-style `run` syntax so the workflow remains valid YAML and can be parsed by the static workflow tests.

@@ -159,6 +159,12 @@ Docker Hub publish run guide:
 docs/deployment/dockerhub_publish_run_guide.md
 ```
 
+Cloud Run GitHub Actions deployment guide:
+
+```text
+docs/deployment/cloud_run_github_actions_deploy.md
+```
+
 ## Project Structure
 
 ```text

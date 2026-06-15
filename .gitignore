@@ -7,6 +7,7 @@ __pycache__/
 
 # Local environment file
 .env
+gha-creds-*.json
 
 # Runtime artifacts
 artifacts/*
