@@ -413,7 +413,7 @@
 - `python -m pytest -q` passed: `407 passed, 1 warning in 7.64s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - v8-c18: validate Artifact Registry setup
+## c376a07 - v8-c18: validate Artifact Registry setup
 
 ### What Changed
 - Added Artifact Registry setup validation documentation.
@@ -434,4 +434,26 @@
 - `python -m pytest -q tests\test_v8_c18_artifact_registry_setup_validation.py` passed: `7 passed in 0.24s`.
 - `python -m pytest -q tests\test_v8_c17_artifact_registry_foundation.py tests\test_v8_c18_artifact_registry_setup_validation.py` passed: `14 passed in 0.31s`.
 - `python -m pytest -q` passed: `414 passed, 1 warning in 20.42s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - v8-c19: add Artifact Registry publish gate
+
+### What Changed
+- Added manual `publish_artifact_registry` workflow input.
+- Added Artifact Registry location and repository workflow inputs.
+- Added Artifact Registry preflight validation for required GCP secrets and workflow inputs.
+- Added Workload Identity Federation authentication and `setup-gcloud` for Artifact Registry publishing.
+- Added Docker authentication for `us-central1-docker.pkg.dev`.
+- Added Git SHA image tag and push to Artifact Registry.
+- Added Artifact Registry publish gate documentation and static workflow tests.
+
+### What Problem It Solved
+- Creates the first CI path that can publish the serving image to GCP-native Artifact Registry.
+- Keeps the current Docker Hub based Cloud Run deployment unchanged until Artifact Registry publishing is validated live.
+
+### Verification
+- `python -m pytest -q tests\test_v8_c19_artifact_registry_publish_gate.py` passed: `10 passed in 0.15s`.
+- `python -m pytest -q tests\test_v8_c14_cloud_run_deploy_gate.py tests\test_v8_c19_artifact_registry_publish_gate.py` passed: `21 passed in 0.22s`.
+- `python -m pytest -q tests\test_v8_c18_artifact_registry_setup_validation.py tests\test_v8_c19_artifact_registry_publish_gate.py` passed: `17 passed in 0.16s`.
+- `python -m pytest -q` passed: `424 passed, 1 warning in 8.57s`.
 - `git diff --check` passed with CRLF normalization warnings only.

@@ -260,6 +260,12 @@ The first validated Artifact Registry setup is recorded here:
 docs/deployment/artifact_registry_setup_validation.md
 ```
 
+The manually gated Artifact Registry publish path is recorded here:
+
+```text
+docs/deployment/artifact_registry_publish_gate.md
+```
+
 ## Source References
 
 - Artifact Registry Docker quickstart: https://cloud.google.com/artifact-registry/docs/docker/store-docker-container-images

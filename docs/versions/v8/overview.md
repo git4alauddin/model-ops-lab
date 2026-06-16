@@ -429,3 +429,32 @@ GitHub Actions still publishes to Docker Hub
 Cloud Run still deploys from Docker Hub
 Artifact Registry publishing remains later scope
 ```
+
+## Artifact Registry Publish Gate
+Artifact Registry publish automation is documented here:
+
+```text
+docs/deployment/artifact_registry_publish_gate.md
+```
+
+Publishing flow:
+
+```text
+workflow_dispatch
+-> tests
+-> Docker image build
+-> Workload Identity Federation auth
+-> gcloud Docker auth for us-central1-docker.pkg.dev
+-> Artifact Registry Git SHA image push
+```
+
+Current boundary:
+
+```text
+publish_artifact_registry defaults to false
+Artifact Registry image uses the Git SHA tag
+Docker Hub publishing remains available
+Cloud Run still deploys from Docker Hub
+live Artifact Registry publish validation remains later scope
+Cloud Run deployment from Artifact Registry remains later scope
+```

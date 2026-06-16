@@ -66,8 +66,8 @@ def test_v8_artifact_registry_setup_validation_links_are_visible() -> None:
     assert "artifact_registry_setup_validation.md" in overview
 
 
-def test_v8_commit_log_has_c17_hash_and_c18_pending_entry() -> None:
+def test_v8_commit_log_has_c17_and_c18_hashes() -> None:
     commit_log = V8_COMMIT_LOG_PATH.read_text()
 
     assert "9dcce01 - v8-c17: add Artifact Registry deployment foundation" in commit_log
-    assert "Pending - v8-c18: validate Artifact Registry setup" in commit_log
+    assert "c376a07 - v8-c18: validate Artifact Registry setup" in commit_log

@@ -183,6 +183,12 @@ Artifact Registry setup validation:
 docs/deployment/artifact_registry_setup_validation.md
 ```
 
+Artifact Registry publish gate:
+
+```text
+docs/deployment/artifact_registry_publish_gate.md
+```
+
 Workload Identity Federation learning notes:
 
 ```text

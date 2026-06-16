@@ -140,3 +140,9 @@ tests
 -> push Git SHA image to Artifact Registry
 -> keep Cloud Run deployment opt-in
 ```
+
+That publish gate is documented here:
+
+```text
+docs/deployment/artifact_registry_publish_gate.md
+```

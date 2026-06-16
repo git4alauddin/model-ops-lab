@@ -270,3 +270,9 @@ The validated Artifact Registry setup is recorded here:
 ```text
 docs/deployment/artifact_registry_setup_validation.md
 ```
+
+The manually gated Artifact Registry publish path is recorded here:
+
+```text
+docs/deployment/artifact_registry_publish_gate.md
+```

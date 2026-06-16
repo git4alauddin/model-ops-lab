@@ -707,3 +707,37 @@ docs/versions/v8/
 V8-C18 validates setup only.
 
 It does not configure Docker auth in CI, push an image to Artifact Registry, deploy Cloud Run from Artifact Registry, remove Docker Hub support, or validate a live Artifact Registry deployment.
+
+## V8-C19: Artifact Registry Publish Gate
+
+### Files Added
+
+```text
+docs/deployment/artifact_registry_publish_gate.md
+tests/test_v8_c19_artifact_registry_publish_gate.py
+```
+
+### Files Updated
+
+```text
+.github/workflows/ci.yaml
+README.md
+docs/deployment/
+docs/versions/v8/
+```
+
+### Behavior
+- Added manual `publish_artifact_registry` workflow input with default value `false`.
+- Added Artifact Registry location and repository workflow inputs with defaults `us-central1` and `modelopslab`.
+- Kept tests as the gate before image build and publishing.
+- Added preflight validation for GCP Workload Identity provider, service account, project ID, Artifact Registry location, and repository.
+- Added Workload Identity Federation authentication for Artifact Registry publishing.
+- Added `google-github-actions/setup-gcloud@v3` for `gcloud` availability in the runner.
+- Added `gcloud auth configure-docker` for the Artifact Registry Docker host.
+- Tagged and pushed the exact Git SHA image to Artifact Registry.
+- Kept Cloud Run deployment on Docker Hub for this chunk.
+
+### Boundary
+V8-C19 adds Artifact Registry publishing support only.
+
+It does not validate a live Artifact Registry push, deploy Cloud Run from Artifact Registry, remove Docker Hub publishing, remove Docker Hub secrets, or change the current Cloud Run deployment image.
