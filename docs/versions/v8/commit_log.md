@@ -393,7 +393,7 @@
 - `python -m pytest -q` passed: `400 passed, 1 warning in 6.34s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - v8-c17: add Artifact Registry deployment foundation
+## 9dcce01 - v8-c17: add Artifact Registry deployment foundation
 
 ### What Changed
 - Added an Artifact Registry foundation guide.
@@ -411,4 +411,27 @@
 - `python -m pytest -q tests\test_v8_c17_artifact_registry_foundation.py` passed: `7 passed in 0.07s`.
 - `python -m pytest -q tests\test_v8_c16_manual_ci_trigger_learning_notes.py tests\test_v8_c17_artifact_registry_foundation.py` passed: `13 passed in 0.09s`.
 - `python -m pytest -q` passed: `407 passed, 1 warning in 7.64s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - v8-c18: validate Artifact Registry setup
+
+### What Changed
+- Added Artifact Registry setup validation documentation.
+- Recorded that the Artifact Registry API is enabled.
+- Recorded the created Docker repository `modelopslab` in `us-central1`.
+- Recorded the registry URI `us-central1-docker.pkg.dev/key-component-498805-h0/modelopslab`.
+- Recorded repository-level `roles/artifactregistry.writer` for the GitHub deploy service account.
+- Added tests that verify the validation evidence and documentation links.
+
+### What Problem It Solved
+- Confirms the GUI-created Artifact Registry setup is ready before changing GitHub Actions.
+- Establishes the exact registry URI and IAM boundary for future Artifact Registry publishing.
+
+### Verification
+- `gcloud services list --enabled --project=key-component-498805-h0 --filter=name:artifactregistry.googleapis.com --format=json` confirmed `artifactregistry.googleapis.com` is `ENABLED`.
+- `gcloud artifacts repositories describe modelopslab --location=us-central1 --project=key-component-498805-h0 --format=json` confirmed Docker repository `modelopslab`, `STANDARD_REPOSITORY`, and registry URI `us-central1-docker.pkg.dev/key-component-498805-h0/modelopslab`.
+- `gcloud artifacts repositories get-iam-policy modelopslab --location=us-central1 --project=key-component-498805-h0 --format=json` confirmed `roles/artifactregistry.writer` for `serviceAccount:modelopslab-github-deployer@key-component-498805-h0.iam.gserviceaccount.com`.
+- `python -m pytest -q tests\test_v8_c18_artifact_registry_setup_validation.py` passed: `7 passed in 0.24s`.
+- `python -m pytest -q tests\test_v8_c17_artifact_registry_foundation.py tests\test_v8_c18_artifact_registry_setup_validation.py` passed: `14 passed in 0.31s`.
+- `python -m pytest -q` passed: `414 passed, 1 warning in 20.42s`.
 - `git diff --check` passed with CRLF normalization warnings only.

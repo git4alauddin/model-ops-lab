@@ -404,3 +404,28 @@ GitHub Actions still publishes to Docker Hub
 Artifact Registry publishing remains later scope
 live Artifact Registry deployment remains later scope
 ```
+
+## Artifact Registry Setup Validation
+Artifact Registry setup validation is recorded here:
+
+```text
+docs/deployment/artifact_registry_setup_validation.md
+```
+
+Validated setup:
+
+```text
+Artifact Registry API enabled
+Docker repository modelopslab exists in us-central1
+registry URI is us-central1-docker.pkg.dev/key-component-498805-h0/modelopslab
+GitHub deploy service account has roles/artifactregistry.writer on the repository
+```
+
+Current boundary:
+
+```text
+no image has been pushed to Artifact Registry yet
+GitHub Actions still publishes to Docker Hub
+Cloud Run still deploys from Docker Hub
+Artifact Registry publishing remains later scope
+```

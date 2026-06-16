@@ -674,3 +674,36 @@ docs/versions/v8/
 V8-C17 is a setup and learning foundation only.
 
 It does not create the Artifact Registry repository, grant IAM automatically, change GitHub Actions, remove Docker Hub support, push an image to Artifact Registry, deploy from Artifact Registry, or validate a live Artifact Registry deployment.
+
+## V8-C18: Artifact Registry Setup Validation
+
+### Files Added
+
+```text
+docs/deployment/artifact_registry_setup_validation.md
+tests/test_v8_c18_artifact_registry_setup_validation.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/deployment/README.md
+docs/deployment/artifact_registry_foundation.md
+docs/deployment/cloud_run_github_actions_deploy.md
+docs/versions/v8/
+```
+
+### Behavior
+- Validated the GUI-created Artifact Registry setup with `gcloud`.
+- Confirmed the Artifact Registry API is enabled in project `key-component-498805-h0`.
+- Confirmed Docker repository `modelopslab` exists in `us-central1`.
+- Confirmed the repository URI is `us-central1-docker.pkg.dev/key-component-498805-h0/modelopslab`.
+- Confirmed the repository uses Docker format and standard repository mode.
+- Confirmed repository-level `roles/artifactregistry.writer` for the GitHub deploy service account.
+- Documented the current boundary before changing GitHub Actions.
+
+### Boundary
+V8-C18 validates setup only.
+
+It does not configure Docker auth in CI, push an image to Artifact Registry, deploy Cloud Run from Artifact Registry, remove Docker Hub support, or validate a live Artifact Registry deployment.

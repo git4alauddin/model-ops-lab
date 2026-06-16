@@ -264,3 +264,9 @@ The Artifact Registry migration foundation is recorded here:
 ```text
 docs/deployment/artifact_registry_foundation.md
 ```
+
+The validated Artifact Registry setup is recorded here:
+
+```text
+docs/deployment/artifact_registry_setup_validation.md
+```

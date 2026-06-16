@@ -177,6 +177,12 @@ Artifact Registry foundation:
 docs/deployment/artifact_registry_foundation.md
 ```
 
+Artifact Registry setup validation:
+
+```text
+docs/deployment/artifact_registry_setup_validation.md
+```
+
 Workload Identity Federation learning notes:
 
 ```text

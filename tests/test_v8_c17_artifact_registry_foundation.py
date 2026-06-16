@@ -65,8 +65,8 @@ def test_v8_artifact_registry_foundation_links_are_visible() -> None:
     assert "artifact_registry_foundation.md" in overview
 
 
-def test_v8_commit_log_has_c16_hash_and_c17_pending_entry() -> None:
+def test_v8_commit_log_has_c16_and_c17_hashes() -> None:
     commit_log = V8_COMMIT_LOG_PATH.read_text()
 
     assert "58cbcf9 - v8-c16: add manual CI trigger learning notes" in commit_log
-    assert "Pending - v8-c17: add Artifact Registry deployment foundation" in commit_log
+    assert "9dcce01 - v8-c17: add Artifact Registry deployment foundation" in commit_log

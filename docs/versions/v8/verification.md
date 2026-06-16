@@ -321,3 +321,13 @@ V8-C15 validates that path live:
 - `python -m pytest -q tests\test_v8_c16_manual_ci_trigger_learning_notes.py tests\test_v8_c17_artifact_registry_foundation.py` passed: `13 passed in 0.09s`.
 - `python -m pytest -q` passed: `407 passed, 1 warning in 7.64s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## V8-C18 Verification
+
+- `gcloud services list --enabled --project=key-component-498805-h0 --filter=name:artifactregistry.googleapis.com --format=json` confirmed `artifactregistry.googleapis.com` is `ENABLED`.
+- `gcloud artifacts repositories describe modelopslab --location=us-central1 --project=key-component-498805-h0 --format=json` confirmed Docker repository `modelopslab`, `STANDARD_REPOSITORY`, and registry URI `us-central1-docker.pkg.dev/key-component-498805-h0/modelopslab`.
+- `gcloud artifacts repositories get-iam-policy modelopslab --location=us-central1 --project=key-component-498805-h0 --format=json` confirmed `roles/artifactregistry.writer` for `serviceAccount:modelopslab-github-deployer@key-component-498805-h0.iam.gserviceaccount.com`.
+- `python -m pytest -q tests\test_v8_c18_artifact_registry_setup_validation.py` passed: `7 passed in 0.24s`.
+- `python -m pytest -q tests\test_v8_c17_artifact_registry_foundation.py tests\test_v8_c18_artifact_registry_setup_validation.py` passed: `14 passed in 0.31s`.
+- `python -m pytest -q` passed: `414 passed, 1 warning in 20.42s`.
+- `git diff --check` passed with CRLF normalization warnings only.

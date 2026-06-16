@@ -252,6 +252,14 @@ validate a live Artifact Registry deployment
 
 Those are separate chunks.
 
+## Setup Validation
+
+The first validated Artifact Registry setup is recorded here:
+
+```text
+docs/deployment/artifact_registry_setup_validation.md
+```
+
 ## Source References
 
 - Artifact Registry Docker quickstart: https://cloud.google.com/artifact-registry/docs/docker/store-docker-container-images

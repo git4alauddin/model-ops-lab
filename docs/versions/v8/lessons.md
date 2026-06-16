@@ -58,3 +58,4 @@
 - Serving closure tests should verify the HTTP behavior that matters instead of depending on framework route metadata internals.
 - A manual `workflow_dispatch` deployment is easier to reason about when treated as visible stages: inputs, secrets, test gate, image publish, short-lived GCP auth, Cloud Run revision, and health check.
 - Artifact Registry is the next pragmatic registry boundary after Docker Hub validation because it keeps image storage, IAM, and Cloud Run deployment inside Google Cloud.
+- Repository-level Artifact Registry Writer is enough for the GitHub deploy service account to publish future images without broadening access to the whole project.
