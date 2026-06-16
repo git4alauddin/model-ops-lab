@@ -13,9 +13,13 @@ from app.api.schemas import (
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
+def _normalize_method(method: object) -> str:
+    return str(getattr(method, "value", method)).upper()
+
+
 def test_v7_closure_serving_routes_exist() -> None:
     routes = {
-        (route.path, str(method).upper())
+        (route.path, _normalize_method(method))
         for route in create_app().routes
         for method in getattr(route, "methods", set())
     }
