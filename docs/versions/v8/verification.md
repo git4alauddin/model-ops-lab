@@ -314,3 +314,10 @@ V8-C15 validates that path live:
 - `python -m pytest -q tests\test_v8_c15_cloud_run_live_validation.py tests\test_v8_c16_manual_ci_trigger_learning_notes.py` passed: `13 passed in 0.10s`.
 - `python -m pytest -q` passed: `400 passed, 1 warning in 6.34s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## V8-C17 Verification
+
+- `python -m pytest -q tests\test_v8_c17_artifact_registry_foundation.py` passed: `7 passed in 0.07s`.
+- `python -m pytest -q tests\test_v8_c16_manual_ci_trigger_learning_notes.py tests\test_v8_c17_artifact_registry_foundation.py` passed: `13 passed in 0.09s`.
+- `python -m pytest -q` passed: `407 passed, 1 warning in 7.64s`.
+- `git diff --check` passed with CRLF normalization warnings only.

@@ -171,6 +171,12 @@ Cloud Run live validation:
 docs/deployment/cloud_run_live_validation.md
 ```
 
+Artifact Registry foundation:
+
+```text
+docs/deployment/artifact_registry_foundation.md
+```
+
 Workload Identity Federation learning notes:
 
 ```text

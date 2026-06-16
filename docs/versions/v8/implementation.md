@@ -642,3 +642,35 @@ docs/versions/v8/
 V8-C16 is documentation and learning material only.
 
 It does not change the workflow behavior, deployment target, authentication setup, image registry, Cloud Run service, or application runtime.
+
+## V8-C17: Artifact Registry Deployment Foundation
+
+### Files Added
+
+```text
+docs/deployment/artifact_registry_foundation.md
+tests/test_v8_c17_artifact_registry_foundation.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/deployment/README.md
+docs/deployment/cloud_run_github_actions_deploy.md
+docs/versions/v8/
+```
+
+### Behavior
+- Added an Artifact Registry foundation guide for the next GCP-native image registry boundary.
+- Documented why Artifact Registry is the next step after Docker Hub pull-path timing appeared during live Cloud Run validation.
+- Documented the target repository name, region, format, mode, and recommended image path.
+- Added GUI-first setup steps for enabling the Artifact Registry API and creating a Docker repository.
+- Documented the service account IAM roles needed for future publish and pull behavior.
+- Documented local Docker authentication with `gcloud auth configure-docker us-central1-docker.pkg.dev`.
+- Documented the future GitHub Actions direction without changing the workflow yet.
+
+### Boundary
+V8-C17 is a setup and learning foundation only.
+
+It does not create the Artifact Registry repository, grant IAM automatically, change GitHub Actions, remove Docker Hub support, push an image to Artifact Registry, deploy from Artifact Registry, or validate a live Artifact Registry deployment.

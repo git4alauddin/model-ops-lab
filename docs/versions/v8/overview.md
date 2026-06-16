@@ -382,3 +382,25 @@ Learning notes for the manual CI trigger components are recorded here:
 ```text
 docs/learning/manual_ci_cloud_run_trigger_notes.md
 ```
+
+## Artifact Registry Foundation
+Artifact Registry migration foundation is documented here:
+
+```text
+docs/deployment/artifact_registry_foundation.md
+```
+
+Target image path:
+
+```text
+us-central1-docker.pkg.dev/key-component-498805-h0/modelopslab/modelopslab-serving:<git-sha>
+```
+
+Current boundary:
+
+```text
+Artifact Registry setup guide exists
+GitHub Actions still publishes to Docker Hub
+Artifact Registry publishing remains later scope
+live Artifact Registry deployment remains later scope
+```

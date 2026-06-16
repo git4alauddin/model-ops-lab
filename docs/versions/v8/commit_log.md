@@ -374,7 +374,7 @@
 - GitHub Actions `/health` check returned `{"status":"ok","service":"modelopslab-serving","api_version":"v7"}`.
 - Local external `/health` check returned `{"status":"ok","service":"modelopslab-serving","api_version":"v7"}`.
 
-## Pending - v8-c16: add manual CI trigger learning notes
+## 58cbcf9 - v8-c16: add manual CI trigger learning notes
 
 ### What Changed
 - Added a learning guide for the manual GitHub Actions Cloud Run trigger.
@@ -391,4 +391,24 @@
 - `python -m pytest -q tests\test_v8_c16_manual_ci_trigger_learning_notes.py` passed: `6 passed in 0.07s`.
 - `python -m pytest -q tests\test_v8_c15_cloud_run_live_validation.py tests\test_v8_c16_manual_ci_trigger_learning_notes.py` passed: `13 passed in 0.10s`.
 - `python -m pytest -q` passed: `400 passed, 1 warning in 6.34s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - v8-c17: add Artifact Registry deployment foundation
+
+### What Changed
+- Added an Artifact Registry foundation guide.
+- Documented the recommended Docker repository: `modelopslab` in `us-central1`.
+- Documented the future image path: `us-central1-docker.pkg.dev/key-component-498805-h0/modelopslab/modelopslab-serving:<git-sha>`.
+- Added GUI-first setup steps for enabling the Artifact Registry API and creating the Docker repository.
+- Documented IAM roles for the GitHub deploy service account and Cloud Run image reads.
+- Added tests that verify the foundation guide and documentation links.
+
+### What Problem It Solved
+- Prepares the move from Docker Hub to a GCP-native image registry before changing CI behavior.
+- Addresses the Docker Hub pull-path timing issue observed during the first live Cloud Run deployment.
+
+### Verification
+- `python -m pytest -q tests\test_v8_c17_artifact_registry_foundation.py` passed: `7 passed in 0.07s`.
+- `python -m pytest -q tests\test_v8_c16_manual_ci_trigger_learning_notes.py tests\test_v8_c17_artifact_registry_foundation.py` passed: `13 passed in 0.09s`.
+- `python -m pytest -q` passed: `407 passed, 1 warning in 7.64s`.
 - `git diff --check` passed with CRLF normalization warnings only.

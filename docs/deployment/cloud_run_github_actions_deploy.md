@@ -258,3 +258,9 @@ The manual CI trigger component notes are recorded here:
 ```text
 docs/learning/manual_ci_cloud_run_trigger_notes.md
 ```
+
+The Artifact Registry migration foundation is recorded here:
+
+```text
+docs/deployment/artifact_registry_foundation.md
+```

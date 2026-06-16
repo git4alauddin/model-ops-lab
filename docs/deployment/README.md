@@ -3,6 +3,7 @@
 Track deployment setup, commands, failures, and rollback steps.
 
 ## Current Guides
+- `artifact_registry_foundation.md`
 - `ci_manual_run_guide.md`
 - `cloud_run_deployment_foundation.md`
 - `cloud_run_github_actions_deploy.md`
