@@ -20,11 +20,11 @@ def test_v8_cloud_run_image_source_gate_guide_exists() -> None:
     assert GUIDE_PATH.is_file()
 
 
-def test_v8_cloud_run_image_source_input_defaults_to_dockerhub() -> None:
+def test_v8_cloud_run_image_source_input_defaults_to_artifact_registry() -> None:
     workflow = _load_workflow()
     source_input = workflow[True]["workflow_dispatch"]["inputs"]["cloud_run_image_source"]
 
-    assert source_input["default"] == "dockerhub"
+    assert source_input["default"] == "artifact_registry"
     assert source_input["required"] is False
     assert source_input["type"] == "choice"
     assert source_input["options"] == ["dockerhub", "artifact_registry"]
@@ -74,7 +74,7 @@ def test_v8_cloud_run_image_source_docs_describe_both_paths() -> None:
     assert "cloud_run_image_source: artifact_registry" in guide
     assert "docker.io/${DOCKERHUB_USERNAME}/modelopslab-serving:${{ github.sha }}" in guide
     assert "us-central1-docker.pkg.dev/key-component-498805-h0/modelopslab/modelopslab-serving:${{ github.sha }}" in guide
-    assert "validate /health from an Artifact Registry deployed revision" in guide
+    assert "Docker Hub image source remains available as a fallback" in guide
 
 
 def test_v8_cloud_run_image_source_docs_are_linked() -> None:

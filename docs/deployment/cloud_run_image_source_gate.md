@@ -6,12 +6,12 @@ Current scope:
 
 ```text
 manual GitHub Actions trigger
-Docker Hub image source remains the default
-Artifact Registry image source is available
+Artifact Registry image source is the default
+Docker Hub image source remains available as a fallback
 post-deploy /health validation remains unchanged
 ```
 
-This chunk changes the deployment gate shape, but it does not validate a live Artifact Registry Cloud Run deployment yet.
+Artifact Registry is the preferred image source after the live Cloud Run deployment validation.
 
 ## Why This Gate Exists
 
@@ -34,19 +34,7 @@ This is clearer than a boolean because the value names the image source directly
 
 ## Inputs
 
-Default Docker Hub deployment path:
-
-```text
-publish_image: true
-publish_artifact_registry: false
-deploy_cloud_run: true
-cloud_run_image_source: dockerhub
-gcp_project_id: key-component-498805-h0
-cloud_run_service: modelopslab-serving
-cloud_run_region: us-central1
-```
-
-Artifact Registry deployment path:
+Default Artifact Registry deployment path:
 
 ```text
 publish_image: false
@@ -58,6 +46,18 @@ cloud_run_service: modelopslab-serving
 cloud_run_region: us-central1
 artifact_registry_location: us-central1
 artifact_registry_repository: modelopslab
+```
+
+Docker Hub fallback deployment path:
+
+```text
+publish_image: true
+publish_artifact_registry: false
+deploy_cloud_run: true
+cloud_run_image_source: dockerhub
+gcp_project_id: key-component-498805-h0
+cloud_run_service: modelopslab-serving
+cloud_run_region: us-central1
 ```
 
 ## Image Resolution
@@ -130,8 +130,8 @@ steps.cloud-run-image.outputs.image
 This gate does:
 
 ```text
-keep Docker Hub as the default Cloud Run image source
-allow Artifact Registry as an explicit Cloud Run image source
+keep Artifact Registry as the default Cloud Run image source
+keep Docker Hub as an explicit fallback Cloud Run image source
 preserve Git SHA image deployment
 preserve post-deploy /health validation
 ```
@@ -139,13 +139,19 @@ preserve post-deploy /health validation
 This gate does not:
 
 ```text
-trigger a live Artifact Registry Cloud Run deployment
-validate /health from an Artifact Registry deployed revision
 remove Docker Hub deployment support
 remove Docker Hub secrets
 ```
 
 Those are later chunks.
+
+## Default Source
+
+The default Artifact Registry deploy source is documented here:
+
+```text
+docs/deployment/artifact_registry_default_deploy_source.md
+```
 
 ## Next Chunk Direction
 

@@ -63,3 +63,4 @@
 - A live publish validation should keep unrelated gates disabled so the evidence proves exactly one new behavior.
 - A named image source input is clearer than a boolean once more than one registry can feed Cloud Run.
 - After Artifact Registry deployment is validated, Docker Hub becomes a fallback path rather than the preferred GCP-native deployment path.
+- Defaults should follow the most recently validated preferred path, while fallback paths remain explicit.

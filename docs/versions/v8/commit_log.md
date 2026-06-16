@@ -505,7 +505,7 @@
 - `python -m pytest -q` passed: `441 passed, 1 warning in 7.11s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - v8-c22: validate Cloud Run deployment from Artifact Registry
+## e24f5b1 - v8-c22: validate Cloud Run deployment from Artifact Registry
 
 ### What Changed
 - Triggered the manual Cloud Run deployment workflow with `cloud_run_image_source=artifact_registry`.
@@ -533,4 +533,23 @@
 - `python -m pytest -q tests\test_v8_c22_cloud_run_artifact_registry_deploy_validation.py` passed: `10 passed in 0.08s`.
 - `python -m pytest -q tests\test_v8_c21_cloud_run_image_source_gate.py tests\test_v8_c22_cloud_run_artifact_registry_deploy_validation.py` passed: `19 passed in 0.15s`.
 - `python -m pytest -q` passed: `451 passed, 1 warning in 5.99s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - v8-c23: make Artifact Registry the default Cloud Run image source
+
+### What Changed
+- Changed `cloud_run_image_source` default from `dockerhub` to `artifact_registry`.
+- Kept Docker Hub as an explicit fallback Cloud Run image source.
+- Added Artifact Registry default deployment source documentation.
+- Updated deployment guides and V8 docs to present Artifact Registry as the preferred GCP-native path.
+- Added tests for the default-source contract.
+
+### What Problem It Solved
+- Aligns workflow defaults with the validated Artifact Registry Cloud Run deployment path.
+- Keeps Docker Hub available without making it the default GCP deployment path.
+
+### Verification
+- `python -m pytest -q tests\test_v8_c23_artifact_registry_default_deploy_source.py` passed: `6 passed in 0.10s`.
+- `python -m pytest -q tests\test_v8_c21_cloud_run_image_source_gate.py tests\test_v8_c22_cloud_run_artifact_registry_deploy_validation.py tests\test_v8_c23_artifact_registry_default_deploy_source.py` passed: `25 passed in 0.22s`.
+- `python -m pytest -q` passed: `457 passed, 1 warning in 6.44s`.
 - `git diff --check` passed with CRLF normalization warnings only.

@@ -546,3 +546,24 @@ Docker Hub deployment support still exists
 /ready and prediction endpoints still need externalized model artifacts for full Cloud Run readiness
 Cloud Run rollback automation remains later scope
 ```
+
+## Artifact Registry Default Deploy Source
+Artifact Registry default deployment source is documented here:
+
+```text
+docs/deployment/artifact_registry_default_deploy_source.md
+```
+
+Current default:
+
+```text
+cloud_run_image_source=artifact_registry
+```
+
+Current boundary:
+
+```text
+Artifact Registry is the default Cloud Run image source
+Docker Hub remains available as explicit fallback
+no live deployment was triggered just for changing the default
+```

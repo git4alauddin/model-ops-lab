@@ -52,28 +52,29 @@ GitHub repository
 Use:
 
 ```text
-publish_image: true
-deploy_cloud_run: true
-cloud_run_image_source: dockerhub
-gcp_project_id: <your-gcp-project-id>
-cloud_run_service: modelopslab-serving
-cloud_run_region: us-central1
-```
-
-Important Docker Hub rule:
-
-```text
-deploy_cloud_run=true with cloud_run_image_source=dockerhub requires publish_image=true
-```
-
-Artifact Registry deployment can use:
-
-```text
+publish_image: false
 publish_artifact_registry: true
 deploy_cloud_run: true
 cloud_run_image_source: artifact_registry
+gcp_project_id: <your-gcp-project-id>
+cloud_run_service: modelopslab-serving
+cloud_run_region: us-central1
 artifact_registry_location: us-central1
 artifact_registry_repository: modelopslab
+```
+
+Important Artifact Registry rule:
+
+```text
+deploy_cloud_run=true with cloud_run_image_source=artifact_registry requires publish_artifact_registry=true
+```
+
+Docker Hub fallback deployment can use:
+
+```text
+publish_image: true
+deploy_cloud_run: true
+cloud_run_image_source: dockerhub
 ```
 
 Cloud Run deploys the exact Docker Hub image tagged with:

@@ -841,3 +841,35 @@ docs/versions/v8/
 V8-C22 validates Artifact Registry as an end-to-end Cloud Run image source.
 
 It does not remove Docker Hub deployment support, remove Docker Hub secrets, validate `/ready` or prediction endpoints in Cloud Run, externalize model registry and MLflow artifacts, or add Cloud Run rollback automation.
+
+## V8-C23: Artifact Registry Default Deploy Source
+
+### Files Added
+
+```text
+docs/deployment/artifact_registry_default_deploy_source.md
+tests/test_v8_c23_artifact_registry_default_deploy_source.py
+```
+
+### Files Updated
+
+```text
+.github/workflows/ci.yaml
+README.md
+docs/deployment/
+docs/versions/v8/
+tests/test_v8_c21_cloud_run_image_source_gate.py
+tests/test_v8_c22_cloud_run_artifact_registry_deploy_validation.py
+```
+
+### Behavior
+- Changed the manual workflow default `cloud_run_image_source` from `dockerhub` to `artifact_registry`.
+- Kept Docker Hub as an explicit fallback image source.
+- Updated deployment docs to present Artifact Registry as the preferred GCP-native Cloud Run path.
+- Added a short default-source guide with preferred and fallback input sets.
+- Preserved manual deployment gating and post-deploy `/health` validation.
+
+### Boundary
+V8-C23 changes the workflow default only.
+
+It does not remove Docker Hub publishing, remove Docker Hub deployment support, remove Docker Hub secrets, trigger a live deployment after changing the default, or add automatic deployment on push.

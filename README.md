@@ -207,6 +207,12 @@ Cloud Run Artifact Registry deployment validation:
 docs/deployment/cloud_run_artifact_registry_deploy_validation.md
 ```
 
+Artifact Registry default deploy source:
+
+```text
+docs/deployment/artifact_registry_default_deploy_source.md
+```
+
 Workload Identity Federation learning notes:
 
 ```text

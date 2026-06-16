@@ -4,6 +4,7 @@ Track deployment setup, commands, failures, and rollback steps.
 
 ## Current Guides
 - `artifact_registry_foundation.md`
+- `artifact_registry_default_deploy_source.md`
 - `artifact_registry_publish_gate.md`
 - `artifact_registry_publish_validation.md`
 - `artifact_registry_setup_validation.md`

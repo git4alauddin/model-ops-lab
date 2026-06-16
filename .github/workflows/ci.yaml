@@ -30,7 +30,7 @@ on:
       cloud_run_image_source:
         description: "Image source for Cloud Run deployment"
         required: false
-        default: "dockerhub"
+        default: "artifact_registry"
         type: choice
         options:
           - "dockerhub"
