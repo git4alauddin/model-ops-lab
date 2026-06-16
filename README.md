@@ -165,6 +165,18 @@ Cloud Run GitHub Actions deployment guide:
 docs/deployment/cloud_run_github_actions_deploy.md
 ```
 
+Cloud Run live validation:
+
+```text
+docs/deployment/cloud_run_live_validation.md
+```
+
+Workload Identity Federation learning notes:
+
+```text
+docs/learning/workload_identity_federation_notes.md
+```
+
 ## Project Structure
 
 ```text

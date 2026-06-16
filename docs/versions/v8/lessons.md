@@ -49,3 +49,10 @@
 - Post-deploy health checks convert deployment success from "revision accepted" into "service can answer a basic request."
 - Public unauthenticated health validation is useful for a first demo gate, but private authenticated service checks need a separate operational design.
 - Temporary GitHub auth credential files should be ignored by both Git and Docker so CI authentication artifacts cannot leak into commits or images.
+- Workload Identity Federation is a safer deployment authentication pattern than service account key JSON because GitHub receives short-lived credentials.
+- A Workload Identity provider authenticates the GitHub OIDC token, but the service account `roles/iam.workloadIdentityUser` binding is what permits impersonation.
+- Restricting the provider to `assertion.repository == "git4alauddin/model-ops-lab"` prevents unrelated repositories from using the same provider.
+- Passing GCP authentication does not prove deployment readiness; image availability and health checks are separate gates.
+- Fresh Docker Hub tags can fail Cloud Run import before Google's pull path sees them, even when the repository is public and the tag exists.
+- For GCP-native production deployments, Artifact Registry is operationally stronger than Docker Hub because image storage, IAM, and Cloud Run live in the same cloud control plane.
+- Serving closure tests should verify the HTTP behavior that matters instead of depending on framework route metadata internals.

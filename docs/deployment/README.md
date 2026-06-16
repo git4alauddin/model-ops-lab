@@ -6,6 +6,7 @@ Track deployment setup, commands, failures, and rollback steps.
 - `ci_manual_run_guide.md`
 - `cloud_run_deployment_foundation.md`
 - `cloud_run_github_actions_deploy.md`
+- `cloud_run_live_validation.md`
 - `dockerhub_publishing_plan.md`
 - `dockerhub_secrets_setup.md`
 - `dockerhub_credentials_walkthrough.md`

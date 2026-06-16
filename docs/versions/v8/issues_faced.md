@@ -176,3 +176,58 @@ The first workflow edit used an inline YAML `run` value containing a colon insid
 
 ### Resolution
 Changed the report step to block-style `run` syntax so the workflow remains valid YAML and can be parsed by the static workflow tests.
+
+## V8-C15: Live Cloud Run Deployment Validation
+
+### Issue
+The first three live workflow attempts failed in the pytest job before Docker build or Cloud Run deployment.
+
+### Symptom
+GitHub Actions reported:
+
+```text
+FAILED tests/test_v7_c11_serving_closure.py::test_v7_closure_serving_routes_exist
+```
+
+The test expected `("/health", "GET")` in internal FastAPI route metadata.
+
+### Root Cause
+The test depended on internal route metadata representation instead of endpoint behavior. GitHub Actions resolved newer Linux dependencies than the local environment, and the metadata assertion did not behave consistently.
+
+### Fix Applied
+Changed the closure test to call the actual HTTP endpoints with `TestClient`.
+
+### Why The Fix Worked
+The test now verifies that `/health`, `/ready`, `/predict`, and `/predict/batch` are reachable through the application surface instead of relying on FastAPI route internals.
+
+### Prevention Strategy
+Use endpoint-level checks for serving surface closure tests.
+
+### Issue
+The first Cloud Run deployment attempt failed even though Docker Hub publishing and GCP authentication succeeded.
+
+### Symptom
+Cloud Run returned:
+
+```text
+Image 'mirror.gcr.io/alaudddin/modelopslab-serving:4388088e4b5f605a552ecf4e46d4edaab2a8e7fb' not found.
+```
+
+### Root Cause
+The exact public Docker Hub tag existed, but Cloud Run's image import path did not see the newly pushed tag during the first deploy attempt.
+
+### Investigation Process
+- Verified Docker Hub push succeeded.
+- Verified Docker Hub repository `alaudddin/modelopslab-serving` was public.
+- Verified the exact Git SHA tag existed through Docker Hub API.
+- Verified GCP Workload Identity authentication succeeded.
+- Verified the failure was isolated to image import.
+
+### Fix Applied
+Reran the failed Cloud Run deploy job after the image tag was externally visible.
+
+### Why The Fix Worked
+The rerun allowed Cloud Run to import the now-visible public Docker Hub tag and create a ready revision.
+
+### Prevention Strategy
+Prefer Artifact Registry for future GCP-native deployments, or expect a retry window when deploying fresh Docker Hub tags.

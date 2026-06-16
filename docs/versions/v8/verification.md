@@ -288,3 +288,22 @@ V8-C12 documents Docker image rollback using exact Git SHA image tags and keeps 
 V8-C13 documents the manual Cloud Run deployment foundation and keeps GitHub Actions GCP deployment automation for a later chunk.
 
 V8-C14 adds a manually gated GitHub Actions Cloud Run deployment path using Workload Identity Federation, the exact Git SHA Docker Hub image, and post-deploy `/health` validation.
+
+V8-C15 validates that path live:
+
+- First live run `27636934917` failed in pytest before deployment: `1 failed, 386 passed`.
+- Second live run `27637162358` failed in pytest before deployment: same route metadata assertion.
+- Third live run `27637313360` failed in pytest before deployment: same route metadata assertion.
+- Serving closure test was changed to verify endpoint behavior with `TestClient` instead of internal route metadata.
+- Local focused check `python -m pytest -q tests\test_v7_c11_serving_closure.py` passed: `5 passed, 1 warning in 1.10s`.
+- Local full suite `python -m pytest -q` passed: `387 passed, 1 warning in 6.28s`.
+- Fourth live run `27637437455` passed pytest: `387 passed, 2 warnings in 5.38s`.
+- Docker image build and Docker Hub push succeeded for tag `4388088e4b5f605a552ecf4e46d4edaab2a8e7fb`.
+- First Cloud Run deploy attempt failed because `mirror.gcr.io/alaudddin/modelopslab-serving:4388088e4b5f605a552ecf4e46d4edaab2a8e7fb` was not found.
+- Docker Hub API confirmed repository `alaudddin/modelopslab-serving` was public and the exact tag existed.
+- Failed Cloud Run deploy job was rerun and succeeded.
+- Cloud Run URL: `https://modelopslab-serving-pv3rkohw6q-uc.a.run.app`.
+- GitHub Actions `/health` check returned `{"status":"ok","service":"modelopslab-serving","api_version":"v7"}`.
+- Local external `/health` check returned `{"status":"ok","service":"modelopslab-serving","api_version":"v7"}`.
+- Cloud Run latest ready revision: `modelopslab-serving-00002-fbc`.
+- Cloud Run traffic: `100`.

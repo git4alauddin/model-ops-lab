@@ -313,7 +313,7 @@
 - `python -m pytest -q` passed: `376 passed in 7.35s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - v8-c14: add manual Cloud Run deployment gate
+## 09b9b27 - v8-c14: add manual Cloud Run deployment gate
 
 ### What Changed
 - Added manual `deploy_cloud_run` workflow input.
@@ -345,3 +345,31 @@
 - Final post-documentation related workflow check `python -m pytest -q tests\test_v8_c10_dockerhub_publish_gate.py tests\test_v8_c13_cloud_run_deployment_foundation.py tests\test_v8_c14_cloud_run_deploy_gate.py` passed: `26 passed in 0.15s`.
 - Final post-documentation full suite `python -m pytest -q` passed: `387 passed in 5.20s`.
 - Final `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - v8-c15: validate live Cloud Run deployment
+
+### What Changed
+- Validated the live GitHub Actions Cloud Run deployment path.
+- Added Cloud Run live validation documentation.
+- Added Workload Identity Federation learning notes.
+- Added tests that verify the validation and learning docs exist and contain the operational evidence.
+- Updated the V7 serving closure test to verify real endpoint behavior instead of FastAPI route metadata internals.
+- Recorded Workload Identity setup, Docker Hub image evidence, Cloud Run service URL, revision, and `/health` response.
+
+### What Problem It Solved
+- Proves the V8-C14 deployment automation works against real GitHub Actions, Docker Hub, GCP Workload Identity Federation, and Cloud Run.
+- Captures the operational debugging path for CI route metadata mismatch and Docker Hub image import timing.
+
+### Verification
+- First live run `27636934917` failed in pytest: `1 failed, 386 passed`.
+- Second live run `27637162358` failed in pytest with the same route metadata assertion.
+- Third live run `27637313360` failed in pytest with the same route metadata assertion.
+- Local focused check `python -m pytest -q tests\test_v7_c11_serving_closure.py` passed: `5 passed, 1 warning in 1.10s`.
+- Local full suite `python -m pytest -q` passed: `387 passed, 1 warning in 6.28s`.
+- Fourth live run `27637437455` passed pytest: `387 passed, 2 warnings in 5.38s`.
+- Docker image build and Docker Hub push succeeded for tag `4388088e4b5f605a552ecf4e46d4edaab2a8e7fb`.
+- First Cloud Run deploy attempt failed because Cloud Run could not import the fresh public Docker Hub tag through `mirror.gcr.io`.
+- Failed Cloud Run deploy job was rerun and succeeded.
+- Cloud Run URL: `https://modelopslab-serving-pv3rkohw6q-uc.a.run.app`.
+- GitHub Actions `/health` check returned `{"status":"ok","service":"modelopslab-serving","api_version":"v7"}`.
+- Local external `/health` check returned `{"status":"ok","service":"modelopslab-serving","api_version":"v7"}`.

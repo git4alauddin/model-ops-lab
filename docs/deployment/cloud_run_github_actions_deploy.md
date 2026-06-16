@@ -238,3 +238,17 @@ That should be handled after the first live deployment has been validated.
 
 - Google GitHub Action for auth: https://github.com/google-github-actions/auth
 - Google GitHub Action for Cloud Run deploy: https://github.com/google-github-actions/deploy-cloudrun
+
+## Live Validation
+
+The first live deployment validation is recorded here:
+
+```text
+docs/deployment/cloud_run_live_validation.md
+```
+
+The Workload Identity Federation learning notes are recorded here:
+
+```text
+docs/learning/workload_identity_federation_notes.md
+```

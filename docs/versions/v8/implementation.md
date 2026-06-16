@@ -576,3 +576,39 @@ tests/test_v8_c13_cloud_run_deployment_foundation.py
 V8-C14 adds manually gated Cloud Run deployment automation.
 
 It does not add automatic deployment on push, Artifact Registry publishing, private authenticated health checks, live Cloud Run rollback automation, or production traffic strategy.
+
+## V8-C15: Live Cloud Run Deployment Validation
+
+### Files Added
+
+```text
+docs/deployment/cloud_run_live_validation.md
+docs/learning/workload_identity_federation_notes.md
+tests/test_v8_c15_cloud_run_live_validation.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/deployment/README.md
+docs/deployment/cloud_run_github_actions_deploy.md
+docs/versions/v8/
+tests/test_v7_c11_serving_closure.py
+```
+
+### Behavior
+- Validated the live GitHub Actions deployment flow against GCP Cloud Run.
+- Created and verified GitHub Actions secrets for GCP Workload Identity Federation.
+- Validated service account impersonation from GitHub Actions.
+- Confirmed the workflow test gate passed in GitHub Actions.
+- Confirmed Docker image build and Docker Hub publish passed in GitHub Actions.
+- Confirmed Cloud Run deployment succeeded after a failed-job rerun.
+- Confirmed `/health` returned `{"status":"ok","service":"modelopslab-serving","api_version":"v7"}`.
+- Added implementation-grounded learning notes for Workload Identity Federation.
+- Reworked the V7 serving closure test to verify endpoint behavior rather than FastAPI route metadata internals, after CI dependency resolution exposed a route-method metadata mismatch.
+
+### Boundary
+V8-C15 validates live `/health` deployment only.
+
+It does not validate `/ready`, `/predict`, model registry artifact availability in Cloud Run, Artifact Registry publishing, authenticated private access, rollback automation, or production traffic strategy.

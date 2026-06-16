@@ -351,3 +351,28 @@ post-deploy /health is checked from GitHub Actions
 Cloud Run revision rollback remains later scope
 Artifact Registry remains later scope
 ```
+
+## Live Cloud Run Deployment Validation
+Live deployment validation is recorded here:
+
+```text
+docs/deployment/cloud_run_live_validation.md
+```
+
+Validated flow:
+
+```text
+GitHub Actions
+-> pytest
+-> Docker image build
+-> Docker Hub push
+-> Workload Identity Federation auth
+-> Cloud Run deploy
+-> /health check
+```
+
+Learning notes for Workload Identity Federation are recorded here:
+
+```text
+docs/learning/workload_identity_federation_notes.md
+```
