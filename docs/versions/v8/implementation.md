@@ -809,3 +809,35 @@ tests/test_v8_c20_artifact_registry_publish_validation.py
 V8-C21 adds source selection to the Cloud Run deployment gate only.
 
 It does not trigger a live Artifact Registry Cloud Run deployment, validate `/health` from an Artifact Registry deployed revision, remove Docker Hub deployment support, or remove Docker Hub secrets.
+
+## V8-C22: Cloud Run Artifact Registry Deployment Validation
+
+### Files Added
+
+```text
+docs/deployment/cloud_run_artifact_registry_deploy_validation.md
+tests/test_v8_c22_cloud_run_artifact_registry_deploy_validation.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/deployment/
+docs/versions/v8/
+```
+
+### Behavior
+- Triggered the `ci` workflow manually with `cloud_run_image_source=artifact_registry`.
+- Kept `publish_image=false` so Docker Hub publishing was skipped.
+- Kept `publish_artifact_registry=true` so a fresh Git SHA image was pushed to Artifact Registry.
+- Kept `deploy_cloud_run=true` so Cloud Run deployed from the Artifact Registry image.
+- Confirmed pytest, Docker image build, Artifact Registry publish, Cloud Run deploy, and post-deploy `/health` validation succeeded.
+- Confirmed Cloud Run revision `modelopslab-serving-00003-zsc` uses the Artifact Registry image digest.
+- Confirmed 100% traffic routes to the new revision.
+- Confirmed external `/health` returned `{"status":"ok","service":"modelopslab-serving","api_version":"v7"}`.
+
+### Boundary
+V8-C22 validates Artifact Registry as an end-to-end Cloud Run image source.
+
+It does not remove Docker Hub deployment support, remove Docker Hub secrets, validate `/ready` or prediction endpoints in Cloud Run, externalize model registry and MLflow artifacts, or add Cloud Run rollback automation.

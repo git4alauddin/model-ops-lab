@@ -307,3 +307,9 @@ The Cloud Run image source selector is recorded here:
 ```text
 docs/deployment/cloud_run_image_source_gate.md
 ```
+
+The live Cloud Run deployment from Artifact Registry is recorded here:
+
+```text
+docs/deployment/cloud_run_artifact_registry_deploy_validation.md
+```

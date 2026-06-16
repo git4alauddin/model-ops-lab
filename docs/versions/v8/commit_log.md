@@ -485,7 +485,7 @@
 - `python -m pytest -q` passed: `432 passed, 1 warning in 6.04s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - v8-c21: add Cloud Run image source gate
+## ee825da - v8-c21: add Cloud Run image source gate
 
 ### What Changed
 - Added manual `cloud_run_image_source` workflow input with choices `dockerhub` and `artifact_registry`.
@@ -503,4 +503,34 @@
 - `python -m pytest -q tests\test_v8_c21_cloud_run_image_source_gate.py` passed: `9 passed in 0.12s`.
 - `python -m pytest -q tests\test_v8_c14_cloud_run_deploy_gate.py tests\test_v8_c19_artifact_registry_publish_gate.py tests\test_v8_c20_artifact_registry_publish_validation.py tests\test_v8_c21_cloud_run_image_source_gate.py` passed: `38 passed in 0.35s`.
 - `python -m pytest -q` passed: `441 passed, 1 warning in 7.11s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - v8-c22: validate Cloud Run deployment from Artifact Registry
+
+### What Changed
+- Triggered the manual Cloud Run deployment workflow with `cloud_run_image_source=artifact_registry`.
+- Published a fresh Git SHA image to Artifact Registry.
+- Deployed Cloud Run from the Artifact Registry image.
+- Recorded GitHub Actions run, Artifact Registry image, Cloud Run revision, traffic, and `/health` evidence.
+- Added validation documentation and tests.
+
+### What Problem It Solved
+- Proves Artifact Registry works as an end-to-end Cloud Run image source.
+- Removes Docker Hub pull-through timing from the validated GCP deployment path while keeping Docker Hub support available.
+
+### Verification
+- `gh workflow run ci.yaml --repo git4alauddin/model-ops-lab --ref main -f publish_image=false -f publish_artifact_registry=true -f deploy_cloud_run=true -f cloud_run_image_source=artifact_registry -f gcp_project_id=key-component-498805-h0 -f cloud_run_service=modelopslab-serving -f cloud_run_region=us-central1 -f artifact_registry_location=us-central1 -f artifact_registry_repository=modelopslab` triggered run `27645315977`.
+- `gh run watch 27645315977 --repo git4alauddin/model-ops-lab --exit-status` passed.
+- GitHub Actions run `27645315977` completed with conclusion `success`.
+- GitHub Actions job `pytest` passed.
+- GitHub Actions job `docker image build` passed.
+- GitHub Actions job `cloud run deploy` passed.
+- Docker Hub publish steps were skipped.
+- `gcloud artifacts docker images list us-central1-docker.pkg.dev/key-component-498805-h0/modelopslab --include-tags --format=json` confirmed tag `ee825dad109380d7f53e4a576de0fd2b042e704a` with digest `sha256:ae9949f46c754d650936175fb6c58e6413bc32716a541f1426400160159fb50b`.
+- `gcloud run services describe modelopslab-serving --region=us-central1 --project=key-component-498805-h0 --format=json` confirmed service image `us-central1-docker.pkg.dev/key-component-498805-h0/modelopslab/modelopslab-serving:ee825dad109380d7f53e4a576de0fd2b042e704a`.
+- `gcloud run revisions describe modelopslab-serving-00003-zsc --region=us-central1 --project=key-component-498805-h0 --format=json` confirmed revision digest `us-central1-docker.pkg.dev/key-component-498805-h0/modelopslab/modelopslab-serving@sha256:ae9949f46c754d650936175fb6c58e6413bc32716a541f1426400160159fb50b`.
+- External `/health` returned `{"status":"ok","service":"modelopslab-serving","api_version":"v7"}`.
+- `python -m pytest -q tests\test_v8_c22_cloud_run_artifact_registry_deploy_validation.py` passed: `10 passed in 0.08s`.
+- `python -m pytest -q tests\test_v8_c21_cloud_run_image_source_gate.py tests\test_v8_c22_cloud_run_artifact_registry_deploy_validation.py` passed: `19 passed in 0.15s`.
+- `python -m pytest -q` passed: `451 passed, 1 warning in 5.99s`.
 - `git diff --check` passed with CRLF normalization warnings only.

@@ -177,3 +177,9 @@ The image source gate is documented here:
 ```text
 docs/deployment/cloud_run_image_source_gate.md
 ```
+
+The first live Cloud Run deployment from Artifact Registry is recorded here:
+
+```text
+docs/deployment/cloud_run_artifact_registry_deploy_validation.md
+```

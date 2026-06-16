@@ -513,3 +513,36 @@ Artifact Registry is available as an explicit Cloud Run image source
 post-deploy /health validation remains unchanged
 live Artifact Registry Cloud Run deployment remains later scope
 ```
+
+## Cloud Run Artifact Registry Deployment Validation
+Cloud Run deployment from Artifact Registry is validated here:
+
+```text
+docs/deployment/cloud_run_artifact_registry_deploy_validation.md
+```
+
+Validated flow:
+
+```text
+GitHub Actions
+-> pytest
+-> Docker image build
+-> Artifact Registry push
+-> Cloud Run deploy from Artifact Registry
+-> /health check
+```
+
+Validated revision:
+
+```text
+modelopslab-serving-00003-zsc
+```
+
+Current boundary:
+
+```text
+Artifact Registry is validated as an end-to-end Cloud Run image source
+Docker Hub deployment support still exists
+/ready and prediction endpoints still need externalized model artifacts for full Cloud Run readiness
+Cloud Run rollback automation remains later scope
+```

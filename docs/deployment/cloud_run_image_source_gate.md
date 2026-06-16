@@ -173,3 +173,11 @@ GitHub Actions
 -> Cloud Run deploy from Artifact Registry image
 -> /health check
 ```
+
+## Live Validation
+
+The first live Cloud Run deployment from Artifact Registry is recorded here:
+
+```text
+docs/deployment/cloud_run_artifact_registry_deploy_validation.md
+```

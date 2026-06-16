@@ -201,6 +201,12 @@ Cloud Run image source gate:
 docs/deployment/cloud_run_image_source_gate.md
 ```
 
+Cloud Run Artifact Registry deployment validation:
+
+```text
+docs/deployment/cloud_run_artifact_registry_deploy_validation.md
+```
+
 Workload Identity Federation learning notes:
 
 ```text

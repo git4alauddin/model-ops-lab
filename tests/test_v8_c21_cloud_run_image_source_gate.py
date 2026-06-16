@@ -87,8 +87,8 @@ def test_v8_cloud_run_image_source_docs_are_linked() -> None:
     assert "cloud_run_image_source_gate.md" in overview
 
 
-def test_v8_commit_log_has_c20_hash_and_c21_pending_entry() -> None:
+def test_v8_commit_log_has_c20_and_c21_hashes() -> None:
     commit_log = V8_COMMIT_LOG_PATH.read_text()
 
     assert "da03220 - v8-c20: validate Artifact Registry publish gate" in commit_log
-    assert "Pending - v8-c21: add Cloud Run image source gate" in commit_log
+    assert "ee825da - v8-c21: add Cloud Run image source gate" in commit_log
