@@ -612,3 +612,33 @@ tests/test_v7_c11_serving_closure.py
 V8-C15 validates live `/health` deployment only.
 
 It does not validate `/ready`, `/predict`, model registry artifact availability in Cloud Run, Artifact Registry publishing, authenticated private access, rollback automation, or production traffic strategy.
+
+## V8-C16: Manual CI Trigger Learning Notes
+
+### Files Added
+
+```text
+docs/learning/manual_ci_cloud_run_trigger_notes.md
+tests/test_v8_c16_manual_ci_trigger_learning_notes.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/deployment/cloud_run_github_actions_deploy.md
+docs/versions/v8/
+```
+
+### Behavior
+- Added a learning guide for the manual GitHub Actions `workflow_dispatch` Cloud Run deployment flow.
+- Explained the deployment inputs: `publish_image`, `deploy_cloud_run`, `gcp_project_id`, `cloud_run_service`, and `cloud_run_region`.
+- Explained how the pytest, Docker image, Docker Hub publish, Workload Identity Federation auth, Cloud Run deploy, and `/health` validation stages connect.
+- Documented the GitHub secrets, Google Cloud components, Docker Hub component, and Cloud Run component involved in the manual run.
+- Documented GUI checkpoints in GitHub Actions, Docker Hub, and Google Cloud Console.
+- Captured common failure points and the debugging order for future manual runs.
+
+### Boundary
+V8-C16 is documentation and learning material only.
+
+It does not change the workflow behavior, deployment target, authentication setup, image registry, Cloud Run service, or application runtime.

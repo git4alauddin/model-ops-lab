@@ -346,7 +346,7 @@
 - Final post-documentation full suite `python -m pytest -q` passed: `387 passed in 5.20s`.
 - Final `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - v8-c15: validate live Cloud Run deployment
+## 0d1f873 - v8-c15: validate live Cloud Run deployment
 
 ### What Changed
 - Validated the live GitHub Actions Cloud Run deployment path.
@@ -373,3 +373,22 @@
 - Cloud Run URL: `https://modelopslab-serving-pv3rkohw6q-uc.a.run.app`.
 - GitHub Actions `/health` check returned `{"status":"ok","service":"modelopslab-serving","api_version":"v7"}`.
 - Local external `/health` check returned `{"status":"ok","service":"modelopslab-serving","api_version":"v7"}`.
+
+## Pending - v8-c16: add manual CI trigger learning notes
+
+### What Changed
+- Added a learning guide for the manual GitHub Actions Cloud Run trigger.
+- Explained the `workflow_dispatch` trigger and each manual input used for deployment.
+- Documented the participating systems: GitHub Actions, GitHub secrets, Docker Hub, Workload Identity Federation, service account impersonation, and Cloud Run.
+- Added GUI checkpoints for GitHub Actions, Docker Hub, and Google Cloud Console.
+- Added focused tests that verify the learning note and documentation links.
+
+### What Problem It Solved
+- Gives a reusable learning reference for what happens after pressing `Run workflow` in the GitHub UI.
+- Separates operational evidence from conceptual learning notes so future deployment runs are easier to debug.
+
+### Verification
+- `python -m pytest -q tests\test_v8_c16_manual_ci_trigger_learning_notes.py` passed: `6 passed in 0.07s`.
+- `python -m pytest -q tests\test_v8_c15_cloud_run_live_validation.py tests\test_v8_c16_manual_ci_trigger_learning_notes.py` passed: `13 passed in 0.10s`.
+- `python -m pytest -q` passed: `400 passed, 1 warning in 6.34s`.
+- `git diff --check` passed with CRLF normalization warnings only.

@@ -177,6 +177,12 @@ Workload Identity Federation learning notes:
 docs/learning/workload_identity_federation_notes.md
 ```
 
+Manual CI Cloud Run trigger learning notes:
+
+```text
+docs/learning/manual_ci_cloud_run_trigger_notes.md
+```
+
 ## Project Structure
 
 ```text

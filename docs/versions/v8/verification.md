@@ -307,3 +307,10 @@ V8-C15 validates that path live:
 - Local external `/health` check returned `{"status":"ok","service":"modelopslab-serving","api_version":"v7"}`.
 - Cloud Run latest ready revision: `modelopslab-serving-00002-fbc`.
 - Cloud Run traffic: `100`.
+
+## V8-C16 Verification
+
+- `python -m pytest -q tests\test_v8_c16_manual_ci_trigger_learning_notes.py` passed: `6 passed in 0.07s`.
+- `python -m pytest -q tests\test_v8_c15_cloud_run_live_validation.py tests\test_v8_c16_manual_ci_trigger_learning_notes.py` passed: `13 passed in 0.10s`.
+- `python -m pytest -q` passed: `400 passed, 1 warning in 6.34s`.
+- `git diff --check` passed with CRLF normalization warnings only.

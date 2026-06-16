@@ -376,3 +376,9 @@ Learning notes for Workload Identity Federation are recorded here:
 ```text
 docs/learning/workload_identity_federation_notes.md
 ```
+
+Learning notes for the manual CI trigger components are recorded here:
+
+```text
+docs/learning/manual_ci_cloud_run_trigger_notes.md
+```
