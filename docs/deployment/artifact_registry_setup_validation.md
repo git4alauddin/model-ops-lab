@@ -146,3 +146,9 @@ That publish gate is documented here:
 ```text
 docs/deployment/artifact_registry_publish_gate.md
 ```
+
+The first live publish validation is recorded here:
+
+```text
+docs/deployment/artifact_registry_publish_validation.md
+```

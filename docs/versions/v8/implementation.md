@@ -741,3 +741,35 @@ docs/versions/v8/
 V8-C19 adds Artifact Registry publishing support only.
 
 It does not validate a live Artifact Registry push, deploy Cloud Run from Artifact Registry, remove Docker Hub publishing, remove Docker Hub secrets, or change the current Cloud Run deployment image.
+
+## V8-C20: Artifact Registry Publish Validation
+
+### Files Added
+
+```text
+docs/deployment/artifact_registry_publish_validation.md
+tests/test_v8_c20_artifact_registry_publish_validation.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/deployment/
+docs/versions/v8/
+```
+
+### Behavior
+- Triggered the `ci` workflow manually with `publish_artifact_registry=true`.
+- Kept `publish_image=false` so Docker Hub publishing was skipped.
+- Kept `deploy_cloud_run=false` so Cloud Run deployment was skipped.
+- Confirmed the pytest job succeeded.
+- Confirmed the Docker image build job succeeded.
+- Confirmed Workload Identity Federation authentication, `setup-gcloud`, Docker auth, Artifact Registry tagging, and Artifact Registry push succeeded.
+- Confirmed the Git SHA image exists in Artifact Registry.
+- Recorded the Artifact Registry image tag, digest, image size, and timestamps.
+
+### Boundary
+V8-C20 validates Artifact Registry publishing only.
+
+It does not deploy Cloud Run from Artifact Registry, validate `/health` from an Artifact Registry deployed revision, remove Docker Hub deployment support, or remove Docker Hub secrets.

@@ -188,6 +188,14 @@ validate live /health from an Artifact Registry deployed revision
 
 Those are later chunks.
 
+## Live Validation
+
+The first live Artifact Registry publish validation is recorded here:
+
+```text
+docs/deployment/artifact_registry_publish_validation.md
+```
+
 ## Source References
 
 - Google GitHub Action for auth: https://github.com/google-github-actions/auth

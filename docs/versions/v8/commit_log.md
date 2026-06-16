@@ -436,7 +436,7 @@
 - `python -m pytest -q` passed: `414 passed, 1 warning in 20.42s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - v8-c19: add Artifact Registry publish gate
+## 55464a7 - v8-c19: add Artifact Registry publish gate
 
 ### What Changed
 - Added manual `publish_artifact_registry` workflow input.
@@ -456,4 +456,31 @@
 - `python -m pytest -q tests\test_v8_c14_cloud_run_deploy_gate.py tests\test_v8_c19_artifact_registry_publish_gate.py` passed: `21 passed in 0.22s`.
 - `python -m pytest -q tests\test_v8_c18_artifact_registry_setup_validation.py tests\test_v8_c19_artifact_registry_publish_gate.py` passed: `17 passed in 0.16s`.
 - `python -m pytest -q` passed: `424 passed, 1 warning in 8.57s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - v8-c20: validate Artifact Registry publish gate
+
+### What Changed
+- Triggered the manual GitHub Actions Artifact Registry publish gate.
+- Recorded the successful workflow run and job outcomes.
+- Confirmed Docker Hub publishing and Cloud Run deployment were skipped.
+- Confirmed Artifact Registry authentication, Docker auth, tagging, and push succeeded.
+- Recorded the published Artifact Registry Git SHA image tag and digest.
+- Added validation documentation and tests.
+
+### What Problem It Solved
+- Proves the V8-C19 Artifact Registry publish gate works live against GitHub Actions and GCP Artifact Registry.
+- Establishes the Artifact Registry image evidence needed before switching Cloud Run deployment away from Docker Hub.
+
+### Verification
+- `gh workflow run ci.yaml --repo git4alauddin/model-ops-lab --ref main -f publish_image=false -f publish_artifact_registry=true -f deploy_cloud_run=false -f gcp_project_id=key-component-498805-h0 -f artifact_registry_location=us-central1 -f artifact_registry_repository=modelopslab` triggered run `27641517665`.
+- `gh run watch 27641517665 --repo git4alauddin/model-ops-lab --exit-status` passed.
+- GitHub Actions run `27641517665` completed with conclusion `success`.
+- GitHub Actions job `pytest` passed.
+- GitHub Actions job `docker image build` passed.
+- GitHub Actions job `cloud run deploy` was skipped.
+- `gcloud artifacts docker images list us-central1-docker.pkg.dev/key-component-498805-h0/modelopslab --include-tags --format=json` confirmed tag `55464a7e17ba6833673ddf897b6284fc772333df` with digest `sha256:b073b2bdd44249ee6a3de10abb8d96035c391170d338850dabc0393a5a5e84f2`.
+- `python -m pytest -q tests\test_v8_c20_artifact_registry_publish_validation.py` passed: `8 passed in 0.08s`.
+- `python -m pytest -q tests\test_v8_c19_artifact_registry_publish_gate.py tests\test_v8_c20_artifact_registry_publish_validation.py` passed: `18 passed in 0.17s`.
+- `python -m pytest -q` passed: `432 passed, 1 warning in 6.04s`.
 - `git diff --check` passed with CRLF normalization warnings only.

@@ -458,3 +458,35 @@ Cloud Run still deploys from Docker Hub
 live Artifact Registry publish validation remains later scope
 Cloud Run deployment from Artifact Registry remains later scope
 ```
+
+## Artifact Registry Publish Validation
+Artifact Registry publish validation is recorded here:
+
+```text
+docs/deployment/artifact_registry_publish_validation.md
+```
+
+Validated flow:
+
+```text
+GitHub Actions
+-> pytest
+-> Docker image build
+-> Workload Identity Federation auth
+-> gcloud Docker auth for us-central1-docker.pkg.dev
+-> Artifact Registry Git SHA image push
+```
+
+Published image:
+
+```text
+us-central1-docker.pkg.dev/key-component-498805-h0/modelopslab/modelopslab-serving:55464a7e17ba6833673ddf897b6284fc772333df
+```
+
+Current boundary:
+
+```text
+Artifact Registry publish is validated
+Cloud Run still deploys from Docker Hub
+Cloud Run deployment from Artifact Registry remains later scope
+```

@@ -276,3 +276,9 @@ The manually gated Artifact Registry publish path is recorded here:
 ```text
 docs/deployment/artifact_registry_publish_gate.md
 ```
+
+The live Artifact Registry publish validation is recorded here:
+
+```text
+docs/deployment/artifact_registry_publish_validation.md
+```

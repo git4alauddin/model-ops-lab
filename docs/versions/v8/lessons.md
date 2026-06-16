@@ -60,3 +60,4 @@
 - Artifact Registry is the next pragmatic registry boundary after Docker Hub validation because it keeps image storage, IAM, and Cloud Run deployment inside Google Cloud.
 - Repository-level Artifact Registry Writer is enough for the GitHub deploy service account to publish future images without broadening access to the whole project.
 - Adding Artifact Registry publishing before switching Cloud Run deployment keeps the migration observable: first prove image push, then prove deployment from that image.
+- A live publish validation should keep unrelated gates disabled so the evidence proves exactly one new behavior.
