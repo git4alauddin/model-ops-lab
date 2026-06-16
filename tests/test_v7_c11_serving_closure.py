@@ -15,7 +15,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 def test_v7_closure_serving_routes_exist() -> None:
     routes = {
-        (route.path, method)
+        (route.path, str(method).upper())
         for route in create_app().routes
         for method in getattr(route, "methods", set())
     }
