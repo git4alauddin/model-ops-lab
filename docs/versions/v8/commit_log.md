@@ -458,7 +458,7 @@
 - `python -m pytest -q` passed: `424 passed, 1 warning in 8.57s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - v8-c20: validate Artifact Registry publish gate
+## da03220 - v8-c20: validate Artifact Registry publish gate
 
 ### What Changed
 - Triggered the manual GitHub Actions Artifact Registry publish gate.
@@ -483,4 +483,24 @@
 - `python -m pytest -q tests\test_v8_c20_artifact_registry_publish_validation.py` passed: `8 passed in 0.08s`.
 - `python -m pytest -q tests\test_v8_c19_artifact_registry_publish_gate.py tests\test_v8_c20_artifact_registry_publish_validation.py` passed: `18 passed in 0.17s`.
 - `python -m pytest -q` passed: `432 passed, 1 warning in 6.04s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - v8-c21: add Cloud Run image source gate
+
+### What Changed
+- Added manual `cloud_run_image_source` workflow input with choices `dockerhub` and `artifact_registry`.
+- Kept Docker Hub as the default Cloud Run deployment image source.
+- Added source-specific deploy validation for Docker Hub and Artifact Registry.
+- Added a `Resolve Cloud Run image` step that emits the exact Git SHA image reference.
+- Updated Cloud Run deploy to use the resolved image output.
+- Added documentation and static workflow tests for both image sources.
+
+### What Problem It Solved
+- Allows the same manually gated Cloud Run deploy job to target either Docker Hub or Artifact Registry.
+- Prepares live Cloud Run deployment validation from Artifact Registry without removing the already validated Docker Hub path.
+
+### Verification
+- `python -m pytest -q tests\test_v8_c21_cloud_run_image_source_gate.py` passed: `9 passed in 0.12s`.
+- `python -m pytest -q tests\test_v8_c14_cloud_run_deploy_gate.py tests\test_v8_c19_artifact_registry_publish_gate.py tests\test_v8_c20_artifact_registry_publish_validation.py tests\test_v8_c21_cloud_run_image_source_gate.py` passed: `38 passed in 0.35s`.
+- `python -m pytest -q` passed: `441 passed, 1 warning in 7.11s`.
 - `git diff --check` passed with CRLF normalization warnings only.

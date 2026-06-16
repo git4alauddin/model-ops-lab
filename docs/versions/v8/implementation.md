@@ -773,3 +773,39 @@ docs/versions/v8/
 V8-C20 validates Artifact Registry publishing only.
 
 It does not deploy Cloud Run from Artifact Registry, validate `/health` from an Artifact Registry deployed revision, remove Docker Hub deployment support, or remove Docker Hub secrets.
+
+## V8-C21: Cloud Run Image Source Gate
+
+### Files Added
+
+```text
+docs/deployment/cloud_run_image_source_gate.md
+tests/test_v8_c21_cloud_run_image_source_gate.py
+```
+
+### Files Updated
+
+```text
+.github/workflows/ci.yaml
+README.md
+docs/deployment/
+docs/versions/v8/
+tests/test_v8_c14_cloud_run_deploy_gate.py
+tests/test_v8_c19_artifact_registry_publish_gate.py
+tests/test_v8_c20_artifact_registry_publish_validation.py
+```
+
+### Behavior
+- Added manual `cloud_run_image_source` workflow input with choices `dockerhub` and `artifact_registry`.
+- Kept `dockerhub` as the default Cloud Run image source.
+- Added source-specific preflight validation for Docker Hub and Artifact Registry deployment.
+- Required `publish_image=true` when Cloud Run deploys from Docker Hub.
+- Required `publish_artifact_registry=true` when Cloud Run deploys from Artifact Registry.
+- Added a `Resolve Cloud Run image` step that emits the selected image reference.
+- Updated the Cloud Run deploy action to use `steps.cloud-run-image.outputs.image`.
+- Preserved post-deploy `/health` validation.
+
+### Boundary
+V8-C21 adds source selection to the Cloud Run deployment gate only.
+
+It does not trigger a live Artifact Registry Cloud Run deployment, validate `/health` from an Artifact Registry deployed revision, remove Docker Hub deployment support, or remove Docker Hub secrets.

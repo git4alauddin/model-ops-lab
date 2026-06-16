@@ -353,3 +353,10 @@ V8-C15 validates that path live:
 - `python -m pytest -q tests\test_v8_c19_artifact_registry_publish_gate.py tests\test_v8_c20_artifact_registry_publish_validation.py` passed: `18 passed in 0.17s`.
 - `python -m pytest -q` passed: `432 passed, 1 warning in 6.04s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## V8-C21 Verification
+
+- `python -m pytest -q tests\test_v8_c21_cloud_run_image_source_gate.py` passed: `9 passed in 0.12s`.
+- `python -m pytest -q tests\test_v8_c14_cloud_run_deploy_gate.py tests\test_v8_c19_artifact_registry_publish_gate.py tests\test_v8_c20_artifact_registry_publish_validation.py tests\test_v8_c21_cloud_run_image_source_gate.py` passed: `38 passed in 0.35s`.
+- `python -m pytest -q` passed: `441 passed, 1 warning in 7.11s`.
+- `git diff --check` passed with CRLF normalization warnings only.

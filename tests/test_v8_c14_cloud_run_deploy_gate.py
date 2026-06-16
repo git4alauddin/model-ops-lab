@@ -38,11 +38,12 @@ def test_v8_cloud_run_deploy_job_is_gated_after_docker_image_job() -> None:
     assert deploy_job["permissions"]["id-token"] == "write"
 
 
-def test_v8_cloud_run_deploy_requires_published_image() -> None:
+def test_v8_cloud_run_deploy_requires_published_image_for_dockerhub_source() -> None:
     workflow = WORKFLOW_PATH.read_text()
 
-    assert "deploy_cloud_run=true requires publish_image=true" in workflow
+    assert "cloud_run_image_source=dockerhub requires publish_image=true" in workflow
     assert "PUBLISH_IMAGE: ${{ inputs.publish_image }}" in workflow
+    assert 'if [ "$CLOUD_RUN_IMAGE_SOURCE" = "dockerhub" ]; then' in workflow
     assert 'if [ "$PUBLISH_IMAGE" != "true" ]; then' in workflow
 
 
@@ -65,11 +66,13 @@ def test_v8_cloud_run_deploy_uses_workload_identity_auth() -> None:
     assert "credentials_json" not in workflow
 
 
-def test_v8_cloud_run_deploy_uses_exact_git_sha_image() -> None:
+def test_v8_cloud_run_deploy_uses_exact_git_sha_image_from_resolved_source() -> None:
     workflow = WORKFLOW_PATH.read_text()
 
     assert "google-github-actions/deploy-cloudrun@v3" in workflow
-    assert "image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/modelopslab-serving:${{ github.sha }}" in workflow
+    assert "Resolve Cloud Run image" in workflow
+    assert "image: ${{ steps.cloud-run-image.outputs.image }}" in workflow
+    assert "docker.io/${DOCKERHUB_USERNAME}/modelopslab-serving:${{ github.sha }}" in workflow
     assert "image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/modelopslab-serving:ci" not in workflow
 
 
@@ -97,6 +100,7 @@ def test_v8_cloud_run_deploy_docs_describe_contract_and_failures() -> None:
 
     assert "publish_image: true" in guide
     assert "deploy_cloud_run: true" in guide
+    assert "cloud_run_image_source" in guide
     assert "GCP_WORKLOAD_IDENTITY_PROVIDER" in guide
     assert "GCP_SERVICE_ACCOUNT" in guide
     assert "Workload Identity Federation" in guide

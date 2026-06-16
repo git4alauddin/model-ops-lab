@@ -77,8 +77,8 @@ def test_v8_artifact_registry_publish_validation_links_are_visible() -> None:
     assert "artifact_registry_publish_validation.md" in overview
 
 
-def test_v8_commit_log_has_c19_hash_and_c20_pending_entry() -> None:
+def test_v8_commit_log_has_c19_and_c20_hashes() -> None:
     commit_log = V8_COMMIT_LOG_PATH.read_text()
 
     assert "55464a7 - v8-c19: add Artifact Registry publish gate" in commit_log
-    assert "Pending - v8-c20: validate Artifact Registry publish gate" in commit_log
+    assert "da03220 - v8-c20: validate Artifact Registry publish gate" in commit_log

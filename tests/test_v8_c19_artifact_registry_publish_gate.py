@@ -81,11 +81,13 @@ def test_v8_artifact_registry_publish_validates_required_inputs_and_secrets() ->
     assert "Missing workflow input: artifact_registry_repository" in workflow
 
 
-def test_v8_artifact_registry_publish_does_not_change_cloud_run_deploy_image_yet() -> None:
+def test_v8_artifact_registry_publish_keeps_cloud_run_deploy_source_explicit() -> None:
     workflow = WORKFLOW_PATH.read_text()
 
-    assert "image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/modelopslab-serving:${{ github.sha }}" in workflow
-    assert "image: ${{ inputs.artifact_registry_location }}-docker.pkg.dev" not in workflow
+    assert "cloud_run_image_source" in workflow
+    assert "image: ${{ steps.cloud-run-image.outputs.image }}" in workflow
+    assert "docker.io/${DOCKERHUB_USERNAME}/modelopslab-serving:${{ github.sha }}" in workflow
+    assert "${ARTIFACT_REGISTRY_LOCATION}-docker.pkg.dev/${GCP_PROJECT_ID}/${ARTIFACT_REGISTRY_REPOSITORY}/modelopslab-serving:${{ github.sha }}" in workflow
 
 
 def test_v8_artifact_registry_publish_docs_describe_boundary_and_links() -> None:

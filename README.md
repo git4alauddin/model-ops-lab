@@ -195,6 +195,12 @@ Artifact Registry publish validation:
 docs/deployment/artifact_registry_publish_validation.md
 ```
 
+Cloud Run image source gate:
+
+```text
+docs/deployment/cloud_run_image_source_gate.md
+```
+
 Workload Identity Federation learning notes:
 
 ```text

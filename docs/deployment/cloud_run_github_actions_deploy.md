@@ -54,15 +54,26 @@ Use:
 ```text
 publish_image: true
 deploy_cloud_run: true
+cloud_run_image_source: dockerhub
 gcp_project_id: <your-gcp-project-id>
 cloud_run_service: modelopslab-serving
 cloud_run_region: us-central1
 ```
 
-Important rule:
+Important Docker Hub rule:
 
 ```text
-deploy_cloud_run=true requires publish_image=true
+deploy_cloud_run=true with cloud_run_image_source=dockerhub requires publish_image=true
+```
+
+Artifact Registry deployment can use:
+
+```text
+publish_artifact_registry: true
+deploy_cloud_run: true
+cloud_run_image_source: artifact_registry
+artifact_registry_location: us-central1
+artifact_registry_repository: modelopslab
 ```
 
 Cloud Run deploys the exact Docker Hub image tagged with:
@@ -71,7 +82,7 @@ Cloud Run deploys the exact Docker Hub image tagged with:
 ${{ github.sha }}
 ```
 
-It does not deploy the moving `ci` tag.
+It does not deploy the moving `ci` tag from either image source.
 
 ## Required GitHub Secrets
 
@@ -140,7 +151,11 @@ google-github-actions/deploy-cloudrun@v3
 Deployment image:
 
 ```text
+cloud_run_image_source=dockerhub:
 docker.io/<dockerhub-username>/modelopslab-serving:<git-sha>
+
+cloud_run_image_source=artifact_registry:
+<artifact-registry-location>-docker.pkg.dev/<gcp-project-id>/<artifact-registry-repository>/modelopslab-serving:<git-sha>
 ```
 
 Runtime configuration:
@@ -193,13 +208,17 @@ If the service URL is missing, the health request fails, or the health payload i
 The workflow fails before deployment when:
 
 ```text
-deploy_cloud_run=true and publish_image=false
+cloud_run_image_source is not dockerhub or artifact_registry
+cloud_run_image_source=dockerhub and publish_image=false
+cloud_run_image_source=artifact_registry and publish_artifact_registry=false
 DOCKERHUB_USERNAME is missing
 GCP_WORKLOAD_IDENTITY_PROVIDER is missing
 GCP_SERVICE_ACCOUNT is missing
 gcp_project_id is missing
 cloud_run_service is missing
 cloud_run_region is missing
+artifact_registry_location is missing for artifact_registry source
+artifact_registry_repository is missing for artifact_registry source
 ```
 
 The workflow fails during deployment when:
@@ -281,4 +300,10 @@ The live Artifact Registry publish validation is recorded here:
 
 ```text
 docs/deployment/artifact_registry_publish_validation.md
+```
+
+The Cloud Run image source selector is recorded here:
+
+```text
+docs/deployment/cloud_run_image_source_gate.md
 ```

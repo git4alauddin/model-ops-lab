@@ -167,6 +167,13 @@ Expected direction:
 ```text
 publish_artifact_registry=true
 deploy_cloud_run=true
+cloud_run_image_source=artifact_registry
 Cloud Run image: us-central1-docker.pkg.dev/key-component-498805-h0/modelopslab/modelopslab-serving:<git-sha>
 post-deploy /health validation
+```
+
+The image source gate is documented here:
+
+```text
+docs/deployment/cloud_run_image_source_gate.md
 ```

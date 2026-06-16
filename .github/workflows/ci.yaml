@@ -27,6 +27,14 @@ on:
         options:
           - "false"
           - "true"
+      cloud_run_image_source:
+        description: "Image source for Cloud Run deployment"
+        required: false
+        default: "dockerhub"
+        type: choice
+        options:
+          - "dockerhub"
+          - "artifact_registry"
       gcp_project_id:
         description: "Google Cloud project ID for Cloud Run deployment"
         required: false
@@ -224,21 +232,49 @@ jobs:
       - name: Validate Cloud Run deployment inputs
         env:
           PUBLISH_IMAGE: ${{ inputs.publish_image }}
+          PUBLISH_ARTIFACT_REGISTRY: ${{ inputs.publish_artifact_registry }}
+          CLOUD_RUN_IMAGE_SOURCE: ${{ inputs.cloud_run_image_source }}
           GCP_PROJECT_ID: ${{ inputs.gcp_project_id }}
           CLOUD_RUN_SERVICE: ${{ inputs.cloud_run_service }}
           CLOUD_RUN_REGION: ${{ inputs.cloud_run_region }}
+          ARTIFACT_REGISTRY_LOCATION: ${{ inputs.artifact_registry_location }}
+          ARTIFACT_REGISTRY_REPOSITORY: ${{ inputs.artifact_registry_repository }}
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           GCP_WORKLOAD_IDENTITY_PROVIDER: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           GCP_SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT }}
         run: |
-          if [ "$PUBLISH_IMAGE" != "true" ]; then
-            echo "::error::deploy_cloud_run=true requires publish_image=true so Cloud Run receives the exact published Git SHA image"
+          if [ "$CLOUD_RUN_IMAGE_SOURCE" != "dockerhub" ] && [ "$CLOUD_RUN_IMAGE_SOURCE" != "artifact_registry" ]; then
+            echo "::error::cloud_run_image_source must be dockerhub or artifact_registry"
             exit 1
           fi
 
-          if [ -z "$DOCKERHUB_USERNAME" ]; then
-            echo "::error::Missing GitHub Actions secret: DOCKERHUB_USERNAME"
-            exit 1
+          if [ "$CLOUD_RUN_IMAGE_SOURCE" = "dockerhub" ]; then
+            if [ "$PUBLISH_IMAGE" != "true" ]; then
+              echo "::error::deploy_cloud_run=true with cloud_run_image_source=dockerhub requires publish_image=true"
+              exit 1
+            fi
+
+            if [ -z "$DOCKERHUB_USERNAME" ]; then
+              echo "::error::Missing GitHub Actions secret: DOCKERHUB_USERNAME"
+              exit 1
+            fi
+          fi
+
+          if [ "$CLOUD_RUN_IMAGE_SOURCE" = "artifact_registry" ]; then
+            if [ "$PUBLISH_ARTIFACT_REGISTRY" != "true" ]; then
+              echo "::error::deploy_cloud_run=true with cloud_run_image_source=artifact_registry requires publish_artifact_registry=true"
+              exit 1
+            fi
+
+            if [ -z "$ARTIFACT_REGISTRY_LOCATION" ]; then
+              echo "::error::Missing workflow input: artifact_registry_location"
+              exit 1
+            fi
+
+            if [ -z "$ARTIFACT_REGISTRY_REPOSITORY" ]; then
+              echo "::error::Missing workflow input: artifact_registry_repository"
+              exit 1
+            fi
           fi
 
           if [ -z "$GCP_WORKLOAD_IDENTITY_PROVIDER" ]; then
@@ -266,6 +302,24 @@ jobs:
             exit 1
           fi
 
+      - name: Resolve Cloud Run image
+        id: cloud-run-image
+        env:
+          CLOUD_RUN_IMAGE_SOURCE: ${{ inputs.cloud_run_image_source }}
+          GCP_PROJECT_ID: ${{ inputs.gcp_project_id }}
+          ARTIFACT_REGISTRY_LOCATION: ${{ inputs.artifact_registry_location }}
+          ARTIFACT_REGISTRY_REPOSITORY: ${{ inputs.artifact_registry_repository }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        run: |
+          if [ "$CLOUD_RUN_IMAGE_SOURCE" = "artifact_registry" ]; then
+            image="${ARTIFACT_REGISTRY_LOCATION}-docker.pkg.dev/${GCP_PROJECT_ID}/${ARTIFACT_REGISTRY_REPOSITORY}/modelopslab-serving:${{ github.sha }}"
+          else
+            image="docker.io/${DOCKERHUB_USERNAME}/modelopslab-serving:${{ github.sha }}"
+          fi
+
+          echo "image=$image" >> "$GITHUB_OUTPUT"
+          echo "Resolved Cloud Run image: $image"
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v3
         with:
@@ -280,7 +334,7 @@ jobs:
           service: ${{ inputs.cloud_run_service }}
           region: ${{ inputs.cloud_run_region }}
           project_id: ${{ inputs.gcp_project_id }}
-          image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/modelopslab-serving:${{ github.sha }}
+          image: ${{ steps.cloud-run-image.outputs.image }}
           env_vars: |-
             MODELOPSLAB_ENV=cloud-run
             SERVING_HOST=0.0.0.0

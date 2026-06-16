@@ -490,3 +490,26 @@ Artifact Registry publish is validated
 Cloud Run still deploys from Docker Hub
 Cloud Run deployment from Artifact Registry remains later scope
 ```
+
+## Cloud Run Image Source Gate
+Cloud Run image source selection is documented here:
+
+```text
+docs/deployment/cloud_run_image_source_gate.md
+```
+
+Supported image sources:
+
+```text
+cloud_run_image_source=dockerhub
+cloud_run_image_source=artifact_registry
+```
+
+Current boundary:
+
+```text
+Docker Hub remains the default Cloud Run image source
+Artifact Registry is available as an explicit Cloud Run image source
+post-deploy /health validation remains unchanged
+live Artifact Registry Cloud Run deployment remains later scope
+```
