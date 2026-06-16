@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from fastapi.testclient import TestClient
+
 from app.api.app import create_app
 from app.api.schemas import (
     BatchPredictionRequest,
@@ -13,21 +15,19 @@ from app.api.schemas import (
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
-def _normalize_method(method: object) -> str:
-    return str(getattr(method, "value", method)).upper()
-
-
 def test_v7_closure_serving_routes_exist() -> None:
-    routes = {
-        (route.path, _normalize_method(method))
-        for route in create_app().routes
-        for method in getattr(route, "methods", set())
-    }
+    client = TestClient(create_app())
 
-    assert ("/health", "GET") in routes
-    assert ("/ready", "GET") in routes
-    assert ("/predict", "POST") in routes
-    assert ("/predict/batch", "POST") in routes
+    health_response = client.get("/health")
+    ready_response = client.get("/ready")
+    predict_response = client.post("/predict", json={})
+    batch_response = client.post("/predict/batch", json={})
+
+    assert health_response.status_code == 200
+    assert health_response.json()["status"] == "ok"
+    assert ready_response.status_code != 404
+    assert predict_response.status_code != 404
+    assert batch_response.status_code != 404
 
 
 def test_v7_closure_inference_schema_surface_exists() -> None:
