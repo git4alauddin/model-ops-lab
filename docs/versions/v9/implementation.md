@@ -393,3 +393,46 @@ V9-C8 is a local, dependency-free drift comparison.
 It does not install Evidently, generate HTML drift reports, create dashboards, or send drift alerts.
 
 It can return `insufficient_data` when the inference snapshot has no feature rows.
+
+## V9-C9: Fresh Feature-Bearing Telemetry Workflow
+
+### Files Added
+
+```text
+docs/monitoring/fresh_feature_telemetry_workflow.md
+tests/test_v9_c9_fresh_feature_telemetry_workflow.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/versions/v9/
+```
+
+### Behavior
+- Generated fresh valid prediction traffic after `input_features` was added to telemetry.
+- Confirmed local `/predict` and `/predict/batch` requests succeeded.
+- Regenerated local monitoring and drift reports.
+- Confirmed `reports/drift/inference_snapshot.json` now contains feature-bearing inference rows.
+- Confirmed `reports/drift/data_drift_summary.json` moved from `insufficient_data` to a real drift comparison result.
+- Added a workflow guide with Swagger UI and local TestClient options.
+
+### Local Result
+
+```text
+prediction_summary.request_count: 154
+prediction_summary.success_count: 18
+inference_snapshot.row_count: 16
+inference_snapshot.feature_event_count: 16
+data_drift_summary.overall_status: drift_detected
+data_drift_summary.inference_row_count: 16
+data_drift_summary.drifted_feature_count: 5
+alerts.overall_status: alerting
+alerts.active_alert_count: 2
+```
+
+### Important Boundary
+V9-C9 is a local workflow validation chunk.
+
+It does not install Evidently, add new runtime services, start Prometheus, create Grafana dashboards, or deploy anything.

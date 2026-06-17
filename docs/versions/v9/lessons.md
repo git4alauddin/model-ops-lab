@@ -65,3 +65,11 @@
 - Categorical drift can start with category ratio changes.
 - `insufficient_data` is a valid monitoring result; it is better than pretending a drift check passed.
 - Local drift comparison makes later Evidently reports easier to understand because the basic math is visible.
+
+## V9-C9: Fresh Feature-Bearing Telemetry Workflow
+
+- Fresh feature-bearing telemetry turns drift comparison from missing-data reporting into real drift evaluation.
+- Drift systems depend on data freshness; old telemetry can be structurally valid but incomplete for newer contracts.
+- A local workflow should regenerate dependent reports in order: prediction summary, inference snapshot, drift summary, then alerts.
+- Swagger UI is useful for learning the API interaction, while TestClient is useful for fast local refreshes.
+- Report transitions are a good learning signal: `insufficient_data` means the pipeline is honest, not broken.

@@ -50,6 +50,48 @@ git diff --check
 passed with CRLF normalization warnings only
 ```
 
+## V9-C9: Fresh Feature-Bearing Telemetry Workflow
+
+Planned verification:
+
+```powershell
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c9_fresh_feature_telemetry_workflow.py
+vir_env\Scripts\python.exe -m app.build_prediction_monitoring_summary
+vir_env\Scripts\python.exe -m app.build_inference_snapshot
+vir_env\Scripts\python.exe -m app.build_data_drift_summary
+vir_env\Scripts\python.exe -m app.build_monitoring_alerts
+vir_env\Scripts\python.exe -m pytest -q
+git diff --check
+```
+
+Actual verification:
+
+```text
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c9_fresh_feature_telemetry_workflow.py
+3 passed in 0.06s
+
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py tests\test_v9_c6_drift_reference_baseline.py tests\test_v9_c7_inference_feature_snapshot.py tests\test_v9_c8_local_data_drift_comparison.py tests\test_v9_c9_fresh_feature_telemetry_workflow.py
+52 passed, 1 warning in 1.36s
+
+vir_env\Scripts\python.exe -m app.build_prediction_monitoring_summary
+generated reports\monitoring\prediction_summary.json with events=154 and failures=136
+
+vir_env\Scripts\python.exe -m app.build_inference_snapshot
+generated reports\drift\inference_snapshot.json with rows=16 and skipped=309
+
+vir_env\Scripts\python.exe -m app.build_data_drift_summary
+generated reports\drift\data_drift_summary.json with status=drift_detected and drifted_features=5
+
+vir_env\Scripts\python.exe -m app.build_monitoring_alerts
+generated reports\monitoring\alerts.json with status=alerting and active_alerts=2
+
+vir_env\Scripts\python.exe -m pytest -q
+526 passed, 1 warning in 6.73s
+
+git diff --check
+passed with CRLF normalization warnings only
+```
+
 ## V9-C8: Local Data Drift Comparison
 
 Planned verification:

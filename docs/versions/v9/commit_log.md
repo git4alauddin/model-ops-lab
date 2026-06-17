@@ -158,3 +158,26 @@
 - `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py tests\test_v9_c6_drift_reference_baseline.py tests\test_v9_c7_inference_feature_snapshot.py tests\test_v9_c8_local_data_drift_comparison.py` passed: `49 passed, 1 warning in 1.36s`.
 - `vir_env\Scripts\python.exe -m pytest -q` passed: `523 passed, 1 warning in 7.16s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## Uncommitted - v9-c9: document fresh feature telemetry workflow
+
+### What Changed
+- Generated fresh feature-bearing prediction telemetry.
+- Regenerated local prediction summary, inference snapshot, data drift summary, and alert report.
+- Added a fresh feature telemetry workflow guide.
+- Updated README and V9 documentation.
+- Added focused documentation tests for the workflow.
+
+### What Problem It Solved
+- Proves the drift pipeline can move from `insufficient_data` to a real baseline-vs-inference comparison after fresh feature-bearing telemetry exists.
+- Documents how to reproduce the local workflow through Swagger UI or a fast local TestClient path.
+
+### Verification
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c9_fresh_feature_telemetry_workflow.py` passed: `3 passed in 0.06s`.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py tests\test_v9_c6_drift_reference_baseline.py tests\test_v9_c7_inference_feature_snapshot.py tests\test_v9_c8_local_data_drift_comparison.py tests\test_v9_c9_fresh_feature_telemetry_workflow.py` passed: `52 passed, 1 warning in 1.36s`.
+- `vir_env\Scripts\python.exe -m app.build_prediction_monitoring_summary` generated `reports\monitoring\prediction_summary.json` with `events=154` and `failures=136`.
+- `vir_env\Scripts\python.exe -m app.build_inference_snapshot` generated `reports\drift\inference_snapshot.json` with `rows=16` and `skipped=309`.
+- `vir_env\Scripts\python.exe -m app.build_data_drift_summary` generated `reports\drift\data_drift_summary.json` with `status=drift_detected` and `drifted_features=5`.
+- `vir_env\Scripts\python.exe -m app.build_monitoring_alerts` generated `reports\monitoring\alerts.json` with `status=alerting` and `active_alerts=2`.
+- `vir_env\Scripts\python.exe -m pytest -q` passed: `526 passed, 1 warning in 6.73s`.
+- `git diff --check` passed with CRLF normalization warnings only.

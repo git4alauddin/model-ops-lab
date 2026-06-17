@@ -269,6 +269,12 @@ Prediction telemetry contract:
 docs/monitoring/prediction_telemetry_contract.md
 ```
 
+Fresh feature telemetry workflow:
+
+```text
+docs/monitoring/fresh_feature_telemetry_workflow.md
+```
+
 Workload Identity Federation learning notes:
 
 ```text
