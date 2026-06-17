@@ -16,3 +16,24 @@
 - `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py` passed: `5 passed in 0.04s`.
 - `vir_env\Scripts\python.exe -m pytest -q` passed: `541 passed, 1 warning in 5.64s`.
 - `git diff --check` passed with a CRLF normalization warning for `README.md`.
+
+## Uncommitted - v10-c2: add local retraining trigger decision
+
+### What Changed
+- Added a local retraining trigger decision builder.
+- Added a command to generate `reports/retraining/retraining_trigger_decision.json`.
+- Reads V9 monitoring alerts and data drift summary reports.
+- Added decision states for recommended retraining, no retraining required, and insufficient monitoring data.
+- Added focused tests and V10 documentation.
+
+### What Problem It Solved
+- Connects V9 monitoring outputs to V10 retraining governance without running retraining or promoting models automatically.
+- Makes the retraining trigger explainable through explicit reasons and source report freshness.
+
+### Verification
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c2_retraining_trigger_decision.py` passed: `6 passed in 0.49s`.
+- `vir_env\Scripts\python.exe -m py_compile app\observability\retraining_trigger.py app\evaluate_retraining_trigger.py` passed.
+- `vir_env\Scripts\python.exe -m app.evaluate_retraining_trigger` generated `reports\retraining\retraining_trigger_decision.json` with `decision=retraining_recommended` and `reason_count=3`.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py` passed: `11 passed in 0.48s`.
+- `vir_env\Scripts\python.exe -m pytest -q` passed: `547 passed, 1 warning in 5.51s`.
+- `git diff --check` passed with CRLF normalization warnings only.

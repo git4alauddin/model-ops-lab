@@ -30,3 +30,58 @@ V10-C1 is documentation and planning only.
 It does not schedule retraining, run retraining, compare candidate models, promote models, install Airflow, or change production artifacts.
 
 Those belong in later V10 chunks.
+
+## V10-C2: Local Retraining Trigger Decision
+
+### Files Added
+
+```text
+app/evaluate_retraining_trigger.py
+app/observability/retraining_trigger.py
+tests/test_v10_c2_retraining_trigger_decision.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/versions/v10/
+```
+
+### Behavior
+- Added a local retraining trigger decision builder.
+- Reads:
+
+```text
+reports/monitoring/alerts.json
+reports/drift/data_drift_summary.json
+```
+
+- Writes:
+
+```text
+reports/retraining/retraining_trigger_decision.json
+```
+
+- Added a command entry point:
+
+```powershell
+python -m app.evaluate_retraining_trigger
+```
+
+- Produces one of three decision states:
+
+```text
+retraining_recommended
+retraining_not_required
+insufficient_monitoring_data
+```
+
+- Treats drift, high failure rate, and prediction distribution collapse as retraining signals.
+- Treats missing telemetry and insufficient drift rows as blockers before retraining.
+- Records decision reasons, source report paths, source freshness, thresholds, and recommended next action.
+
+### Important Boundary
+V10-C2 evaluates whether retraining should be considered.
+
+It does not run retraining, train a candidate model, compare models, promote artifacts, schedule jobs, or change production state.
