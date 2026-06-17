@@ -49,3 +49,60 @@ vir_env\Scripts\python.exe -m pytest -q
 git diff --check
 passed with CRLF normalization warnings only
 ```
+
+## V9-C4: Monitoring Summary Event Filtering
+
+Planned verification:
+
+```powershell
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py
+vir_env\Scripts\python.exe -m pytest -q
+git diff --check
+```
+
+Actual verification:
+
+```text
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py
+12 passed in 0.12s
+
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py
+23 passed, 1 warning in 1.07s
+
+vir_env\Scripts\python.exe -m app.build_prediction_monitoring_summary
+regenerated reports\monitoring\prediction_summary.json with raw_event_count=263, total_events=92, skipped_event_count=171, and no None metric buckets
+
+vir_env\Scripts\python.exe -m pytest -q
+497 passed, 1 warning in 5.54s
+
+git diff --check
+passed with CRLF normalization warnings only
+```
+
+## V9-C3: Local Monitoring Summary From Prediction Telemetry
+
+Planned verification:
+
+```powershell
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c3_local_monitoring_summary.py
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py
+vir_env\Scripts\python.exe -m pytest -q
+git diff --check
+```
+
+Actual verification:
+
+```text
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c3_local_monitoring_summary.py
+7 passed in 0.06s
+
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py
+18 passed, 1 warning in 0.82s
+
+vir_env\Scripts\python.exe -m pytest -q
+492 passed, 1 warning in 5.60s
+
+git diff --check
+passed with CRLF normalization warnings only
+```

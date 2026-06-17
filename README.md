@@ -72,6 +72,14 @@ Run the FastAPI serving API locally:
 uvicorn app.serve_api:app --reload
 ```
 
+Build local prediction monitoring summary:
+
+```powershell
+python -m app.build_prediction_monitoring_summary
+```
+
+The summary uses supported V9 telemetry events and reports skipped legacy records.
+
 Check dataset reproducibility:
 
 ```powershell
@@ -120,6 +128,7 @@ Generated runtime files are intentionally local and ignored by git:
 |---|---|
 | `artifacts/` | trained model, metrics, config snapshot, training metadata |
 | `reports/` | validation reports and champion selection report |
+| `reports/monitoring/prediction_summary.json` | local prediction monitoring summary |
 | `logs/` | local runtime logs |
 | `mlflow.db` | MLflow backend database |
 | `mlruns/` | MLflow run artifacts |

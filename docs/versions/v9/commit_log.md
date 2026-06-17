@@ -36,3 +36,41 @@
 - `vir_env\Scripts\python.exe -m pytest -q tests\test_v7_c7_prediction_logging.py tests\test_v7_c8_batch_prediction_endpoint.py tests\test_v8_c3_serving_environment_config.py` passed: `20 passed in 0.96s`.
 - `vir_env\Scripts\python.exe -m pytest -q` passed: `485 passed, 1 warning in 5.64s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## Uncommitted - v9-c3: add local prediction monitoring summary
+
+### What Changed
+- Added a local monitoring summary builder for prediction telemetry.
+- Added a command to build `reports/monitoring/prediction_summary.json`.
+- Summarized request counts, success/failure counts, failure rate, latency percentiles, prediction distribution, probability distribution, and failure categories.
+- Updated README and V9 documentation.
+- Added focused tests for the monitoring summary logic and report persistence.
+
+### What Problem It Solved
+- Converts V9 prediction telemetry into practical monitoring signals before adding Prometheus, Grafana, or drift tooling.
+- Gives the project a local, testable observability report that can feed later dashboard and alerting work.
+
+### Verification
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c3_local_monitoring_summary.py` passed: `7 passed in 0.06s`.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py` passed: `18 passed, 1 warning in 0.82s`.
+- `vir_env\Scripts\python.exe -m pytest -q` passed: `492 passed, 1 warning in 5.60s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+
+## Uncommitted - v9-c4: filter monitoring summary telemetry events
+
+### What Changed
+- Updated the local prediction monitoring summary to use only supported V9 telemetry events.
+- Added skipped-record accounting for legacy or unsupported telemetry records.
+- Added focused tests for event filtering.
+- Updated README and V9 documentation.
+
+### What Problem It Solved
+- Prevents older pre-V9 telemetry records from appearing as `None` buckets in event and endpoint summaries.
+- Prevents legacy records from polluting request counts, failure rates, latency metrics, and prediction distributions.
+
+### Verification
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py` passed: `12 passed in 0.12s`.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py` passed: `23 passed, 1 warning in 1.07s`.
+- `vir_env\Scripts\python.exe -m app.build_prediction_monitoring_summary` regenerated `reports\monitoring\prediction_summary.json` with `raw_event_count=263`, `total_events=92`, `skipped_event_count=171`, and no `None` metric buckets.
+- `vir_env\Scripts\python.exe -m pytest -q` passed: `497 passed, 1 warning in 5.54s`.
+- `git diff --check` passed with CRLF normalization warnings only.
