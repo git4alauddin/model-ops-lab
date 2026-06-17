@@ -17,3 +17,12 @@
 - Drift and prediction failures can recommend retraining, but missing telemetry should block the decision until data is trustworthy.
 - A decision report should explain why retraining is recommended, not only output a boolean.
 - Source freshness matters because stale monitoring reports can lead to bad retraining decisions.
+
+## V10-C3: Candidate Retraining Run Metadata
+
+- Candidate run metadata is the handoff between a retraining recommendation and actual training.
+- Starting a retraining run should create an audit record before changing any model artifacts.
+- The trigger reason, source reports, dataset version, schema version, and current production model belong in the same retraining record.
+- Capturing the previous production model early creates rollback context before promotion decisions are made.
+- Pending candidate paths are useful because they show the lifecycle stage clearly: initialized, trained, compared, approved, then promoted or rejected.
+- A governed retraining run can exist without automatic promotion; this is safer and easier to explain in a production review.

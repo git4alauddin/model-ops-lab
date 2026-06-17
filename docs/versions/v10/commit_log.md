@@ -37,3 +37,24 @@
 - `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py` passed: `11 passed in 0.48s`.
 - `vir_env\Scripts\python.exe -m pytest -q` passed: `547 passed, 1 warning in 5.51s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## Uncommitted - v10-c3: add candidate retraining run metadata
+
+### What Changed
+- Added a candidate retraining run metadata builder.
+- Added a command to initialize `retraining_runs/<run_id>/retraining_metadata.json`.
+- Added the `retraining_runs/` runtime directory placeholder and git ignore rules.
+- Captures trigger context, data lineage, schema lineage, previous production champion, rollback target, pending approval, and pending promotion state.
+- Added focused tests and V10 documentation.
+
+### What Problem It Solved
+- Turns a retraining recommendation into a governed retraining run record before training starts.
+- Creates audit and rollback context without changing production artifacts.
+
+### Verification
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c3_candidate_retraining_run_metadata.py` passed: `6 passed in 0.70s`.
+- `vir_env\Scripts\python.exe -m py_compile app\retraining\candidate_run_metadata.py app\start_candidate_retraining_run.py` passed.
+- `vir_env\Scripts\python.exe -m app.start_candidate_retraining_run` generated `retraining_runs\retrain-20260617T184250573186Z\retraining_metadata.json` with `status=candidate_run_initialized` and `approval=pending`.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py` passed: `17 passed in 0.59s`.
+- `vir_env\Scripts\python.exe -m pytest -q` passed: `598 passed, 1 warning in 7.37s`.
+- `git diff --check` passed with CRLF normalization warnings only.

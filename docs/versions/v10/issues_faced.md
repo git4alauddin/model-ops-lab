@@ -15,3 +15,11 @@ No retraining job was added.
 The main design choice was separating retraining recommendation from retraining execution. A drift alert can justify a candidate retraining run, but it should not automatically train or promote a model.
 
 The decision report also treats insufficient telemetry as a blocker because retraining from unreliable monitoring data would create a false sense of automation maturity.
+
+## V10-C3: Candidate Retraining Run Metadata
+
+No training job was added yet.
+
+The main design choice was making the candidate run initializer strict. It only starts when the trigger decision is `retraining_recommended`, because initializing retraining from a clean or insufficient signal would weaken the governance story.
+
+The metadata also stores the current champion model as rollback context. That keeps the next steps safer because candidate evaluation and promotion can always answer what production model existed before the candidate run started.

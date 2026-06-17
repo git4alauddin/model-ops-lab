@@ -11,6 +11,7 @@ V10 is in progress.
 Implemented chunks:
 - V10-C1: retraining governance foundation.
 - V10-C2: local retraining trigger decision.
+- V10-C3: candidate retraining run metadata.
 
 ## Final Definition
 V10 is a production-style continuous ML lifecycle management layer with governed retraining workflows, drift-triggered automation, regression protection, deployment safeguards, architecture documentation, and portfolio-grade operational ML system presentation.
@@ -73,6 +74,7 @@ The first practical implementation layers should be:
 ```text
 retraining governance documentation
 local retraining trigger decision from V9 reports
+candidate retraining run metadata
 candidate retraining command
 candidate-vs-production comparison report
 promotion gate

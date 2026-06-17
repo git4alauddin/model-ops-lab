@@ -31,6 +31,58 @@ It does not schedule retraining, run retraining, compare candidate models, promo
 
 Those belong in later V10 chunks.
 
+## V10-C3: Candidate Retraining Run Metadata
+
+### Files Added
+
+```text
+app/retraining/
+app/start_candidate_retraining_run.py
+retraining_runs/.gitkeep
+tests/test_v10_c3_candidate_retraining_run_metadata.py
+```
+
+### Files Updated
+
+```text
+.gitignore
+README.md
+docs/versions/v10/
+```
+
+### Behavior
+- Added a governed candidate retraining run initializer.
+- Reads:
+
+```text
+reports/retraining/retraining_trigger_decision.json
+configs/training.yaml
+data_versions/customer_churn/v1.yaml
+schema_versions/customer_churn_v1.yaml
+model_registry/
+```
+
+- Writes:
+
+```text
+retraining_runs/<run_id>/retraining_metadata.json
+```
+
+- Added a command entry point:
+
+```powershell
+python -m app.start_candidate_retraining_run
+```
+
+- Requires the trigger decision to be `retraining_recommended`.
+- Captures trigger reasons, source report freshness, dataset lineage, schema lineage, previous production champion, rollback target, pending approval state, pending promotion decision, and empty candidate artifact placeholders.
+- Keeps generated retraining run records local and ignored by git.
+
+### Important Boundary
+V10-C3 initializes the governed candidate retraining record only.
+
+It does not train a model, create candidate artifacts, compare candidate-vs-production metrics, approve promotion, promote artifacts, schedule retraining, or change production state.
+
 ## V10-C2: Local Retraining Trigger Decision
 
 ### Files Added

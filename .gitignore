@@ -25,6 +25,10 @@ reports/*
 pipeline_runs/*
 !pipeline_runs/.gitkeep
 
+# Runtime retraining run metadata
+retraining_runs/*
+!retraining_runs/.gitkeep
+
 # Runtime model registry metadata
 model_registry/*
 !model_registry/.gitkeep

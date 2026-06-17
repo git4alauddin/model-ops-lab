@@ -56,3 +56,38 @@ vir_env\Scripts\python.exe -m pytest -q
 git diff --check
 passed with CRLF normalization warnings only
 ```
+
+## V10-C3: Candidate Retraining Run Metadata
+
+Planned verification:
+
+```powershell
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c3_candidate_retraining_run_metadata.py
+vir_env\Scripts\python.exe -m py_compile app\retraining\candidate_run_metadata.py app\start_candidate_retraining_run.py
+vir_env\Scripts\python.exe -m app.start_candidate_retraining_run
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py
+vir_env\Scripts\python.exe -m pytest -q
+git diff --check
+```
+
+Actual verification:
+
+```text
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c3_candidate_retraining_run_metadata.py
+6 passed in 0.70s
+
+vir_env\Scripts\python.exe -m py_compile app\retraining\candidate_run_metadata.py app\start_candidate_retraining_run.py
+passed
+
+vir_env\Scripts\python.exe -m app.start_candidate_retraining_run
+generated retraining_runs\retrain-20260617T184250573186Z\retraining_metadata.json with status=candidate_run_initialized and approval=pending
+
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py
+17 passed in 0.59s
+
+vir_env\Scripts\python.exe -m pytest -q
+598 passed, 1 warning in 7.37s
+
+git diff --check
+passed with CRLF normalization warnings only
+```

@@ -131,6 +131,12 @@ Evaluate local retraining trigger decision:
 python -m app.evaluate_retraining_trigger
 ```
 
+Initialize a governed candidate retraining run:
+
+```powershell
+python -m app.start_candidate_retraining_run
+```
+
 Check dataset reproducibility:
 
 ```powershell
@@ -192,6 +198,7 @@ Generated runtime files are intentionally local and ignored by git:
 | `reports/monitoring/dashboard_snapshot.json` | dashboard-ready monitoring and drift snapshot |
 | `reports/monitoring/dashboard.html` | local static monitoring dashboard |
 | `reports/retraining/retraining_trigger_decision.json` | local retraining trigger recommendation |
+| `retraining_runs/<run_id>/retraining_metadata.json` | governed candidate retraining run metadata |
 | `reports/drift/reference_baseline.json` | training-data reference baseline for drift checks |
 | `reports/drift/inference_snapshot.json` | production inference feature snapshot for drift checks |
 | `reports/drift/data_drift_summary.json` | local baseline-vs-inference drift summary |
@@ -390,4 +397,5 @@ modelOpsLab/
   logs/                # local logs
   mlruns/              # MLflow artifact store
   pipeline_runs/       # pipeline run metadata
+  retraining_runs/     # local retraining run metadata
 ```
