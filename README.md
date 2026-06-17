@@ -319,6 +319,12 @@ Grafana and Prometheus local stack:
 docs/monitoring/grafana_prometheus_local_stack.md
 ```
 
+Prometheus and Grafana learning notes:
+
+```text
+docs/learning/prometheus_grafana_notes.md
+```
+
 Retraining governance:
 
 ```text
