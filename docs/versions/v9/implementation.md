@@ -214,3 +214,65 @@ V9-C5 is local file-based alert evaluation.
 It does not send notifications, configure Prometheus Alertmanager, create Grafana dashboards, integrate Cloud Monitoring, or page anyone.
 
 Those belong after the local alert rules are stable and understandable.
+
+## V9-C6: Data Drift Reference Baseline Foundation
+
+### Files Added
+
+```text
+app/build_drift_reference_baseline.py
+app/observability/drift_baseline.py
+tests/test_v9_c6_drift_reference_baseline.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/versions/v9/
+```
+
+### Behavior
+- Added a no-install reference baseline builder for future drift detection.
+- Reads the configured training dataset from `configs/training.yaml`.
+- Reads feature and target roles from `schema_versions/customer_churn_v1.yaml`.
+- Summarizes numeric feature distributions.
+- Summarizes categorical and boolean feature distributions.
+- Summarizes target distribution separately from features.
+- Writes baseline output to:
+
+```text
+reports/drift/reference_baseline.json
+```
+
+- Added a command entry point:
+
+```powershell
+python -m app.build_drift_reference_baseline
+```
+
+### Baseline Contents
+The baseline records:
+
+```text
+baseline version
+dataset path
+schema path
+schema name
+schema version
+row count
+feature count
+numeric feature stats
+categorical feature counts and ratios
+boolean feature counts and ratios
+target counts and ratios
+```
+
+### Important Boundary
+V9-C6 creates the reference side of data drift detection.
+
+It does not compare production inference data against the baseline yet.
+
+It does not install Evidently, generate HTML drift reports, add dashboards, or trigger alerts from drift metrics.
+
+Those belong in later V9 chunks.

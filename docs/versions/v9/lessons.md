@@ -40,3 +40,12 @@
 - Alerts should include recommended actions, not only metric values.
 - High failure rate and missing telemetry are critical because they block trust in the serving system.
 - Prediction distribution collapse is ML-specific; it can reveal behavior problems even when backend latency looks healthy.
+
+## V9-C6: Data Drift Reference Baseline Foundation
+
+- Drift detection needs a reference distribution before it can compare current production traffic.
+- The training dataset is the first practical reference baseline for this project.
+- Schema roles prevent identifiers and target columns from being mixed into feature drift checks.
+- Numeric drift needs distribution statistics, not only min and max.
+- Categorical drift needs value counts and value ratios so shifts can be measured later.
+- Building the baseline before using Evidently makes the tool easier to understand when we add it.

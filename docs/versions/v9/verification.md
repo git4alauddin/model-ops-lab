@@ -50,6 +50,37 @@ git diff --check
 passed with CRLF normalization warnings only
 ```
 
+## V9-C6: Data Drift Reference Baseline Foundation
+
+Planned verification:
+
+```powershell
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c6_drift_reference_baseline.py
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py tests\test_v9_c6_drift_reference_baseline.py
+vir_env\Scripts\python.exe -m app.build_drift_reference_baseline
+vir_env\Scripts\python.exe -m pytest -q
+git diff --check
+```
+
+Actual verification:
+
+```text
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c6_drift_reference_baseline.py
+7 passed in 0.59s
+
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py tests\test_v9_c6_drift_reference_baseline.py
+37 passed, 1 warning in 1.54s
+
+vir_env\Scripts\python.exe -m app.build_drift_reference_baseline
+generated reports\drift\reference_baseline.json with row_count=20 and feature_count=7
+
+vir_env\Scripts\python.exe -m pytest -q
+511 passed, 1 warning in 8.64s
+
+git diff --check
+passed with CRLF normalization warnings only
+```
+
 ## V9-C5: Monitoring Alert Rules Foundation
 
 Planned verification:

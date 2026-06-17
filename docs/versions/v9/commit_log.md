@@ -94,3 +94,23 @@
 - `vir_env\Scripts\python.exe -m app.build_monitoring_alerts` generated `reports\monitoring\alerts.json` with `overall_status=alerting` and `active_alert_count=3`.
 - `vir_env\Scripts\python.exe -m pytest -q` passed: `504 passed, 1 warning in 18.71s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## Uncommitted - v9-c6: add data drift reference baseline foundation
+
+### What Changed
+- Added a reference baseline builder for future data drift detection.
+- Added a command to generate `reports/drift/reference_baseline.json`.
+- Summarized numeric, categorical, boolean, and target distributions from the training dataset.
+- Updated README and V9 documentation.
+- Added focused tests for baseline content and persistence.
+
+### What Problem It Solved
+- Establishes the reference distribution needed before comparing production inference traffic for drift.
+- Keeps drift foundations dependency-free before introducing Evidently or dashboard tooling.
+
+### Verification
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c6_drift_reference_baseline.py` passed: `7 passed in 0.59s`.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py tests\test_v9_c6_drift_reference_baseline.py` passed: `37 passed, 1 warning in 1.54s`.
+- `vir_env\Scripts\python.exe -m app.build_drift_reference_baseline` generated `reports\drift\reference_baseline.json` with `row_count=20` and `feature_count=7`.
+- `vir_env\Scripts\python.exe -m pytest -q` passed: `511 passed, 1 warning in 8.64s`.
+- `git diff --check` passed with CRLF normalization warnings only.

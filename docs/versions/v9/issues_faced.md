@@ -29,3 +29,9 @@ The fix was to treat the telemetry contract as a real boundary. Current metrics 
 No external alerting system was added.
 
 The key design choice was to keep alert thresholds local and explicit. This lets the project learn alert behavior before adding Prometheus Alertmanager, Grafana alerts, Cloud Monitoring, or notification channels.
+
+## V9-C6: Data Drift Reference Baseline Foundation
+
+No external drift library was added.
+
+The main design choice was to build the reference baseline from the existing training config and validation schema. That keeps the drift baseline aligned with the same dataset and feature roles already used by training, validation, and serving.

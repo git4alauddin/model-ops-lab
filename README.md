@@ -86,6 +86,12 @@ Build local monitoring alerts:
 python -m app.build_monitoring_alerts
 ```
 
+Build drift reference baseline:
+
+```powershell
+python -m app.build_drift_reference_baseline
+```
+
 Check dataset reproducibility:
 
 ```powershell
@@ -136,6 +142,7 @@ Generated runtime files are intentionally local and ignored by git:
 | `reports/` | validation reports and champion selection report |
 | `reports/monitoring/prediction_summary.json` | local prediction monitoring summary |
 | `reports/monitoring/alerts.json` | local monitoring alert report |
+| `reports/drift/reference_baseline.json` | training-data reference baseline for drift checks |
 | `logs/` | local runtime logs |
 | `mlflow.db` | MLflow backend database |
 | `mlruns/` | MLflow run artifacts |
