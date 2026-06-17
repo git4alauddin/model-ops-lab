@@ -44,3 +44,12 @@
 - Missing candidate or production metrics should lead to manual review instead of a fake pass.
 - A passing comparison can recommend `ready_for_approval`, but the actual promotion decision should still happen in a separate approval gate.
 - Keeping the comparison report inside the retraining run folder makes the lifecycle auditable.
+
+## V10-C6: Human Approval Record
+
+- Approval is permission, not promotion.
+- A model can pass metric comparison and still require human review before production changes.
+- Separating approval from promotion creates a clean audit trail: comparison evidence, human decision, then production action.
+- Approval should record who decided, when they decided, what they decided, and why.
+- Rejected and needs-review decisions are useful records, not failures of the system.
+- Keeping `promotion.decision` pending after approval protects the final production change as a separate operational step.

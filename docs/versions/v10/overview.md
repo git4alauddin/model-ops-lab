@@ -14,6 +14,7 @@ Implemented chunks:
 - V10-C3: candidate retraining run metadata.
 - V10-C4: candidate retraining command.
 - V10-C5: candidate-vs-production comparison report.
+- V10-C6: human approval record and promotion gate.
 
 ## Final Definition
 V10 is a production-style continuous ML lifecycle management layer with governed retraining workflows, drift-triggered automation, regression protection, deployment safeguards, architecture documentation, and portfolio-grade operational ML system presentation.

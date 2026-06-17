@@ -102,3 +102,26 @@
 - `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py tests\test_v10_c4_candidate_retraining_command.py tests\test_v10_c5_candidate_production_comparison.py` passed: `27 passed in 1.91s`.
 - `vir_env\Scripts\python.exe -m pytest -q` passed: `608 passed, 1 warning in 7.23s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## Uncommitted - v10-c6: add retraining approval gate
+
+### What Changed
+- Added a human approval gate.
+- Added a command to write `retraining_runs/<run_id>/approval_record.json`.
+- Supports `approved`, `rejected`, and `needs_review` decisions.
+- Updates retraining metadata with the human decision and approval record path.
+- Moves candidate runs from `candidate_compared` to `candidate_approval_recorded`.
+- Keeps `promotion.decision` pending.
+- Added focused tests and V10 documentation.
+
+### What Problem It Solved
+- Adds the human-in-the-loop checkpoint between comparison evidence and production promotion.
+- Prevents metric comparison from silently becoming production approval.
+
+### Verification
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c6_retraining_approval_gate.py` passed: `5 passed in 0.56s`.
+- `vir_env\Scripts\python.exe -m py_compile app\retraining\candidate_run_metadata.py app\retraining\approval_gate.py app\record_retraining_approval.py` passed.
+- `vir_env\Scripts\python.exe -m app.record_retraining_approval --run-id retrain-20260617T184250573186Z --decision approved --approved-by alauddin --notes "Candidate passed comparison gate for local V10 walkthrough."` generated `retraining_runs\retrain-20260617T184250573186Z\approval_record.json` with `decision=approved` and kept `promotion.decision=pending`.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py tests\test_v10_c4_candidate_retraining_command.py tests\test_v10_c5_candidate_production_comparison.py tests\test_v10_c6_retraining_approval_gate.py` passed: `32 passed in 1.91s`.
+- `vir_env\Scripts\python.exe -m pytest -q` passed: `613 passed, 1 warning in 6.51s`.
+- `git diff --check` passed with CRLF normalization warnings only.

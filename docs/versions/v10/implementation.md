@@ -253,3 +253,65 @@ retraining_runs/<run_id>/retraining_metadata.json
 V10-C5 produces comparison evidence only.
 
 It does not approve the candidate, promote it, register it, update the serving model, overwrite artifacts, or change rollback state.
+
+## V10-C6: Human Approval Record
+
+### Files Added
+
+```text
+app/retraining/approval_gate.py
+app/record_retraining_approval.py
+tests/test_v10_c6_retraining_approval_gate.py
+```
+
+### Files Updated
+
+```text
+README.md
+app/retraining/candidate_run_metadata.py
+docs/versions/v10/
+```
+
+### Behavior
+- Added a human approval command:
+
+```powershell
+python -m app.record_retraining_approval --run-id <run_id> --decision approved --approved-by <name> --notes "<reason>"
+```
+
+- Supported approval decisions:
+
+```text
+approved
+rejected
+needs_review
+```
+
+- Reads:
+
+```text
+retraining_runs/<run_id>/retraining_metadata.json
+```
+
+- Writes:
+
+```text
+retraining_runs/<run_id>/approval_record.json
+```
+
+- Updates:
+
+```text
+retraining_runs/<run_id>/retraining_metadata.json
+```
+
+- Requires run status `candidate_compared`.
+- Requires `regression_gates.status` to be `passed`.
+- Moves the run status to `candidate_approval_recorded`.
+- Records who made the decision, when it was made, the decision notes, comparison report path, regression gate status, and whether production change is allowed.
+- Keeps `promotion.decision` as `pending`.
+
+### Important Boundary
+V10-C6 records human permission only.
+
+It does not promote the model, register the candidate as production, update serving artifacts, overwrite production artifacts, or change rollback state.

@@ -149,6 +149,12 @@ Compare a trained candidate against production:
 python -m app.compare_candidate_to_production --run-id <run_id>
 ```
 
+Record a human retraining approval decision:
+
+```powershell
+python -m app.record_retraining_approval --run-id <run_id> --decision approved --approved-by <name> --notes "<reason>"
+```
+
 Check dataset reproducibility:
 
 ```powershell
@@ -213,6 +219,7 @@ Generated runtime files are intentionally local and ignored by git:
 | `retraining_runs/<run_id>/retraining_metadata.json` | governed candidate retraining run metadata |
 | `retraining_runs/<run_id>/candidate/` | candidate retraining model, metrics, config snapshot, and training metadata |
 | `retraining_runs/<run_id>/comparison_report.json` | candidate-vs-production metric comparison report |
+| `retraining_runs/<run_id>/approval_record.json` | human approval decision record before promotion |
 | `reports/drift/reference_baseline.json` | training-data reference baseline for drift checks |
 | `reports/drift/inference_snapshot.json` | production inference feature snapshot for drift checks |
 | `reports/drift/data_drift_summary.json` | local baseline-vs-inference drift summary |

@@ -29,9 +29,20 @@ DEFAULT_SCHEMA_PATH = Path("schema_versions/customer_churn_v1.yaml")
 CANDIDATE_RUN_INITIALIZED = "candidate_run_initialized"
 CANDIDATE_TRAINED = "candidate_trained"
 CANDIDATE_COMPARED = "candidate_compared"
+CANDIDATE_APPROVAL_RECORDED = "candidate_approval_recorded"
 APPROVAL_PENDING = "pending"
+APPROVAL_APPROVED = "approved"
+APPROVAL_REJECTED = "rejected"
+APPROVAL_NEEDS_REVIEW = "needs_review"
 PROMOTION_PENDING_EVALUATION = "pending_evaluation"
+VALID_APPROVAL_STATES = {
+    APPROVAL_APPROVED,
+    APPROVAL_NEEDS_REVIEW,
+    APPROVAL_PENDING,
+    APPROVAL_REJECTED,
+}
 VALID_CANDIDATE_RUN_STATUSES = {
+    CANDIDATE_APPROVAL_RECORDED,
     CANDIDATE_COMPARED,
     CANDIDATE_RUN_INITIALIZED,
     CANDIDATE_TRAINED,
@@ -295,8 +306,12 @@ def _validate_candidate_retraining_run_metadata(metadata: dict[str, Any]) -> Non
             "Invalid candidate retraining status: "
             f"{metadata['status']}. Expected one of {sorted(VALID_CANDIDATE_RUN_STATUSES)}."
         )
-    if metadata["approval"].get("state") != APPROVAL_PENDING:
-        raise CandidateRetrainingRunError("Candidate retraining approval must start pending.")
+    approval_state = metadata["approval"].get("state")
+    if approval_state not in VALID_APPROVAL_STATES:
+        raise CandidateRetrainingRunError(
+            "Invalid approval state: "
+            f"{approval_state}. Expected one of {sorted(VALID_APPROVAL_STATES)}."
+        )
     if metadata["promotion"].get("decision") != APPROVAL_PENDING:
         raise CandidateRetrainingRunError("Promotion decision must start pending.")
 

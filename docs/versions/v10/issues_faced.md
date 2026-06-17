@@ -58,3 +58,21 @@ promotion.decision = pending
 ```
 
 Missing metrics are treated as manual review instead of passing by default.
+
+## V10-C6: Human Approval Record
+
+The main boundary was avoiding approval and promotion becoming the same thing.
+
+C6 records a human decision and writes:
+
+```text
+retraining_runs/<run_id>/approval_record.json
+```
+
+But it keeps:
+
+```text
+promotion.decision = pending
+```
+
+This lets approval become a required permission step while production changes remain a separate, explicit operation.
