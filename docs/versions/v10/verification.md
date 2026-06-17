@@ -57,6 +57,41 @@ git diff --check
 passed with CRLF normalization warnings only
 ```
 
+## V10-C7: Approved Candidate Promotion Record
+
+Planned verification:
+
+```powershell
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c7_candidate_promotion_record.py
+vir_env\Scripts\python.exe -m py_compile app\retraining\candidate_run_metadata.py app\retraining\promotion_record.py app\record_candidate_promotion.py
+vir_env\Scripts\python.exe -m app.record_candidate_promotion --run-id <run_id> --promoted-by <name> --reason "<reason>"
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py tests\test_v10_c4_candidate_retraining_command.py tests\test_v10_c5_candidate_production_comparison.py tests\test_v10_c6_retraining_approval_gate.py tests\test_v10_c7_candidate_promotion_record.py
+vir_env\Scripts\python.exe -m pytest -q
+git diff --check
+```
+
+Actual verification:
+
+```text
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c7_candidate_promotion_record.py
+6 passed in 0.57s
+
+vir_env\Scripts\python.exe -m py_compile app\retraining\candidate_run_metadata.py app\retraining\promotion_record.py app\record_candidate_promotion.py
+passed
+
+vir_env\Scripts\python.exe -m app.record_candidate_promotion --run-id retrain-20260617T184250573186Z --promoted-by alauddin --reason "Approved candidate selected for V10 promotion record walkthrough."
+generated retraining_runs\retrain-20260617T184250573186Z\promotion_record.json with decision=promoted, registry_update=not_performed, and serving_update=not_performed
+
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py tests\test_v10_c4_candidate_retraining_command.py tests\test_v10_c5_candidate_production_comparison.py tests\test_v10_c6_retraining_approval_gate.py tests\test_v10_c7_candidate_promotion_record.py
+38 passed in 1.94s
+
+vir_env\Scripts\python.exe -m pytest -q
+619 passed, 1 warning in 7.40s
+
+git diff --check
+passed with CRLF normalization warnings only
+```
+
 ## V10-C6: Human Approval Record
 
 Planned verification:

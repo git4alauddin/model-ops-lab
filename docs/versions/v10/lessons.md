@@ -53,3 +53,12 @@
 - Approval should record who decided, when they decided, what they decided, and why.
 - Rejected and needs-review decisions are useful records, not failures of the system.
 - Keeping `promotion.decision` pending after approval protects the final production change as a separate operational step.
+
+## V10-C7: Approved Candidate Promotion Record
+
+- Promotion record is not the same as serving update.
+- Approval says a human permits production change; promotion record says the approved candidate has been selected as the promoted candidate.
+- Registry updates and serving updates are operational actions and should stay explicit.
+- Recording `registry_update = not_performed` and `serving_update = not_performed` prevents us from pretending production changed when it did not.
+- A good promotion record should preserve the rollback target before any production artifact changes.
+- The retraining run now has a full decision trail: trigger, candidate training, comparison, approval, and promotion decision.

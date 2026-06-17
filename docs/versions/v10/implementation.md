@@ -315,3 +315,68 @@ retraining_runs/<run_id>/retraining_metadata.json
 V10-C6 records human permission only.
 
 It does not promote the model, register the candidate as production, update serving artifacts, overwrite production artifacts, or change rollback state.
+
+## V10-C7: Approved Candidate Promotion Record
+
+### Files Added
+
+```text
+app/retraining/promotion_record.py
+app/record_candidate_promotion.py
+tests/test_v10_c7_candidate_promotion_record.py
+```
+
+### Files Updated
+
+```text
+README.md
+app/retraining/candidate_run_metadata.py
+docs/versions/v10/
+```
+
+### Behavior
+- Added an approved candidate promotion record command:
+
+```powershell
+python -m app.record_candidate_promotion --run-id <run_id> --promoted-by <name> --reason "<reason>"
+```
+
+- Reads:
+
+```text
+retraining_runs/<run_id>/retraining_metadata.json
+```
+
+- Writes:
+
+```text
+retraining_runs/<run_id>/promotion_record.json
+```
+
+- Updates:
+
+```text
+retraining_runs/<run_id>/retraining_metadata.json
+```
+
+- Requires run status `candidate_approval_recorded`.
+- Requires `approval.state = approved`.
+- Requires `promotion.decision = pending`.
+- Requires `promotion.production_change_allowed = true`.
+- Requires candidate model and metrics paths to exist in metadata.
+- Moves the run status to `candidate_promoted`.
+- Sets `promotion.decision = promoted`.
+- Records who promoted, why, when, the rollback target, candidate paths, approval record path, and comparison report path.
+- Explicitly records:
+
+```text
+registry_update = not_performed
+serving_update = not_performed
+```
+
+### Important Boundary
+V10-C7 records the approved promotion decision only.
+
+It does not update the model registry champion, copy model artifacts, update the serving runtime, redeploy the API, or change live production traffic.
+
+This keeps the audit decision separate from the operational serving update.

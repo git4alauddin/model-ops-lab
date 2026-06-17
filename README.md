@@ -155,6 +155,12 @@ Record a human retraining approval decision:
 python -m app.record_retraining_approval --run-id <run_id> --decision approved --approved-by <name> --notes "<reason>"
 ```
 
+Record an approved candidate promotion decision:
+
+```powershell
+python -m app.record_candidate_promotion --run-id <run_id> --promoted-by <name> --reason "<reason>"
+```
+
 Check dataset reproducibility:
 
 ```powershell
@@ -220,6 +226,7 @@ Generated runtime files are intentionally local and ignored by git:
 | `retraining_runs/<run_id>/candidate/` | candidate retraining model, metrics, config snapshot, and training metadata |
 | `retraining_runs/<run_id>/comparison_report.json` | candidate-vs-production metric comparison report |
 | `retraining_runs/<run_id>/approval_record.json` | human approval decision record before promotion |
+| `retraining_runs/<run_id>/promotion_record.json` | approved candidate promotion decision record |
 | `reports/drift/reference_baseline.json` | training-data reference baseline for drift checks |
 | `reports/drift/inference_snapshot.json` | production inference feature snapshot for drift checks |
 | `reports/drift/data_drift_summary.json` | local baseline-vs-inference drift summary |

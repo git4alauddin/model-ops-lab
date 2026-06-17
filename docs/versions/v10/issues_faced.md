@@ -76,3 +76,23 @@ promotion.decision = pending
 ```
 
 This lets approval become a required permission step while production changes remain a separate, explicit operation.
+
+## V10-C7: Approved Candidate Promotion Record
+
+The confusing part is that "promotion" can mean two different things:
+
+```text
+promotion decision recorded
+production serving model changed
+```
+
+C7 implements only the first meaning.
+
+The promotion record explicitly stores:
+
+```text
+registry_update = not_performed
+serving_update = not_performed
+```
+
+This avoids a false production story. The system has now recorded that the approved candidate is selected for promotion, but the registry and serving update remain separate controlled steps.

@@ -30,20 +30,28 @@ CANDIDATE_RUN_INITIALIZED = "candidate_run_initialized"
 CANDIDATE_TRAINED = "candidate_trained"
 CANDIDATE_COMPARED = "candidate_compared"
 CANDIDATE_APPROVAL_RECORDED = "candidate_approval_recorded"
+CANDIDATE_PROMOTED = "candidate_promoted"
 APPROVAL_PENDING = "pending"
 APPROVAL_APPROVED = "approved"
 APPROVAL_REJECTED = "rejected"
 APPROVAL_NEEDS_REVIEW = "needs_review"
 PROMOTION_PENDING_EVALUATION = "pending_evaluation"
+PROMOTION_DECISION_PENDING = "pending"
+PROMOTION_DECISION_PROMOTED = "promoted"
 VALID_APPROVAL_STATES = {
     APPROVAL_APPROVED,
     APPROVAL_NEEDS_REVIEW,
     APPROVAL_PENDING,
     APPROVAL_REJECTED,
 }
+VALID_PROMOTION_DECISIONS = {
+    PROMOTION_DECISION_PENDING,
+    PROMOTION_DECISION_PROMOTED,
+}
 VALID_CANDIDATE_RUN_STATUSES = {
     CANDIDATE_APPROVAL_RECORDED,
     CANDIDATE_COMPARED,
+    CANDIDATE_PROMOTED,
     CANDIDATE_RUN_INITIALIZED,
     CANDIDATE_TRAINED,
 }
@@ -200,7 +208,7 @@ def build_candidate_retraining_run_metadata(
         },
         "promotion": {
             "recommendation": PROMOTION_PENDING_EVALUATION,
-            "decision": APPROVAL_PENDING,
+            "decision": PROMOTION_DECISION_PENDING,
             "promoted_at": None,
             "rollback_target": _rollback_target(previous_production_model),
         },
@@ -312,8 +320,12 @@ def _validate_candidate_retraining_run_metadata(metadata: dict[str, Any]) -> Non
             "Invalid approval state: "
             f"{approval_state}. Expected one of {sorted(VALID_APPROVAL_STATES)}."
         )
-    if metadata["promotion"].get("decision") != APPROVAL_PENDING:
-        raise CandidateRetrainingRunError("Promotion decision must start pending.")
+    promotion_decision = metadata["promotion"].get("decision")
+    if promotion_decision not in VALID_PROMOTION_DECISIONS:
+        raise CandidateRetrainingRunError(
+            "Invalid promotion decision: "
+            f"{promotion_decision}. Expected one of {sorted(VALID_PROMOTION_DECISIONS)}."
+        )
 
 
 def _section(config: dict[str, Any], name: str) -> dict[str, Any]:

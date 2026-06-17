@@ -125,3 +125,26 @@
 - `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py tests\test_v10_c4_candidate_retraining_command.py tests\test_v10_c5_candidate_production_comparison.py tests\test_v10_c6_retraining_approval_gate.py` passed: `32 passed in 1.91s`.
 - `vir_env\Scripts\python.exe -m pytest -q` passed: `613 passed, 1 warning in 6.51s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## Uncommitted - v10-c7: add candidate promotion record
+
+### What Changed
+- Added an approved candidate promotion record.
+- Added a command to write `retraining_runs/<run_id>/promotion_record.json`.
+- Updates retraining metadata from `candidate_approval_recorded` to `candidate_promoted`.
+- Sets `promotion.decision = promoted`.
+- Records promoter, reason, promotion timestamp, rollback target, approval record path, comparison report path, and candidate artifact paths.
+- Explicitly records registry and serving updates as not performed.
+- Added focused tests and V10 documentation.
+
+### What Problem It Solved
+- Creates an auditable promotion decision after human approval without pretending live production changed.
+- Separates promotion decision from model registry and serving runtime updates.
+
+### Verification
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c7_candidate_promotion_record.py` passed: `6 passed in 0.57s`.
+- `vir_env\Scripts\python.exe -m py_compile app\retraining\candidate_run_metadata.py app\retraining\promotion_record.py app\record_candidate_promotion.py` passed.
+- `vir_env\Scripts\python.exe -m app.record_candidate_promotion --run-id retrain-20260617T184250573186Z --promoted-by alauddin --reason "Approved candidate selected for V10 promotion record walkthrough."` generated `retraining_runs\retrain-20260617T184250573186Z\promotion_record.json` with `decision=promoted`, `registry_update=not_performed`, and `serving_update=not_performed`.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py tests\test_v10_c4_candidate_retraining_command.py tests\test_v10_c5_candidate_production_comparison.py tests\test_v10_c6_retraining_approval_gate.py tests\test_v10_c7_candidate_promotion_record.py` passed: `38 passed in 1.94s`.
+- `vir_env\Scripts\python.exe -m pytest -q` passed: `619 passed, 1 warning in 7.40s`.
+- `git diff --check` passed with CRLF normalization warnings only.
