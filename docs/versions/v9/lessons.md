@@ -32,3 +32,11 @@
 - Raw event count and valid event count are different when logs span multiple contract versions.
 - Skipped-record accounting is better than silent filtering because it explains why the summary numbers may be smaller than the file line count.
 - Versioned telemetry contracts make monitoring evolution safer.
+
+## V9-C5: Monitoring Alert Rules Foundation
+
+- Alert rules turn monitoring metrics into operational decisions.
+- Local alert files are useful before notification systems because they make threshold logic visible and testable.
+- Alerts should include recommended actions, not only metric values.
+- High failure rate and missing telemetry are critical because they block trust in the serving system.
+- Prediction distribution collapse is ML-specific; it can reveal behavior problems even when backend latency looks healthy.

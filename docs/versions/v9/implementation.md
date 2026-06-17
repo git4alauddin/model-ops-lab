@@ -159,3 +159,58 @@ skipped_events
 V9-C4 improves local summary correctness only.
 
 It does not delete old local logs, mutate `logs/predictions.jsonl`, add time-window filtering, add Prometheus metrics, or create dashboards.
+
+## V9-C5: Monitoring Alert Rules Foundation
+
+### Files Added
+
+```text
+app/build_monitoring_alerts.py
+app/observability/monitoring_alerts.py
+tests/test_v9_c5_monitoring_alert_rules.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/versions/v9/
+```
+
+### Behavior
+- Added local alert evaluation from `reports/monitoring/prediction_summary.json`.
+- Writes alert output to `reports/monitoring/alerts.json`.
+- Added a command entry point:
+
+```powershell
+python -m app.build_monitoring_alerts
+```
+
+- Added default local alert thresholds:
+
+```text
+minimum_request_count=1
+max_failure_rate=0.2
+max_p95_latency_ms=1000.0
+max_skipped_event_ratio=0.1
+max_prediction_class_share=0.95
+```
+
+- Added alert rules for:
+
+```text
+missing prediction telemetry
+high failure rate
+high p95 latency
+high skipped event ratio
+prediction distribution collapse
+```
+
+- Each alert includes status, severity, metric value, threshold, message, and recommended action.
+
+### Important Boundary
+V9-C5 is local file-based alert evaluation.
+
+It does not send notifications, configure Prometheus Alertmanager, create Grafana dashboards, integrate Cloud Monitoring, or page anyone.
+
+Those belong after the local alert rules are stable and understandable.

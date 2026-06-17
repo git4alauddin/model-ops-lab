@@ -50,6 +50,37 @@ git diff --check
 passed with CRLF normalization warnings only
 ```
 
+## V9-C5: Monitoring Alert Rules Foundation
+
+Planned verification:
+
+```powershell
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c5_monitoring_alert_rules.py
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py
+vir_env\Scripts\python.exe -m app.build_monitoring_alerts
+vir_env\Scripts\python.exe -m pytest -q
+git diff --check
+```
+
+Actual verification:
+
+```text
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c5_monitoring_alert_rules.py
+7 passed in 0.09s
+
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py
+30 passed, 1 warning in 2.38s
+
+vir_env\Scripts\python.exe -m app.build_monitoring_alerts
+generated reports\monitoring\alerts.json with overall_status=alerting and active_alert_count=3
+
+vir_env\Scripts\python.exe -m pytest -q
+504 passed, 1 warning in 18.71s
+
+git diff --check
+passed with CRLF normalization warnings only
+```
+
 ## V9-C4: Monitoring Summary Event Filtering
 
 Planned verification:

@@ -80,6 +80,12 @@ python -m app.build_prediction_monitoring_summary
 
 The summary uses supported V9 telemetry events and reports skipped legacy records.
 
+Build local monitoring alerts:
+
+```powershell
+python -m app.build_monitoring_alerts
+```
+
 Check dataset reproducibility:
 
 ```powershell
@@ -129,6 +135,7 @@ Generated runtime files are intentionally local and ignored by git:
 | `artifacts/` | trained model, metrics, config snapshot, training metadata |
 | `reports/` | validation reports and champion selection report |
 | `reports/monitoring/prediction_summary.json` | local prediction monitoring summary |
+| `reports/monitoring/alerts.json` | local monitoring alert report |
 | `logs/` | local runtime logs |
 | `mlflow.db` | MLflow backend database |
 | `mlruns/` | MLflow run artifacts |

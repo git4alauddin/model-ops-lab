@@ -13,6 +13,7 @@ Implemented chunks:
 - V9-C2: prediction telemetry contract.
 - V9-C3: local monitoring summary from prediction telemetry.
 - V9-C4: monitoring summary event filtering.
+- V9-C5: monitoring alert rules foundation.
 
 ## Final Definition
 V9 is a production-style ML observability and monitoring layer using prediction telemetry, drift detection, operational dashboards, latency monitoring, alert-ready metrics, and traceable production metrics for reliable long-term ML system operation.

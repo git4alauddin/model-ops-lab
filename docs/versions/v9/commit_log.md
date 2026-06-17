@@ -74,3 +74,23 @@
 - `vir_env\Scripts\python.exe -m app.build_prediction_monitoring_summary` regenerated `reports\monitoring\prediction_summary.json` with `raw_event_count=263`, `total_events=92`, `skipped_event_count=171`, and no `None` metric buckets.
 - `vir_env\Scripts\python.exe -m pytest -q` passed: `497 passed, 1 warning in 5.54s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## Uncommitted - v9-c5: add monitoring alert rules foundation
+
+### What Changed
+- Added local alert evaluation from the prediction monitoring summary.
+- Added an alert report command.
+- Added default thresholds for missing telemetry, failure rate, p95 latency, skipped telemetry, and prediction distribution collapse.
+- Added focused tests for alert rules and persistence.
+- Updated README and V9 documentation.
+
+### What Problem It Solved
+- Converts local monitoring metrics into actionable alert states.
+- Creates a file-based alert foundation before Prometheus, Grafana, Alertmanager, Cloud Monitoring, or notifications.
+
+### Verification
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c5_monitoring_alert_rules.py` passed: `7 passed in 0.09s`.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py` passed: `30 passed, 1 warning in 2.38s`.
+- `vir_env\Scripts\python.exe -m app.build_monitoring_alerts` generated `reports\monitoring\alerts.json` with `overall_status=alerting` and `active_alert_count=3`.
+- `vir_env\Scripts\python.exe -m pytest -q` passed: `504 passed, 1 warning in 18.71s`.
+- `git diff --check` passed with CRLF normalization warnings only.

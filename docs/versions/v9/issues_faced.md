@@ -23,3 +23,9 @@ The main design choice was percentile calculation. V9-C3 uses a nearest-rank per
 The first local summary exposed a realistic issue: `logs/predictions.jsonl` contained older records from before V9-C2. Those records did not have `event_version`, `event_type`, or `endpoint`, so they appeared as `None` buckets and inflated failure metrics.
 
 The fix was to treat the telemetry contract as a real boundary. Current metrics now use only supported V9 events and separately report skipped legacy records.
+
+## V9-C5: Monitoring Alert Rules Foundation
+
+No external alerting system was added.
+
+The key design choice was to keep alert thresholds local and explicit. This lets the project learn alert behavior before adding Prometheus Alertmanager, Grafana alerts, Cloud Monitoring, or notification channels.
