@@ -111,3 +111,11 @@
 - Grafana provisioning makes dashboards reproducible instead of manually clicking them into existence.
 - Keeping the monitoring compose file separate from the serving compose file makes learning and debugging easier.
 - A starter dashboard is useful even if teams later refine panels in the Grafana UI.
+
+## V9-C15: Monitoring Retention And Incident Debugging Workflow
+
+- Incident debugging starts from the symptom, then moves backward through dashboards, metrics, reports, and raw telemetry.
+- Retention is useful only when the retained files can reconstruct what happened.
+- Generated logs and reports should stay out of Git because they are runtime evidence and may contain sensitive context.
+- Report freshness matters during incidents because stale reports can point to the wrong cause.
+- A clear regeneration order prevents inconsistent monitoring reports during local debugging.

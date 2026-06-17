@@ -23,6 +23,7 @@ Implemented chunks:
 - V9-C12: local monitoring dashboard HTML.
 - V9-C13: Prometheus metrics endpoint.
 - V9-C14: Prometheus and Grafana local stack.
+- V9-C15: monitoring retention and incident debugging workflow.
 
 ## Final Definition
 V9 is a production-style ML observability and monitoring layer using prediction telemetry, drift detection, operational dashboards, latency monitoring, alert-ready metrics, and traceable production metrics for reliable long-term ML system operation.

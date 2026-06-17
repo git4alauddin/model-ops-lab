@@ -89,3 +89,11 @@ The main local networking issue is that Prometheus runs in a container while the
 The stack uses `host.docker.internal:8000/metrics` so Prometheus can scrape the host API from Docker Desktop.
 
 The monitoring compose file is separate from the serving compose file so the project can start the API and monitoring stack independently while learning each tool.
+
+## V9-C15: Monitoring Retention And Incident Debugging Workflow
+
+No new runtime system was added.
+
+The main design choice was to keep generated monitoring evidence local and ignored by Git while documenting how to use it for incident reconstruction.
+
+The workflow explicitly separates production-style evidence collection from long-term production retention infrastructure, which remains outside V9.

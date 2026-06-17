@@ -319,6 +319,12 @@ Grafana and Prometheus local stack:
 docs/monitoring/grafana_prometheus_local_stack.md
 ```
 
+Monitoring retention and incident debugging:
+
+```text
+docs/monitoring/monitoring_retention_incident_workflow.md
+```
+
 Prometheus and Grafana learning notes:
 
 ```text

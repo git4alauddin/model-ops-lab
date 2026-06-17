@@ -288,3 +288,24 @@
 - `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c13_prometheus_metrics_endpoint.py tests\test_v9_c14_grafana_prometheus_local_stack.py` passed: `11 passed, 1 warning in 2.12s`.
 - `vir_env\Scripts\python.exe -m pytest -q` passed: `564 passed, 1 warning in 8.48s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## Uncommitted - v9-c15: add monitoring retention incident workflow
+
+### What Changed
+- Added a monitoring retention and incident debugging workflow.
+- Documented how each V9 monitoring artifact is used during investigation.
+- Documented the Git retention boundary for generated logs and reports.
+- Documented the privacy boundary for telemetry retention.
+- Added debugging paths for high failure rate, high latency, data drift, and empty Grafana dashboards.
+- Updated README and V9 documentation.
+- Added focused tests for the workflow document.
+
+### What Problem It Solved
+- Makes V9 observability useful after an incident by explaining how to reconstruct what happened from dashboards, metrics, reports, and raw telemetry.
+- Clarifies what is retained locally, what is ignored by Git, and what remains outside V9.
+
+### Verification
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c15_monitoring_retention_incident_workflow.py` passed: `5 passed in 0.04s`.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py tests\test_v9_c6_drift_reference_baseline.py tests\test_v9_c7_inference_feature_snapshot.py tests\test_v9_c8_local_data_drift_comparison.py tests\test_v9_c9_fresh_feature_telemetry_workflow.py tests\test_v9_c10_drift_alert_integration.py tests\test_v9_c11_dashboard_snapshot_contract.py tests\test_v9_c12_local_monitoring_dashboard_html.py tests\test_v9_c13_prometheus_metrics_endpoint.py tests\test_v9_c14_grafana_prometheus_local_stack.py tests\test_v9_c15_monitoring_retention_incident_workflow.py` passed: `84 passed, 1 warning in 1.52s`.
+- `vir_env\Scripts\python.exe -m pytest -q` passed: `573 passed, 1 warning in 7.95s`.
+- `git diff --check` passed with CRLF normalization warnings only.

@@ -698,3 +698,48 @@ report availability
 V9-C14 adds local monitoring infrastructure configuration.
 
 It does not run Docker automatically, deploy Grafana to the cloud, configure alert notifications, or persist long-term Prometheus storage.
+
+## V9-C15: Monitoring Retention And Incident Debugging Workflow
+
+### Files Added
+
+```text
+docs/monitoring/monitoring_retention_incident_workflow.md
+tests/test_v9_c15_monitoring_retention_incident_workflow.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/versions/v9/
+```
+
+### Behavior
+- Added a monitoring retention and incident debugging workflow.
+- Documented the purpose of each V9 monitoring artifact:
+
+```text
+logs/predictions.jsonl
+reports/monitoring/prediction_summary.json
+reports/monitoring/alerts.json
+reports/drift/reference_baseline.json
+reports/drift/inference_snapshot.json
+reports/drift/data_drift_summary.json
+reports/monitoring/dashboard_snapshot.json
+reports/monitoring/dashboard.html
+GET /metrics
+Prometheus
+Grafana
+```
+
+- Defined the Git retention boundary for generated logs and reports.
+- Defined the privacy boundary for telemetry retention.
+- Added a step-by-step incident debugging workflow from symptom to raw telemetry.
+- Added common investigation paths for high failure rate, high latency, data drift, and empty Grafana dashboards.
+- Documented the report regeneration order when monitoring data is stale.
+
+### Important Boundary
+V9-C15 documents local retention and incident debugging behavior.
+
+It does not add long-term storage, alert notifications, cloud monitoring, incident ticketing, or automatic remediation.
