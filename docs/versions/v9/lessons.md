@@ -95,3 +95,11 @@
 - Dashboard cards should show both backend health and ML-specific health.
 - Escaping snapshot values matters because dashboards render report data into HTML.
 - Report freshness belongs on the dashboard because stale observability can be worse than no observability.
+
+## V9-C13: Prometheus Metrics Endpoint
+
+- Prometheus gives Grafana a scrapeable metrics source instead of making Grafana read local JSON files directly.
+- `prometheus-client` avoids hand-rolled text exposition and keeps the endpoint aligned with Prometheus conventions.
+- A per-render collector registry prevents duplicate metric registration during tests and repeated app imports.
+- Report availability metrics are useful because a working `/metrics` endpoint can still be missing local monitoring inputs.
+- The metrics endpoint is a bridge from local file-based observability to production-style monitoring tools.

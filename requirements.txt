@@ -7,3 +7,4 @@ mlflow>=3.0.0
 prefect>=3.0.0
 fastapi>=0.110.0
 uvicorn>=0.29.0
+prometheus-client>=0.25.0

@@ -3,7 +3,8 @@
 from uuid import uuid4
 
 from fastapi import APIRouter
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
+from prometheus_client import CONTENT_TYPE_LATEST
 
 from app.api.constants import API_VERSION, SERVICE_NAME
 from app.api.schemas import (
@@ -11,6 +12,7 @@ from app.api.schemas import (
     BatchPredictionResponse,
     PredictionRequest,
 )
+from app.observability.prometheus_metrics import build_prometheus_metrics_from_reports
 from app.serving.model_loader import load_champion_model, ModelLoaderError
 from app.serving.prediction_logging import (
     build_prediction_failure_log,
@@ -47,6 +49,15 @@ def readiness_check():
     if readiness["status"] != "ready":
         return JSONResponse(status_code=503, content=readiness)
     return readiness
+
+
+@router.get("/metrics", response_class=Response)
+def prometheus_metrics() -> Response:
+    """Return Prometheus-compatible local monitoring metrics."""
+    return Response(
+        content=build_prometheus_metrics_from_reports(),
+        media_type=CONTENT_TYPE_LATEST,
+    )
 
 
 @router.post("/predict", response_model=None)

@@ -245,3 +245,25 @@
 - `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py tests\test_v9_c6_drift_reference_baseline.py tests\test_v9_c7_inference_feature_snapshot.py tests\test_v9_c8_local_data_drift_comparison.py tests\test_v9_c9_fresh_feature_telemetry_workflow.py tests\test_v9_c10_drift_alert_integration.py tests\test_v9_c11_dashboard_snapshot_contract.py tests\test_v9_c12_local_monitoring_dashboard_html.py` passed: `68 passed, 1 warning in 1.39s`.
 - `vir_env\Scripts\python.exe -m pytest -q` passed: `553 passed, 1 warning in 6.09s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## Uncommitted - v9-c13: add Prometheus metrics endpoint
+
+### What Changed
+- Added Prometheus metrics rendering with `prometheus-client`.
+- Added a FastAPI `GET /metrics` endpoint.
+- Exposed local monitoring, alert, telemetry quality, and data drift metrics.
+- Added report availability metrics for missing local monitoring reports.
+- Added `prometheus-client` as an explicit dependency.
+- Updated README and V9 documentation.
+- Added focused tests for renderer behavior, source validation, and endpoint response.
+
+### What Problem It Solved
+- Creates the scrapeable metrics source needed before Prometheus and Grafana can be wired into the project.
+- Moves V9 from local dashboard artifacts toward production-style monitoring integration.
+
+### Verification
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c13_prometheus_metrics_endpoint.py` passed: `6 passed, 1 warning in 1.23s`.
+- `vir_env\Scripts\python.exe -m py_compile app\observability\prometheus_metrics.py app\api\routes.py` passed.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py tests\test_v9_c6_drift_reference_baseline.py tests\test_v9_c7_inference_feature_snapshot.py tests\test_v9_c8_local_data_drift_comparison.py tests\test_v9_c9_fresh_feature_telemetry_workflow.py tests\test_v9_c10_drift_alert_integration.py tests\test_v9_c11_dashboard_snapshot_contract.py tests\test_v9_c12_local_monitoring_dashboard_html.py tests\test_v9_c13_prometheus_metrics_endpoint.py` passed: `74 passed, 1 warning in 1.50s`.
+- `vir_env\Scripts\python.exe -m pytest -q` passed: `559 passed, 1 warning in 6.76s`.
+- `git diff --check` passed with CRLF normalization warnings only.

@@ -21,6 +21,7 @@ Implemented chunks:
 - V9-C10: drift alert integration.
 - V9-C11: monitoring dashboard data contract.
 - V9-C12: local monitoring dashboard HTML.
+- V9-C13: Prometheus metrics endpoint.
 
 ## Final Definition
 V9 is a production-style ML observability and monitoring layer using prediction telemetry, drift detection, operational dashboards, latency monitoring, alert-ready metrics, and traceable production metrics for reliable long-term ML system operation.

@@ -587,3 +587,56 @@ report freshness
 V9-C12 adds a local dashboard artifact.
 
 It does not install Grafana, expose Prometheus metrics, start a web server, add a FastAPI dashboard route, or add live auto-refresh.
+
+## V9-C13: Prometheus Metrics Endpoint
+
+### Files Added
+
+```text
+app/observability/prometheus_metrics.py
+tests/test_v9_c13_prometheus_metrics_endpoint.py
+```
+
+### Files Updated
+
+```text
+README.md
+app/api/routes.py
+docs/versions/v9/
+requirements.txt
+```
+
+### Behavior
+- Added a Prometheus-compatible `/metrics` endpoint to the FastAPI serving API.
+- Uses `prometheus-client` with a per-render `CollectorRegistry`.
+- Reads available local V9 reports:
+
+```text
+reports/monitoring/prediction_summary.json
+reports/monitoring/alerts.json
+reports/drift/data_drift_summary.json
+```
+
+- Exposes report availability flags when reports are missing.
+- Exposes metrics for:
+
+```text
+prediction request count
+prediction success count
+prediction failure count
+prediction failure rate
+latency average, p95, p99, min, max
+raw and skipped telemetry events
+active alert count
+monitoring status
+data drift detected
+drifted feature count
+drift inference row count
+```
+
+- Added `prometheus-client` as an explicit project dependency.
+
+### Important Boundary
+V9-C13 creates the scrapeable metrics source needed by Prometheus and Grafana.
+
+It does not start Prometheus, install Grafana, add Docker Compose monitoring services, or create a Grafana dashboard JSON.

@@ -73,6 +73,14 @@ Run the FastAPI serving API locally:
 uvicorn app.serve_api:app --reload
 ```
 
+Expose Prometheus metrics from the serving API:
+
+```text
+GET /metrics
+```
+
+The endpoint uses `prometheus-client` and local V9 monitoring reports as the metrics source.
+
 Build local prediction monitoring summary:
 
 ```powershell

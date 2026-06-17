@@ -73,3 +73,11 @@ No external dashboard tool was added.
 The main design choice was to render a static local HTML file from `reports/monitoring/dashboard_snapshot.json`. This gives the project an actual visible dashboard while keeping Grafana, Prometheus, servers, and new dependencies out of this chunk.
 
 The dashboard renderer escapes snapshot values because monitoring reports are data inputs to HTML output.
+
+## V9-C13: Prometheus Metrics Endpoint
+
+The first design thought was to hand-render Prometheus text manually, but that would compromise the production learning goal.
+
+The fix was to use `prometheus-client` explicitly and add it to `requirements.txt`. It was already installed transitively in the local virtual environment, but V9-C13 records it as a direct dependency because `/metrics` now relies on it.
+
+The endpoint uses a local collector registry per response so tests and repeated app creation do not collide on metric names.
