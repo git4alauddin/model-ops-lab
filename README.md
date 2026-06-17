@@ -17,6 +17,7 @@ The project starts with a local ML training pipeline and gradually adds validati
 | V7 | FastAPI model serving |
 | V8 | Dockerization and deployment foundations |
 | V9 | Monitoring, drift detection, and production observability |
+| V10 | Retraining automation, governance, and portfolio packaging |
 
 Detailed implementation history lives under `docs/versions/`.
 
@@ -280,6 +281,12 @@ Fresh feature telemetry workflow:
 
 ```text
 docs/monitoring/fresh_feature_telemetry_workflow.md
+```
+
+Retraining governance:
+
+```text
+docs/retraining/retraining_governance.md
 ```
 
 Workload Identity Federation learning notes:
