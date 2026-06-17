@@ -80,3 +80,10 @@
 - A drift detector is more useful when it produces actionable alert states, not only a standalone report.
 - `drift_detected` and `insufficient_data` are different alert situations and need different recommended actions.
 - Integrating drift alerts locally first keeps the alert logic visible before adding external notification systems.
+
+## V9-C11: Monitoring Dashboard Data Contract
+
+- Dashboards should read from a stable data contract instead of scraping many unrelated files directly.
+- A dashboard snapshot separates report generation from visualization.
+- Report freshness timestamps matter because stale monitoring data can be misleading.
+- Source report paths make dashboard cards traceable back to the detailed JSON reports.

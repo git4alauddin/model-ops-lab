@@ -202,3 +202,24 @@
 - `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py tests\test_v9_c6_drift_reference_baseline.py tests\test_v9_c7_inference_feature_snapshot.py tests\test_v9_c8_local_data_drift_comparison.py tests\test_v9_c9_fresh_feature_telemetry_workflow.py tests\test_v9_c10_drift_alert_integration.py` passed: `57 passed, 1 warning in 1.21s`.
 - `vir_env\Scripts\python.exe -m pytest -q` passed: `531 passed, 1 warning in 5.64s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## Uncommitted - v9-c11: add monitoring dashboard data contract
+
+### What Changed
+- Added a dashboard-ready snapshot builder.
+- Added a command to generate `reports/monitoring/dashboard_snapshot.json`.
+- Aggregated prediction summary, alerts, drift baseline, inference snapshot, and drift summary.
+- Added dashboard cards, distributions, report freshness, and source report paths.
+- Added focused tests and V9 documentation.
+
+### What Problem It Solved
+- Creates one stable data contract for a future dashboard UI or Grafana-like visualization layer.
+- Avoids coupling a future dashboard directly to several raw report files.
+
+### Verification
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c11_dashboard_snapshot_contract.py` passed: `5 passed in 0.56s`.
+- `vir_env\Scripts\python.exe -m py_compile app\observability\dashboard_snapshot.py app\build_dashboard_snapshot.py` passed.
+- `vir_env\Scripts\python.exe -m app.build_dashboard_snapshot` generated `reports\monitoring\dashboard_snapshot.json` with `overall_status=alerting`, `active_alert_count=3`, and `drifted_feature_count=5`.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py tests\test_v9_c6_drift_reference_baseline.py tests\test_v9_c7_inference_feature_snapshot.py tests\test_v9_c8_local_data_drift_comparison.py tests\test_v9_c9_fresh_feature_telemetry_workflow.py tests\test_v9_c10_drift_alert_integration.py tests\test_v9_c11_dashboard_snapshot_contract.py` passed: `62 passed, 1 warning in 1.25s`.
+- `vir_env\Scripts\python.exe -m pytest -q` passed: `536 passed, 1 warning in 5.72s`.
+- `git diff --check` passed with CRLF normalization warnings only.

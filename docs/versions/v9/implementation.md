@@ -471,3 +471,60 @@ data_drift_insufficient_data
 V9-C10 integrates local drift results into local alert output.
 
 It does not send notifications, configure Alertmanager, configure Cloud Monitoring, create Grafana dashboards, or install new tools.
+
+## V9-C11: Monitoring Dashboard Data Contract
+
+### Files Added
+
+```text
+app/build_dashboard_snapshot.py
+app/observability/dashboard_snapshot.py
+tests/test_v9_c11_dashboard_snapshot_contract.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/versions/v9/
+```
+
+### Behavior
+- Added a dashboard-ready local snapshot builder.
+- Reads:
+
+```text
+reports/monitoring/prediction_summary.json
+reports/monitoring/alerts.json
+reports/drift/reference_baseline.json
+reports/drift/inference_snapshot.json
+reports/drift/data_drift_summary.json
+```
+
+- Writes:
+
+```text
+reports/monitoring/dashboard_snapshot.json
+```
+
+- Aggregates dashboard cards for:
+
+```text
+request counts
+latency
+alerts
+drift status
+telemetry quality
+```
+
+- Includes distributions, drifted feature names, report freshness timestamps, and source report paths.
+- Added a command entry point:
+
+```powershell
+python -m app.build_dashboard_snapshot
+```
+
+### Important Boundary
+V9-C11 creates the data contract for a dashboard.
+
+It does not build the visual dashboard UI, install Grafana, start a server, or add frontend assets.

@@ -59,3 +59,9 @@ Generating fresh valid prediction requests fixed the missing inference feature r
 No external alerting tool was added.
 
 The main integration choice was to keep drift alerts in `reports/monitoring/alerts.json` instead of creating a separate alert report. That keeps operational and ML-specific alert states in one local place.
+
+## V9-C11: Monitoring Dashboard Data Contract
+
+No dashboard UI was added.
+
+The key design choice was to create a dashboard-ready JSON contract first. This keeps the visualization layer simple later because it can consume one stable file instead of reinterpreting every raw monitoring and drift report.

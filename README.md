@@ -104,6 +104,12 @@ Build local data drift summary:
 python -m app.build_data_drift_summary
 ```
 
+Build dashboard-ready monitoring snapshot:
+
+```powershell
+python -m app.build_dashboard_snapshot
+```
+
 Check dataset reproducibility:
 
 ```powershell
@@ -154,6 +160,7 @@ Generated runtime files are intentionally local and ignored by git:
 | `reports/` | validation reports and champion selection report |
 | `reports/monitoring/prediction_summary.json` | local prediction monitoring summary |
 | `reports/monitoring/alerts.json` | local monitoring alert report |
+| `reports/monitoring/dashboard_snapshot.json` | dashboard-ready monitoring and drift snapshot |
 | `reports/drift/reference_baseline.json` | training-data reference baseline for drift checks |
 | `reports/drift/inference_snapshot.json` | production inference feature snapshot for drift checks |
 | `reports/drift/data_drift_summary.json` | local baseline-vs-inference drift summary |
