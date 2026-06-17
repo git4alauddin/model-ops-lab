@@ -640,3 +640,61 @@ drift inference row count
 V9-C13 creates the scrapeable metrics source needed by Prometheus and Grafana.
 
 It does not start Prometheus, install Grafana, add Docker Compose monitoring services, or create a Grafana dashboard JSON.
+
+## V9-C14: Prometheus And Grafana Local Stack
+
+### Files Added
+
+```text
+deployment/docker-compose.monitoring.yaml
+deployment/monitoring/prometheus/prometheus.yml
+deployment/monitoring/grafana/provisioning/datasources/prometheus.yaml
+deployment/monitoring/grafana/provisioning/dashboards/modelopslab.yaml
+deployment/monitoring/grafana/dashboards/modelopslab-monitoring.json
+docs/monitoring/grafana_prometheus_local_stack.md
+tests/test_v9_c14_grafana_prometheus_local_stack.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/versions/v9/
+```
+
+### Behavior
+- Added a dedicated local monitoring Docker Compose stack.
+- Added Prometheus configuration that scrapes:
+
+```text
+host.docker.internal:8000/metrics
+```
+
+- Added Grafana provisioning for:
+
+```text
+Prometheus datasource
+ModelOpsLab dashboard provider
+ModelOpsLab Monitoring dashboard JSON
+```
+
+- Added a starter Grafana dashboard for:
+
+```text
+prediction requests
+failure rate
+p95 latency
+active alerts
+latency metrics
+telemetry quality
+data drift detected
+drifted feature count
+report availability
+```
+
+- Added a local guide for starting the serving API, Prometheus, and Grafana.
+
+### Important Boundary
+V9-C14 adds local monitoring infrastructure configuration.
+
+It does not run Docker automatically, deploy Grafana to the cloud, configure alert notifications, or persist long-term Prometheus storage.

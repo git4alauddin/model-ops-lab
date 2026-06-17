@@ -50,6 +50,33 @@ git diff --check
 passed with CRLF normalization warnings only
 ```
 
+## V9-C14: Prometheus And Grafana Local Stack
+
+Planned verification:
+
+```powershell
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c14_grafana_prometheus_local_stack.py
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c13_prometheus_metrics_endpoint.py tests\test_v9_c14_grafana_prometheus_local_stack.py
+vir_env\Scripts\python.exe -m pytest -q
+git diff --check
+```
+
+Actual verification:
+
+```text
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c14_grafana_prometheus_local_stack.py
+5 passed in 0.13s
+
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c13_prometheus_metrics_endpoint.py tests\test_v9_c14_grafana_prometheus_local_stack.py
+11 passed, 1 warning in 2.12s
+
+vir_env\Scripts\python.exe -m pytest -q
+564 passed, 1 warning in 8.48s
+
+git diff --check
+passed with CRLF normalization warnings only
+```
+
 ## V9-C13: Prometheus Metrics Endpoint
 
 Planned verification:

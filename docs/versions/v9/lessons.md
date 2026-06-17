@@ -103,3 +103,11 @@
 - A per-render collector registry prevents duplicate metric registration during tests and repeated app imports.
 - Report availability metrics are useful because a working `/metrics` endpoint can still be missing local monitoring inputs.
 - The metrics endpoint is a bridge from local file-based observability to production-style monitoring tools.
+
+## V9-C14: Prometheus And Grafana Local Stack
+
+- Grafana should visualize Prometheus metrics instead of reading application files directly.
+- Prometheus needs a stable scrape target; in this local Windows/Docker setup that target is `host.docker.internal:8000/metrics`.
+- Grafana provisioning makes dashboards reproducible instead of manually clicking them into existence.
+- Keeping the monitoring compose file separate from the serving compose file makes learning and debugging easier.
+- A starter dashboard is useful even if teams later refine panels in the Grafana UI.

@@ -157,6 +157,14 @@ docker compose -f deployment/docker-compose.yaml --env-file .env.example up --bu
 
 Serving environment defaults live in `.env.example`.
 
+Run the local Prometheus and Grafana monitoring stack:
+
+```powershell
+docker compose -f deployment/docker-compose.monitoring.yaml up
+```
+
+Grafana opens at `http://localhost:3000` and Prometheus opens at `http://localhost:9090`.
+
 ## MLflow UI
 
 Start the local MLflow UI:
@@ -303,6 +311,12 @@ Fresh feature telemetry workflow:
 
 ```text
 docs/monitoring/fresh_feature_telemetry_workflow.md
+```
+
+Grafana and Prometheus local stack:
+
+```text
+docs/monitoring/grafana_prometheus_local_stack.md
 ```
 
 Retraining governance:

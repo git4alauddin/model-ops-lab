@@ -81,3 +81,11 @@ The first design thought was to hand-render Prometheus text manually, but that w
 The fix was to use `prometheus-client` explicitly and add it to `requirements.txt`. It was already installed transitively in the local virtual environment, but V9-C13 records it as a direct dependency because `/metrics` now relies on it.
 
 The endpoint uses a local collector registry per response so tests and repeated app creation do not collide on metric names.
+
+## V9-C14: Prometheus And Grafana Local Stack
+
+The main local networking issue is that Prometheus runs in a container while the FastAPI API may run on the host machine.
+
+The stack uses `host.docker.internal:8000/metrics` so Prometheus can scrape the host API from Docker Desktop.
+
+The monitoring compose file is separate from the serving compose file so the project can start the API and monitoring stack independently while learning each tool.
