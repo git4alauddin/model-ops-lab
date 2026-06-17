@@ -31,6 +31,7 @@ CANDIDATE_TRAINED = "candidate_trained"
 CANDIDATE_COMPARED = "candidate_compared"
 CANDIDATE_APPROVAL_RECORDED = "candidate_approval_recorded"
 CANDIDATE_PROMOTED = "candidate_promoted"
+CANDIDATE_SERVING_HANDOFF_VALIDATED = "candidate_serving_handoff_validated"
 APPROVAL_PENDING = "pending"
 APPROVAL_APPROVED = "approved"
 APPROVAL_REJECTED = "rejected"
@@ -53,6 +54,7 @@ VALID_CANDIDATE_RUN_STATUSES = {
     CANDIDATE_COMPARED,
     CANDIDATE_PROMOTED,
     CANDIDATE_RUN_INITIALIZED,
+    CANDIDATE_SERVING_HANDOFF_VALIDATED,
     CANDIDATE_TRAINED,
 }
 _SAFE_RUN_ID_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+$")

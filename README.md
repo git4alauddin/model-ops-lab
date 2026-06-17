@@ -161,6 +161,12 @@ Record an approved candidate promotion decision:
 python -m app.record_candidate_promotion --run-id <run_id> --promoted-by <name> --reason "<reason>"
 ```
 
+Validate serving update handoff readiness:
+
+```powershell
+python -m app.validate_serving_handoff --run-id <run_id>
+```
+
 Check dataset reproducibility:
 
 ```powershell
@@ -227,6 +233,7 @@ Generated runtime files are intentionally local and ignored by git:
 | `retraining_runs/<run_id>/comparison_report.json` | candidate-vs-production metric comparison report |
 | `retraining_runs/<run_id>/approval_record.json` | human approval decision record before promotion |
 | `retraining_runs/<run_id>/promotion_record.json` | approved candidate promotion decision record |
+| `retraining_runs/<run_id>/serving_handoff_report.json` | validation report for serving update readiness |
 | `reports/drift/reference_baseline.json` | training-data reference baseline for drift checks |
 | `reports/drift/inference_snapshot.json` | production inference feature snapshot for drift checks |
 | `reports/drift/data_drift_summary.json` | local baseline-vs-inference drift summary |
@@ -376,6 +383,12 @@ Retraining governance:
 
 ```text
 docs/retraining/retraining_governance.md
+```
+
+Serving update handoff:
+
+```text
+docs/retraining/serving_update_handoff.md
 ```
 
 Workload Identity Federation learning notes:

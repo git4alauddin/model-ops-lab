@@ -148,3 +148,25 @@
 - `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py tests\test_v10_c4_candidate_retraining_command.py tests\test_v10_c5_candidate_production_comparison.py tests\test_v10_c6_retraining_approval_gate.py tests\test_v10_c7_candidate_promotion_record.py` passed: `38 passed in 1.94s`.
 - `vir_env\Scripts\python.exe -m pytest -q` passed: `619 passed, 1 warning in 7.40s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## Uncommitted - v10-c8: add serving update handoff
+
+### What Changed
+- Added a serving update handoff validation command.
+- Added `docs/retraining/serving_update_handoff.md`.
+- Writes `retraining_runs/<run_id>/serving_handoff_report.json`.
+- Updates retraining metadata with serving handoff status and report path.
+- Moves candidate runs from `candidate_promoted` to `candidate_serving_handoff_validated`.
+- Added focused tests and V10 documentation.
+
+### What Problem It Solved
+- Explains and validates the boundary between a promoted candidate record and an actual serving update.
+- Prevents the project from pretending a model is live just because metadata says it was promoted.
+
+### Verification
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c8_serving_handoff.py` passed: `5 passed in 0.61s`.
+- `vir_env\Scripts\python.exe -m py_compile app\retraining\candidate_run_metadata.py app\retraining\serving_handoff.py app\validate_serving_handoff.py` passed.
+- `vir_env\Scripts\python.exe -m app.validate_serving_handoff --run-id retrain-20260617T184250573186Z` generated `retraining_runs\retrain-20260617T184250573186Z\serving_handoff_report.json` with `status=ready` and no registry, serving, Cloud Run, or traffic change.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py tests\test_v10_c4_candidate_retraining_command.py tests\test_v10_c5_candidate_production_comparison.py tests\test_v10_c6_retraining_approval_gate.py tests\test_v10_c7_candidate_promotion_record.py tests\test_v10_c8_serving_handoff.py` passed: `43 passed in 3.01s`.
+- `vir_env\Scripts\python.exe -m pytest -q` passed: `624 passed, 1 warning in 8.25s`.
+- `git diff --check` passed with CRLF normalization warnings only.

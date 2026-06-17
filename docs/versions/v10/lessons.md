@@ -62,3 +62,12 @@
 - Recording `registry_update = not_performed` and `serving_update = not_performed` prevents us from pretending production changed when it did not.
 - A good promotion record should preserve the rollback target before any production artifact changes.
 - The retraining run now has a full decision trail: trigger, candidate training, comparison, approval, and promotion decision.
+
+## V10-C8: Serving Update Handoff
+
+- Serving handoff validates readiness, not deployment.
+- The serving API currently loads the champion from `model_registry/`, while the V10 candidate lives under `retraining_runs/<run_id>/candidate/`.
+- A promoted candidate is not live until the serving system can actually resolve and load it.
+- A handoff report should prove the candidate model, metrics, comparison report, approval record, promotion record, and rollback target exist before any serving mutation.
+- Keeping `registry_update = not_performed` and `serving_update = not_performed` in the handoff report makes the production boundary honest.
+- `/health` only proves the API process is alive; `/ready` and `/predict` are the meaningful checks after a serving update.

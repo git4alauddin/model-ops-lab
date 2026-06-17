@@ -96,3 +96,23 @@ serving_update = not_performed
 ```
 
 This avoids a false production story. The system has now recorded that the approved candidate is selected for promotion, but the registry and serving update remain separate controlled steps.
+
+## V10-C8: Serving Update Handoff
+
+The main confusion point was where the promoted candidate actually lives.
+
+Current serving reads:
+
+```text
+model_registry/ -> champion -> artifact_uri -> loaded model
+```
+
+The retraining candidate lives at:
+
+```text
+retraining_runs/<run_id>/candidate/model.pkl
+```
+
+Those are not the same path or contract.
+
+C8 validates that the promoted candidate is ready for a future serving update, but it does not update serving. This keeps the learning path honest and prevents metadata-only promotion from being confused with live model serving.

@@ -57,6 +57,41 @@ git diff --check
 passed with CRLF normalization warnings only
 ```
 
+## V10-C8: Serving Update Handoff
+
+Planned verification:
+
+```powershell
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c8_serving_handoff.py
+vir_env\Scripts\python.exe -m py_compile app\retraining\candidate_run_metadata.py app\retraining\serving_handoff.py app\validate_serving_handoff.py
+vir_env\Scripts\python.exe -m app.validate_serving_handoff --run-id <run_id>
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py tests\test_v10_c4_candidate_retraining_command.py tests\test_v10_c5_candidate_production_comparison.py tests\test_v10_c6_retraining_approval_gate.py tests\test_v10_c7_candidate_promotion_record.py tests\test_v10_c8_serving_handoff.py
+vir_env\Scripts\python.exe -m pytest -q
+git diff --check
+```
+
+Actual verification:
+
+```text
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c8_serving_handoff.py
+5 passed in 0.61s
+
+vir_env\Scripts\python.exe -m py_compile app\retraining\candidate_run_metadata.py app\retraining\serving_handoff.py app\validate_serving_handoff.py
+passed
+
+vir_env\Scripts\python.exe -m app.validate_serving_handoff --run-id retrain-20260617T184250573186Z
+generated retraining_runs\retrain-20260617T184250573186Z\serving_handoff_report.json with status=ready and no registry, serving, Cloud Run, or traffic change
+
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py tests\test_v10_c4_candidate_retraining_command.py tests\test_v10_c5_candidate_production_comparison.py tests\test_v10_c6_retraining_approval_gate.py tests\test_v10_c7_candidate_promotion_record.py tests\test_v10_c8_serving_handoff.py
+43 passed in 3.01s
+
+vir_env\Scripts\python.exe -m pytest -q
+624 passed, 1 warning in 8.25s
+
+git diff --check
+passed with CRLF normalization warnings only
+```
+
 ## V10-C7: Approved Candidate Promotion Record
 
 Planned verification:

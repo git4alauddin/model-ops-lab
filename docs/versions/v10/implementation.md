@@ -380,3 +380,78 @@ V10-C7 records the approved promotion decision only.
 It does not update the model registry champion, copy model artifacts, update the serving runtime, redeploy the API, or change live production traffic.
 
 This keeps the audit decision separate from the operational serving update.
+
+## V10-C8: Serving Update Handoff
+
+### Files Added
+
+```text
+app/retraining/serving_handoff.py
+app/validate_serving_handoff.py
+docs/retraining/serving_update_handoff.md
+tests/test_v10_c8_serving_handoff.py
+```
+
+### Files Updated
+
+```text
+README.md
+app/retraining/candidate_run_metadata.py
+docs/versions/v10/
+```
+
+### Behavior
+- Added a serving handoff validation command:
+
+```powershell
+python -m app.validate_serving_handoff --run-id <run_id>
+```
+
+- Reads:
+
+```text
+retraining_runs/<run_id>/retraining_metadata.json
+```
+
+- Writes:
+
+```text
+retraining_runs/<run_id>/serving_handoff_report.json
+```
+
+- Updates:
+
+```text
+retraining_runs/<run_id>/retraining_metadata.json
+```
+
+- Requires the promoted retraining run to have:
+
+```text
+candidate_promoted status
+approved human decision
+promotion decision record
+candidate model artifact
+candidate metrics artifact
+comparison report
+approval record
+promotion record
+rollback target
+registry_update = not_performed
+serving_update = not_performed
+```
+
+- Moves the run status to `candidate_serving_handoff_validated`.
+- Records `promotion.serving_handoff_status`, `promotion.serving_handoff_report_path`, and `promotion.serving_update_ready`.
+- Adds a detailed learning guide at:
+
+```text
+docs/retraining/serving_update_handoff.md
+```
+
+### Important Boundary
+V10-C8 validates readiness for a future serving update.
+
+It does not copy model artifacts, update `model_registry/`, archive champions, change the FastAPI serving model, rebuild Docker images, redeploy Cloud Run, or shift traffic.
+
+The serving update itself remains a separate operational step.
