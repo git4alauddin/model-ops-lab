@@ -63,8 +63,8 @@ def test_v8_artifact_registry_default_links_are_visible() -> None:
     assert "artifact_registry_default_deploy_source.md" in overview
 
 
-def test_v8_commit_log_has_c22_hash_and_c23_pending_entry() -> None:
+def test_v8_commit_log_has_c22_and_c23_hashes() -> None:
     commit_log = V8_COMMIT_LOG_PATH.read_text()
 
     assert "e24f5b1 - v8-c22: validate Cloud Run deployment from Artifact Registry" in commit_log
-    assert "Pending - v8-c23: make Artifact Registry the default Cloud Run image source" in commit_log
+    assert "40bcb14 - v8-c23: make Artifact Registry the default Cloud Run image source" in commit_log

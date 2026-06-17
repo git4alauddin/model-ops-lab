@@ -314,3 +314,9 @@ The live Cloud Run deployment from Artifact Registry is recorded here:
 ```text
 docs/deployment/cloud_run_artifact_registry_deploy_validation.md
 ```
+
+Rollback and cleanup guidance is recorded here:
+
+```text
+docs/deployment/cloud_run_rollback_cleanup_guide.md
+```

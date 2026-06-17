@@ -873,3 +873,36 @@ tests/test_v8_c22_cloud_run_artifact_registry_deploy_validation.py
 V8-C23 changes the workflow default only.
 
 It does not remove Docker Hub publishing, remove Docker Hub deployment support, remove Docker Hub secrets, trigger a live deployment after changing the default, or add automatic deployment on push.
+
+## V8-C24: Cloud Run Rollback And Cleanup Guide
+
+### Files Added
+
+```text
+docs/deployment/cloud_run_rollback_cleanup_guide.md
+tests/test_v8_c24_cloud_run_rollback_cleanup_guide.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/deployment/
+docs/versions/v8/
+tests/test_v8_c23_artifact_registry_default_deploy_source.py
+```
+
+### Behavior
+- Added a Cloud Run rollback and cleanup operations guide.
+- Documented known-good Docker Hub and Artifact Registry revisions.
+- Documented rollback by shifting 100% traffic to a previous Cloud Run revision.
+- Documented rollback by redeploying a known-good Git SHA image.
+- Documented `/health` validation after rollback.
+- Documented conservative Cloud Run revision cleanup guidance.
+- Documented Artifact Registry image cleanup guidance with known-good digest protection.
+- Documented Docker Hub fallback cleanup guidance.
+
+### Boundary
+V8-C24 is documentation only.
+
+It does not execute a rollback, delete Cloud Run revisions, delete Artifact Registry images, configure cleanup policies, remove Docker Hub support, or add rollback automation.

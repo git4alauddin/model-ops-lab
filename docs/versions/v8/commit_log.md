@@ -535,7 +535,7 @@
 - `python -m pytest -q` passed: `451 passed, 1 warning in 5.99s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - v8-c23: make Artifact Registry the default Cloud Run image source
+## 40bcb14 - v8-c23: make Artifact Registry the default Cloud Run image source
 
 ### What Changed
 - Changed `cloud_run_image_source` default from `dockerhub` to `artifact_registry`.
@@ -552,4 +552,25 @@
 - `python -m pytest -q tests\test_v8_c23_artifact_registry_default_deploy_source.py` passed: `6 passed in 0.10s`.
 - `python -m pytest -q tests\test_v8_c21_cloud_run_image_source_gate.py tests\test_v8_c22_cloud_run_artifact_registry_deploy_validation.py tests\test_v8_c23_artifact_registry_default_deploy_source.py` passed: `25 passed in 0.22s`.
 - `python -m pytest -q` passed: `457 passed, 1 warning in 6.44s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - v8-c24: add Cloud Run rollback and cleanup guide
+
+### What Changed
+- Added Cloud Run rollback and cleanup guidance.
+- Documented known-good Docker Hub and Artifact Registry revisions.
+- Documented traffic rollback to a previous revision.
+- Documented redeploying a known-good Git SHA image.
+- Documented `/health` validation after rollback.
+- Documented conservative cleanup rules for Cloud Run revisions, Artifact Registry images, and Docker Hub fallback tags.
+- Added tests for the new guide and documentation links.
+
+### What Problem It Solved
+- Gives a practical recovery path before closing the deployment foundation.
+- Separates rollback operations from cleanup so known-good runtime evidence is not accidentally deleted.
+
+### Verification
+- `python -m pytest -q tests\test_v8_c24_cloud_run_rollback_cleanup_guide.py` passed: `8 passed in 0.06s`.
+- `python -m pytest -q tests\test_v8_c23_artifact_registry_default_deploy_source.py tests\test_v8_c24_cloud_run_rollback_cleanup_guide.py` passed: `14 passed in 0.13s`.
+- `python -m pytest -q` passed: `465 passed, 1 warning in 9.49s`.
 - `git diff --check` passed with CRLF normalization warnings only.

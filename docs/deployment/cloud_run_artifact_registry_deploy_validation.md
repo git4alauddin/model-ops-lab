@@ -250,6 +250,12 @@ externalize model registry and MLflow artifacts for full prediction readiness
 add rollback automation for Cloud Run revisions
 ```
 
+Rollback and cleanup guidance is recorded here:
+
+```text
+docs/deployment/cloud_run_rollback_cleanup_guide.md
+```
+
 ## Outcome
 
 Artifact Registry is now a validated end-to-end image source for Cloud Run:

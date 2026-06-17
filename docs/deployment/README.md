@@ -10,6 +10,7 @@ Track deployment setup, commands, failures, and rollback steps.
 - `artifact_registry_setup_validation.md`
 - `cloud_run_artifact_registry_deploy_validation.md`
 - `cloud_run_image_source_gate.md`
+- `cloud_run_rollback_cleanup_guide.md`
 - `ci_manual_run_guide.md`
 - `cloud_run_deployment_foundation.md`
 - `cloud_run_github_actions_deploy.md`

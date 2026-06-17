@@ -97,3 +97,11 @@ add automatic deployment on push
 ```
 
 Those are separate decisions.
+
+## Rollback And Cleanup
+
+Cloud Run rollback and cleanup guidance is recorded here:
+
+```text
+docs/deployment/cloud_run_rollback_cleanup_guide.md
+```

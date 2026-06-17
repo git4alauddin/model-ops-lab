@@ -567,3 +567,27 @@ Artifact Registry is the default Cloud Run image source
 Docker Hub remains available as explicit fallback
 no live deployment was triggered just for changing the default
 ```
+
+## Cloud Run Rollback And Cleanup
+Rollback and cleanup guidance is documented here:
+
+```text
+docs/deployment/cloud_run_rollback_cleanup_guide.md
+```
+
+Known-good runtime points:
+
+```text
+Docker Hub revision: modelopslab-serving-00002-fbc
+Artifact Registry revision: modelopslab-serving-00003-zsc
+```
+
+Current boundary:
+
+```text
+rollback guide exists
+cleanup guide exists
+no rollback was executed
+no cleanup was executed
+Cloud Run rollback automation remains later scope
+```

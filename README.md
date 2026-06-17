@@ -213,6 +213,12 @@ Artifact Registry default deploy source:
 docs/deployment/artifact_registry_default_deploy_source.md
 ```
 
+Cloud Run rollback and cleanup guide:
+
+```text
+docs/deployment/cloud_run_rollback_cleanup_guide.md
+```
+
 Workload Identity Federation learning notes:
 
 ```text
