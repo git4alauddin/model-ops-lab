@@ -528,3 +528,62 @@ python -m app.build_dashboard_snapshot
 V9-C11 creates the data contract for a dashboard.
 
 It does not build the visual dashboard UI, install Grafana, start a server, or add frontend assets.
+
+## V9-C12: Local Monitoring Dashboard HTML
+
+### Files Added
+
+```text
+app/build_monitoring_dashboard.py
+app/observability/monitoring_dashboard.py
+tests/test_v9_c12_local_monitoring_dashboard_html.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/versions/v9/
+```
+
+### Behavior
+- Added a dependency-free static HTML monitoring dashboard builder.
+- Reads:
+
+```text
+reports/monitoring/dashboard_snapshot.json
+```
+
+- Writes:
+
+```text
+reports/monitoring/dashboard.html
+```
+
+- Added a command entry point:
+
+```powershell
+python -m app.build_monitoring_dashboard
+```
+
+- Renders dashboard sections for:
+
+```text
+request counts
+latency
+active alerts
+drift status
+telemetry quality
+prediction distribution
+probability distribution
+drifted features
+report freshness
+```
+
+- Escapes rendered snapshot values before writing HTML.
+- Produces a static local file that can be opened in a browser without starting a server.
+
+### Important Boundary
+V9-C12 adds a local dashboard artifact.
+
+It does not install Grafana, expose Prometheus metrics, start a web server, add a FastAPI dashboard route, or add live auto-refresh.

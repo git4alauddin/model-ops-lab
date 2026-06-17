@@ -111,6 +111,12 @@ Build dashboard-ready monitoring snapshot:
 python -m app.build_dashboard_snapshot
 ```
 
+Build local monitoring dashboard HTML:
+
+```powershell
+python -m app.build_monitoring_dashboard
+```
+
 Evaluate local retraining trigger decision:
 
 ```powershell
@@ -168,6 +174,7 @@ Generated runtime files are intentionally local and ignored by git:
 | `reports/monitoring/prediction_summary.json` | local prediction monitoring summary |
 | `reports/monitoring/alerts.json` | local monitoring alert report |
 | `reports/monitoring/dashboard_snapshot.json` | dashboard-ready monitoring and drift snapshot |
+| `reports/monitoring/dashboard.html` | local static monitoring dashboard |
 | `reports/retraining/retraining_trigger_decision.json` | local retraining trigger recommendation |
 | `reports/drift/reference_baseline.json` | training-data reference baseline for drift checks |
 | `reports/drift/inference_snapshot.json` | production inference feature snapshot for drift checks |

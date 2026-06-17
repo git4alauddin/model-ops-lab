@@ -50,6 +50,41 @@ git diff --check
 passed with CRLF normalization warnings only
 ```
 
+## V9-C12: Local Monitoring Dashboard HTML
+
+Planned verification:
+
+```powershell
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c12_local_monitoring_dashboard_html.py
+vir_env\Scripts\python.exe -m py_compile app\observability\monitoring_dashboard.py app\build_monitoring_dashboard.py
+vir_env\Scripts\python.exe -m app.build_monitoring_dashboard
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py tests\test_v9_c6_drift_reference_baseline.py tests\test_v9_c7_inference_feature_snapshot.py tests\test_v9_c8_local_data_drift_comparison.py tests\test_v9_c9_fresh_feature_telemetry_workflow.py tests\test_v9_c10_drift_alert_integration.py tests\test_v9_c11_dashboard_snapshot_contract.py tests\test_v9_c12_local_monitoring_dashboard_html.py
+vir_env\Scripts\python.exe -m pytest -q
+git diff --check
+```
+
+Actual verification:
+
+```text
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c12_local_monitoring_dashboard_html.py
+6 passed in 0.80s
+
+vir_env\Scripts\python.exe -m py_compile app\observability\monitoring_dashboard.py app\build_monitoring_dashboard.py
+passed
+
+vir_env\Scripts\python.exe -m app.build_monitoring_dashboard
+generated reports\monitoring\dashboard.html with 9075 bytes
+
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py tests\test_v9_c6_drift_reference_baseline.py tests\test_v9_c7_inference_feature_snapshot.py tests\test_v9_c8_local_data_drift_comparison.py tests\test_v9_c9_fresh_feature_telemetry_workflow.py tests\test_v9_c10_drift_alert_integration.py tests\test_v9_c11_dashboard_snapshot_contract.py tests\test_v9_c12_local_monitoring_dashboard_html.py
+68 passed, 1 warning in 1.39s
+
+vir_env\Scripts\python.exe -m pytest -q
+553 passed, 1 warning in 6.09s
+
+git diff --check
+passed with CRLF normalization warnings only
+```
+
 ## V9-C11: Monitoring Dashboard Data Contract
 
 Planned verification:

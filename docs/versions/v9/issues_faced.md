@@ -65,3 +65,11 @@ The main integration choice was to keep drift alerts in `reports/monitoring/aler
 No dashboard UI was added.
 
 The key design choice was to create a dashboard-ready JSON contract first. This keeps the visualization layer simple later because it can consume one stable file instead of reinterpreting every raw monitoring and drift report.
+
+## V9-C12: Local Monitoring Dashboard HTML
+
+No external dashboard tool was added.
+
+The main design choice was to render a static local HTML file from `reports/monitoring/dashboard_snapshot.json`. This gives the project an actual visible dashboard while keeping Grafana, Prometheus, servers, and new dependencies out of this chunk.
+
+The dashboard renderer escapes snapshot values because monitoring reports are data inputs to HTML output.

@@ -87,3 +87,11 @@
 - A dashboard snapshot separates report generation from visualization.
 - Report freshness timestamps matter because stale monitoring data can be misleading.
 - Source report paths make dashboard cards traceable back to the detailed JSON reports.
+
+## V9-C12: Local Monitoring Dashboard HTML
+
+- A dashboard should read from the dashboard snapshot instead of recomputing monitoring logic.
+- Static HTML is a useful learning bridge before Grafana because it makes the monitoring surface visible without new services.
+- Dashboard cards should show both backend health and ML-specific health.
+- Escaping snapshot values matters because dashboards render report data into HTML.
+- Report freshness belongs on the dashboard because stale observability can be worse than no observability.
