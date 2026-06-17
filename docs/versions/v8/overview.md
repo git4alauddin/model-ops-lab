@@ -6,7 +6,13 @@ Add Dockerization, CI/CD, and deployment automation foundations.
 V8 moves the project from local serving to reproducible release engineering.
 
 ## Completion Status
-V8 is in progress.
+V8 is complete.
+
+Final closure is recorded here:
+
+```text
+docs/versions/v8/closure.md
+```
 
 Implemented chunks:
 - V8-C1: Docker serving image foundation.
@@ -22,6 +28,18 @@ Implemented chunks:
 - V8-C11: Docker Hub publish validation.
 - V8-C12: Docker rollback guide.
 - V8-C13: Cloud Run deployment foundation.
+- V8-C14: manual Cloud Run deployment gate.
+- V8-C15: live Cloud Run deployment validation.
+- V8-C16: manual CI trigger learning notes.
+- V8-C17: Artifact Registry deployment foundation.
+- V8-C18: Artifact Registry setup validation.
+- V8-C19: Artifact Registry publish gate.
+- V8-C20: Artifact Registry publish validation.
+- V8-C21: Cloud Run image source gate.
+- V8-C22: Cloud Run deployment from Artifact Registry validation.
+- V8-C23: Artifact Registry default Cloud Run image source.
+- V8-C24: Cloud Run rollback and cleanup guide.
+- V8-C25: V8 deployment foundation closure.
 
 ## Components To Introduce
 - Docker serving image
@@ -590,4 +608,30 @@ cleanup guide exists
 no rollback was executed
 no cleanup was executed
 Cloud Run rollback automation remains later scope
+```
+
+## V8 Closure
+V8 closure is recorded here:
+
+```text
+docs/versions/v8/closure.md
+```
+
+Final validated path:
+
+```text
+GitHub Actions manual trigger
+-> pytest
+-> Docker image build
+-> Artifact Registry push
+-> Cloud Run deploy from Artifact Registry
+-> /health check
+```
+
+Next version boundary:
+
+```text
+externalize model registry and MLflow artifacts
+validate /ready and prediction endpoints on Cloud Run
+add production monitoring and access controls
 ```

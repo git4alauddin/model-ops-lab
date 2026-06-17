@@ -906,3 +906,34 @@ tests/test_v8_c23_artifact_registry_default_deploy_source.py
 V8-C24 is documentation only.
 
 It does not execute a rollback, delete Cloud Run revisions, delete Artifact Registry images, configure cleanup policies, remove Docker Hub support, or add rollback automation.
+
+## V8-C25: V8 Deployment Foundation Closure
+
+### Files Added
+
+```text
+docs/versions/v8/closure.md
+tests/test_v8_c25_close_deployment_foundation.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/versions/v8/
+tests/test_v8_c24_cloud_run_rollback_cleanup_guide.py
+```
+
+### Behavior
+- Added the final V8 closure document.
+- Marked V8 as complete in the overview.
+- Summarized the final validated deployment path.
+- Recorded the preferred Artifact Registry based Cloud Run deployment path.
+- Recorded the known-good live Cloud Run revision and health response.
+- Summarized completed V8 capabilities.
+- Listed the production-hardening work that moves to V9.
+
+### Boundary
+V8-C25 closes the deployment foundation.
+
+It does not change workflow behavior, trigger cloud actions, remove Docker Hub fallback support, add production monitoring, validate `/ready` or prediction endpoints, externalize model artifacts, or add rollback automation.

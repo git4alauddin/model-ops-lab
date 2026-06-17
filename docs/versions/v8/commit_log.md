@@ -554,7 +554,7 @@
 - `python -m pytest -q` passed: `457 passed, 1 warning in 6.44s`.
 - `git diff --check` passed with CRLF normalization warnings only.
 
-## Pending - v8-c24: add Cloud Run rollback and cleanup guide
+## c78ee47 - v8-c24: add Cloud Run rollback and cleanup guide
 
 ### What Changed
 - Added Cloud Run rollback and cleanup guidance.
@@ -573,4 +573,24 @@
 - `python -m pytest -q tests\test_v8_c24_cloud_run_rollback_cleanup_guide.py` passed: `8 passed in 0.06s`.
 - `python -m pytest -q tests\test_v8_c23_artifact_registry_default_deploy_source.py tests\test_v8_c24_cloud_run_rollback_cleanup_guide.py` passed: `14 passed in 0.13s`.
 - `python -m pytest -q` passed: `465 passed, 1 warning in 9.49s`.
+- `git diff --check` passed with CRLF normalization warnings only.
+
+## Pending - v8-c25: close V8 deployment foundation
+
+### What Changed
+- Added the final V8 closure document.
+- Marked V8 complete in the overview.
+- Recorded the final validated deployment path.
+- Summarized completed Docker, CI, Docker Hub, Workload Identity Federation, Cloud Run, Artifact Registry, and rollback/cleanup work.
+- Recorded what moves to V9.
+- Added tests for the closure document and links.
+
+### What Problem It Solved
+- Turns V8 from an open implementation stream into a closed deployment foundation version.
+- Makes the handoff to production serving readiness explicit.
+
+### Verification
+- `python -m pytest -q tests\test_v8_c25_close_deployment_foundation.py` passed: `9 passed in 0.06s`.
+- `python -m pytest -q tests\test_v8_c24_cloud_run_rollback_cleanup_guide.py tests\test_v8_c25_close_deployment_foundation.py` passed: `17 passed in 0.08s`.
+- `python -m pytest -q` passed: `474 passed, 1 warning in 5.47s`.
 - `git diff --check` passed with CRLF normalization warnings only.

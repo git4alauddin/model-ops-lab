@@ -65,3 +65,4 @@
 - After Artifact Registry deployment is validated, Docker Hub becomes a fallback path rather than the preferred GCP-native deployment path.
 - Defaults should follow the most recently validated preferred path, while fallback paths remain explicit.
 - Rollback guidance should separate traffic rollback, image redeploy, and cleanup because they solve different operational problems.
+- A version should close by naming the validated production-like path and explicitly moving unfinished production hardening into the next version.

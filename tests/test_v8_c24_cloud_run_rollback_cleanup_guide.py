@@ -72,8 +72,8 @@ def test_v8_cloud_run_rollback_cleanup_guide_links_are_visible() -> None:
     assert "cloud_run_rollback_cleanup_guide.md" in overview
 
 
-def test_v8_commit_log_has_c23_hash_and_c24_pending_entry() -> None:
+def test_v8_commit_log_has_c23_and_c24_hashes() -> None:
     commit_log = V8_COMMIT_LOG_PATH.read_text()
 
     assert "40bcb14 - v8-c23: make Artifact Registry the default Cloud Run image source" in commit_log
-    assert "Pending - v8-c24: add Cloud Run rollback and cleanup guide" in commit_log
+    assert "c78ee47 - v8-c24: add Cloud Run rollback and cleanup guide" in commit_log

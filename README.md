@@ -231,6 +231,12 @@ Manual CI Cloud Run trigger learning notes:
 docs/learning/manual_ci_cloud_run_trigger_notes.md
 ```
 
+V8 closure:
+
+```text
+docs/versions/v8/closure.md
+```
+
 ## Project Structure
 
 ```text
