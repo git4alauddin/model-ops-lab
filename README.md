@@ -361,6 +361,18 @@ V8 closure:
 docs/versions/v8/closure.md
 ```
 
+V8 deployment flow diagram:
+
+```text
+docs/diagrams/v8_deployment_flow.md
+```
+
+V9 observability flow diagram:
+
+```text
+docs/diagrams/v9_observability_flow.md
+```
+
 ## Project Structure
 
 ```text

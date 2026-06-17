@@ -6,25 +6,32 @@ It is intentionally limited to V3 scope: dataset registry metadata, checksum tra
 
 ```mermaid
 flowchart TD
-    config["configs/training.yaml"]
-    metadata["data_versions/customer_churn/v1.yaml"]
-    dataset["data/churn.csv"]
-    schema["schema_versions/customer_churn_v1.yaml"]
+    subgraph versioned_inputs["Versioned data inputs"]
+        config["configs/training.yaml"]
+        metadata["data_versions/customer_churn/v1.yaml"]
+        dataset["data/churn.csv"]
+        schema["schema_versions/customer_churn_v1.yaml"]
+    end
 
-    registry["Dataset registry loader"]
-    checksum["SHA256 checksum validation"]
-    repro["python -m app.check_reproducibility"]
+    subgraph reproducibility_checks["Reproducibility checks"]
+        registry["Dataset registry loader"]
+        checksum["SHA256 checksum validation"]
+        repro["python -m app.check_reproducibility"]
+        pass["Reproducibility passed"]
+        fail["Fail safely on mismatch"]
+    end
 
-    validation["python -m app.validate_data"]
-    training["python -m app.train"]
+    subgraph downstream_commands["Downstream commands"]
+        validation["python -m app.validate_data"]
+        training["python -m app.train"]
+    end
 
-    validation_report["reports/validation_report.json"]
-    validation_summary["reports/validation_summary.txt"]
-    training_metadata["artifacts/training_metadata.json"]
-    logs["logs/modelopslab.log"]
-
-    pass["Reproducibility passed"]
-    fail["Fail safely on mismatch"]
+    subgraph traceable_outputs["Traceable outputs"]
+        validation_report["reports/validation_report.json"]
+        validation_summary["reports/validation_summary.txt"]
+        training_metadata["artifacts/training_metadata.json"]
+        logs["logs/modelopslab.log"]
+    end
 
     config --> registry
     metadata --> registry

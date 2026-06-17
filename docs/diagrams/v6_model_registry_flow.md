@@ -6,21 +6,35 @@ It is intentionally limited to implemented V6 behavior: local registry metadata,
 
 ```mermaid
 flowchart TD
-    champion_report["reports/champion_run.json<br/>selected experiment winner"]
-    register_cmd["python -m app.register_model"]
-    registry_contract["app.model_registry<br/>metadata contract + validation"]
-    candidate_record["model_registry/<model>__<version>.json<br/>status=candidate"]
+    subgraph champion_input["Champion selection input"]
+        champion_report["reports/champion_run.json<br/>selected experiment winner"]
+    end
 
-    promote_cmd["python -m app.promote_model"]
-    existing_champion{"Existing champion<br/>for same model_name?"}
-    archived_record["previous champion record<br/>status=archived"]
-    champion_record["selected model record<br/>status=champion"]
+    subgraph registry_contract_layer["Registry contract"]
+        registry_contract["app.model_registry<br/>metadata contract + validation"]
+    end
 
-    query_cmd["python -m app.query_model_registry"]
-    summary["Registry summary<br/>current champion + versions"]
+    subgraph registration_flow["Registration flow"]
+        register_cmd["python -m app.register_model"]
+        candidate_record["model_registry/<model>__<version>.json<br/>status=candidate"]
+    end
 
-    ignored_runtime["model_registry/*.json<br/>ignored runtime metadata"]
-    tracked_placeholder["model_registry/.gitkeep<br/>tracked folder placeholder"]
+    subgraph promotion_flow["Promotion flow"]
+        promote_cmd["python -m app.promote_model"]
+        existing_champion{"Existing champion<br/>for same model_name?"}
+        archived_record["previous champion record<br/>status=archived"]
+        champion_record["selected model record<br/>status=champion"]
+    end
+
+    subgraph inspection_flow["Inspection flow"]
+        query_cmd["python -m app.query_model_registry"]
+        summary["Registry summary<br/>current champion + versions"]
+    end
+
+    subgraph registry_storage["Local registry storage"]
+        ignored_runtime["model_registry/*.json<br/>ignored runtime metadata"]
+        tracked_placeholder["model_registry/.gitkeep<br/>tracked folder placeholder"]
+    end
 
     champion_report --> register_cmd
     register_cmd --> registry_contract

@@ -6,31 +6,41 @@ It is intentionally limited to V2 scope: schema checks, data quality checks, rep
 
 ```mermaid
 flowchart TD
-    config["configs/training.yaml"]
-    dataset["data/churn.csv"]
-    schema["schema_versions/customer_churn_v1.yaml"]
+    subgraph validation_inputs["Validation inputs"]
+        config["configs/training.yaml"]
+        dataset["data/churn.csv"]
+        schema["schema_versions/customer_churn_v1.yaml"]
+    end
 
-    command["python -m app.validate_data"]
+    subgraph validation_command["Validation command"]
+        command["python -m app.validate_data"]
+        checks["Validation checks"]
+    end
 
-    checks["Validation checks"]
-    structural["Schema structure"]
-    dtype["Datatypes"]
-    nullability["Nullability"]
-    null_pct["Null percentages"]
-    ranges["Numeric ranges"]
-    outliers["Outlier sanity"]
-    allowed["Allowed values"]
-    duplicates["Duplicates"]
-    target["Target distribution"]
+    subgraph validation_checks["Data quality checks"]
+        structural["Schema structure"]
+        dtype["Datatypes"]
+        nullability["Nullability"]
+        null_pct["Null percentages"]
+        ranges["Numeric ranges"]
+        outliers["Outlier sanity"]
+        allowed["Allowed values"]
+        duplicates["Duplicates"]
+        target["Target distribution"]
+    end
 
-    report["reports/validation_report.json"]
-    summary["reports/validation_summary.txt"]
-    logs["logs/modelopslab.log"]
+    subgraph validation_outputs["Validation outputs"]
+        report["reports/validation_report.json"]
+        summary["reports/validation_summary.txt"]
+        logs["logs/modelopslab.log"]
+    end
 
-    gate["Training validation gate"]
-    train["python -m app.train"]
-    stop["Stop training on failed validation"]
-    continue["Continue when validation passed"]
+    subgraph training_gate["Training gate"]
+        gate["Training validation gate"]
+        train["python -m app.train"]
+        stop["Stop training on failed validation"]
+        continue["Continue when validation passed"]
+    end
 
     config --> command
     dataset --> command

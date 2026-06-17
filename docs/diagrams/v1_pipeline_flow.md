@@ -6,28 +6,39 @@ It is intentionally limited to V1 scope: config-driven training, baseline prepro
 
 ```mermaid
 flowchart TD
-    config["configs/training.yaml"]
-    dataset["data/churn.csv"]
+    subgraph inputs["Training inputs"]
+        config["configs/training.yaml"]
+        dataset["data/churn.csv"]
+    end
 
-    command["python -m app.train"]
+    subgraph command_layer["Training command"]
+        command["python -m app.train"]
+        load_config["Load and validate config"]
+        load_data["Load CSV dataset"]
+    end
 
-    load_config["Load and validate config"]
-    load_data["Load CSV dataset"]
-    drop_cols["Drop configured non-feature columns"]
-    split_target["Split features and target"]
-    split_train["Create train/test split"]
-    feature_types["Detect numeric and categorical features"]
-    preprocessing["Build preprocessing pipeline"]
-    model["Build Logistic Regression model"]
-    pipeline["Build sklearn training pipeline"]
-    fit["Fit pipeline on training data"]
-    evaluate["Evaluate held-out test set"]
+    subgraph data_preparation["Data preparation"]
+        drop_cols["Drop configured non-feature columns"]
+        split_target["Split features and target"]
+        split_train["Create train/test split"]
+        feature_types["Detect numeric and categorical features"]
+    end
 
-    model_file["artifacts/model.pkl"]
-    metrics_file["artifacts/metrics.json"]
-    config_snapshot["artifacts/config_snapshot.json"]
-    metadata_file["artifacts/training_metadata.json"]
-    logs["logs/modelopslab.log"]
+    subgraph model_training["Model training and evaluation"]
+        preprocessing["Build preprocessing pipeline"]
+        model["Build Logistic Regression model"]
+        pipeline["Build sklearn training pipeline"]
+        fit["Fit pipeline on training data"]
+        evaluate["Evaluate held-out test set"]
+    end
+
+    subgraph runtime_outputs["Runtime outputs"]
+        model_file["artifacts/model.pkl"]
+        metrics_file["artifacts/metrics.json"]
+        config_snapshot["artifacts/config_snapshot.json"]
+        metadata_file["artifacts/training_metadata.json"]
+        logs["logs/modelopslab.log"]
+    end
 
     config --> command
     dataset --> command

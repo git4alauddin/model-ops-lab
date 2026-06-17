@@ -6,35 +6,44 @@ It is intentionally limited to V4 scope: MLflow run tracking, single-model train
 
 ```mermaid
 flowchart TD
-    config["configs/training.yaml"]
-    validation["Validation gate"]
-    dataset_version["Dataset version + checksum"]
+    subgraph experiment_inputs["Experiment inputs"]
+        config["configs/training.yaml"]
+        validation["Validation gate"]
+        dataset_version["Dataset version + checksum"]
+    end
 
-    train_cmd["python -m app.train"]
-    single_run["Single baseline MLflow run"]
-    single_artifacts["artifacts/model.pkl<br/>metrics.json<br/>confusion_matrix.json<br/>training_metadata.json"]
+    subgraph baseline_path["Single-model baseline path"]
+        train_cmd["python -m app.train"]
+        single_run["Single baseline MLflow run"]
+        single_artifacts["artifacts/model.pkl<br/>metrics.json<br/>confusion_matrix.json<br/>training_metadata.json"]
+    end
 
-    experiment_cmd["python -m app.run_experiments"]
-    candidates["Configured candidates"]
-    logreg["logistic_regression_baseline"]
-    tree["decision_tree_baseline"]
-    forest["random_forest_baseline"]
+    subgraph candidate_path["Multi-model candidate path"]
+        experiment_cmd["python -m app.run_experiments"]
+        candidates["Configured candidates"]
+        logreg["logistic_regression_baseline"]
+        tree["decision_tree_baseline"]
+        forest["random_forest_baseline"]
+        run_a["MLflow candidate run"]
+        run_b["MLflow candidate run"]
+        run_c["MLflow candidate run"]
+        candidate_artifacts["artifacts/experiments/<candidate>/..."]
+    end
 
-    run_a["MLflow candidate run"]
-    run_b["MLflow candidate run"]
-    run_c["MLflow candidate run"]
-    candidate_artifacts["artifacts/experiments/<candidate>/..."]
+    subgraph mlflow_tracking["MLflow tracking store"]
+        mlflow["mlflow.db + mlruns/"]
+        params["Params<br/>model, split, dataset, checksum"]
+        metrics["Metrics<br/>accuracy, precision, recall, f1, durations"]
+        tags["Tags<br/>candidate_name, champion"]
+        artifacts["Artifacts<br/>model, metrics, confusion matrix, metadata"]
+        ui["MLflow UI"]
+    end
 
-    mlflow["MLflow tracking store<br/>mlflow.db + mlruns/"]
-    params["Params<br/>model, split, dataset, checksum"]
-    metrics["Metrics<br/>accuracy, precision, recall, f1, durations"]
-    tags["Tags<br/>candidate_name, champion"]
-    artifacts["Artifacts<br/>model, metrics, confusion matrix, metadata"]
-
-    selection["Champion selection rule"]
-    champion["Current champion run<br/>champion=true"]
-    report["reports/champion_run.json"]
-    ui["MLflow UI"]
+    subgraph champion_selection["Champion selection"]
+        selection["Champion selection rule"]
+        champion["Current champion run<br/>champion=true"]
+        report["reports/champion_run.json"]
+    end
 
     config --> validation
     validation --> train_cmd

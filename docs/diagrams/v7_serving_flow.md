@@ -7,35 +7,45 @@ It is intentionally limited to implemented V7 behavior: FastAPI health/readiness
 ```mermaid
 flowchart TD
     client["Client / Swagger / terminal"]
-    api["FastAPI app<br/>app.serve_api:app"]
 
-    health["GET /health"]
-    health_response["status=ok<br/>service + api_version"]
+    subgraph api_layer["FastAPI app"]
+        api["app.serve_api:app"]
+        health["GET /health"]
+        ready["GET /ready"]
+        predict["POST /predict"]
+        batch["POST /predict/batch"]
+    end
 
-    ready["GET /ready"]
-    readiness["app.serving.readiness<br/>find one champion"]
-    registry["model_registry/*.json<br/>local champion metadata"]
-    ready_response["ready response<br/>model_loaded=true"]
-    not_ready_response["not_ready response<br/>HTTP 503"]
+    subgraph health_readiness["Health and readiness"]
+        health_response["status=ok<br/>service + api_version"]
+        readiness["app.serving.readiness<br/>find one champion"]
+        ready_response["ready response<br/>model_loaded=true"]
+        not_ready_response["not_ready response<br/>HTTP 503"]
+    end
 
-    predict["POST /predict"]
-    batch["POST /predict/batch"]
+    subgraph request_validation["Request validation"]
+        single_schema["PredictionRequest<br/>schema v1 validation"]
+        batch_schema["BatchPredictionRequest<br/>non-empty instances"]
+    end
 
-    single_schema["PredictionRequest<br/>schema v1 validation"]
-    batch_schema["BatchPredictionRequest<br/>non-empty instances"]
+    subgraph model_loading["Model loading"]
+        registry["model_registry/*.json<br/>local champion metadata"]
+        loader["app.serving.model_loader<br/>load_champion_model"]
+        mlflow_artifact["mlruns/<experiment>/<run>/artifacts/model.pkl"]
+        loaded_model["LoadedModel<br/>model + metadata + artifact_path"]
+    end
 
-    loader["app.serving.model_loader<br/>load_champion_model"]
-    mlflow_artifact["mlruns/<experiment>/<run>/artifacts/model.pkl"]
-    loaded_model["LoadedModel<br/>model + metadata + artifact_path"]
+    subgraph prediction_service["Prediction service"]
+        predictor["app.serving.predictor<br/>predict_customer_churn"]
+        single_response["PredictionResponse<br/>prediction + probability<br/>model_version + request_id"]
+        batch_response["BatchPredictionResponse<br/>request_id + predictions"]
+        error_response["Serving error response<br/>HTTP 503 or HTTP 500"]
+    end
 
-    predictor["app.serving.predictor<br/>predict_customer_churn"]
-    single_response["PredictionResponse<br/>prediction + probability<br/>model_version + request_id"]
-    batch_response["BatchPredictionResponse<br/>request_id + predictions"]
-
-    prediction_audit["logs/predictions.jsonl<br/>structured prediction events"]
-    runtime_log["logs/modelopslab.log<br/>human-readable serving timeline"]
-
-    error_response["Serving error response<br/>HTTP 503 or HTTP 500"]
+    subgraph serving_observability["Serving observability"]
+        prediction_audit["logs/predictions.jsonl<br/>structured prediction events"]
+        runtime_log["logs/modelopslab.log<br/>human-readable serving timeline"]
+    end
 
     client --> api
 
