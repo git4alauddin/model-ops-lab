@@ -17,6 +17,7 @@ services:
       SERVING_HOST: ${SERVING_HOST:-0.0.0.0}
       SERVING_PORT: ${SERVING_PORT:-8000}
       LOG_LEVEL: ${LOG_LEVEL:-info}
+      DEPLOYMENT_VERSION: ${DEPLOYMENT_VERSION:-local}
       MODEL_REGISTRY_DIR: /app/model_registry
       MLFLOW_RUNS_DIR: /app/mlruns
       PREDICTION_LOG_PATH: /app/logs/predictions.jsonl

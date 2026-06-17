@@ -10,6 +10,7 @@ V9 is in progress.
 
 Implemented chunks:
 - V9-C1: production observability foundation.
+- V9-C2: prediction telemetry contract.
 
 ## Final Definition
 V9 is a production-style ML observability and monitoring layer using prediction telemetry, drift detection, operational dashboards, latency monitoring, alert-ready metrics, and traceable production metrics for reliable long-term ML system operation.

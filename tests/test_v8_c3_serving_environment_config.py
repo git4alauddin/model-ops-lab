@@ -25,6 +25,7 @@ def test_serving_settings_use_local_safe_defaults() -> None:
     assert settings.mlflow_runs_dir == Path("mlruns")
     assert settings.prediction_log_path == Path("logs/predictions.jsonl")
     assert settings.app_log_path == Path("logs/modelopslab.log")
+    assert settings.deployment_version == "local"
 
 
 def test_serving_settings_accept_environment_overrides() -> None:
@@ -38,6 +39,7 @@ def test_serving_settings_accept_environment_overrides() -> None:
             "MLFLOW_RUNS_DIR": "/runtime/mlruns",
             "PREDICTION_LOG_PATH": "/runtime/logs/predictions.jsonl",
             "APP_LOG_PATH": "/runtime/logs/modelopslab.log",
+            "DEPLOYMENT_VERSION": "revision-1",
         }
     )
 
@@ -49,6 +51,7 @@ def test_serving_settings_accept_environment_overrides() -> None:
     assert settings.mlflow_runs_dir == Path("/runtime/mlruns")
     assert settings.prediction_log_path == Path("/runtime/logs/predictions.jsonl")
     assert settings.app_log_path == Path("/runtime/logs/modelopslab.log")
+    assert settings.deployment_version == "revision-1"
 
 
 def test_serving_settings_reject_invalid_port() -> None:
@@ -67,6 +70,7 @@ def test_env_example_documents_serving_runtime_keys() -> None:
         "SERVING_HOST=",
         "SERVING_PORT=",
         "LOG_LEVEL=",
+        "DEPLOYMENT_VERSION=",
         "MODEL_REGISTRY_DIR=",
         "MLFLOW_RUNS_DIR=",
         "PREDICTION_LOG_PATH=",
@@ -86,6 +90,7 @@ def test_docker_compose_passes_serving_environment() -> None:
     assert environment["SERVING_HOST"] == "${SERVING_HOST:-0.0.0.0}"
     assert environment["SERVING_PORT"] == "${SERVING_PORT:-8000}"
     assert environment["LOG_LEVEL"] == "${LOG_LEVEL:-info}"
+    assert environment["DEPLOYMENT_VERSION"] == "${DEPLOYMENT_VERSION:-local}"
     assert environment["MODEL_REGISTRY_DIR"] == "/app/model_registry"
     assert environment["MLFLOW_RUNS_DIR"] == "/app/mlruns"
     assert environment["PREDICTION_LOG_PATH"] == "/app/logs/predictions.jsonl"

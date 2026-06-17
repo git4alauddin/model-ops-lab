@@ -54,15 +54,23 @@ def test_success_log_record_contains_prediction_metadata():
     )
 
     assert record == {
+        "event_version": "v1",
+        "event_type": "prediction_success",
         "timestamp": "2026-06-07T00:00:00+00:00",
         "request_id": "request-1",
+        "endpoint": "/predict",
         "status": "success",
+        "input_schema_version": "v1",
         "model_name": "customer_churn_model",
         "model_version": "v1-test",
-        "schema_version": "v1",
+        "serving_environment": "local",
+        "deployment_version": "local",
         "prediction": 1,
         "probability": 0.82,
         "latency_ms": 4.2,
+        "error_category": None,
+        "error_message": None,
+        "failure_stage": None,
     }
 
 
@@ -77,11 +85,23 @@ def test_failure_log_record_contains_error_metadata():
     )
 
     assert record == {
+        "event_version": "v1",
+        "event_type": "prediction_failure",
         "timestamp": "2026-06-07T00:00:00+00:00",
         "request_id": "request-1",
+        "endpoint": "/predict",
         "status": "failed",
-        "schema_version": "v1",
-        "error": "No champion model found.",
+        "input_schema_version": "v1",
+        "model_name": None,
+        "model_version": None,
+        "serving_environment": "local",
+        "deployment_version": "local",
+        "prediction": None,
+        "probability": None,
+        "latency_ms": None,
+        "error_category": "prediction",
+        "error_message": "No champion model found.",
+        "failure_stage": "prediction",
     }
 
 
@@ -112,8 +132,12 @@ def test_predict_endpoint_logs_success(monkeypatch):
 
     assert response.status_code == 200
     assert len(records) == 1
+    assert records[0]["event_version"] == "v1"
+    assert records[0]["event_type"] == "prediction_success"
     assert records[0]["status"] == "success"
     assert records[0]["model_version"] == "v1-test"
+    assert records[0]["serving_environment"] == "local"
+    assert records[0]["deployment_version"] == "local"
     assert records[0]["request_id"] == response.json()["request_id"]
 
 
@@ -134,8 +158,11 @@ def test_predict_endpoint_logs_model_loader_failure(monkeypatch):
 
     assert response.status_code == 503
     assert len(records) == 1
+    assert records[0]["event_type"] == "prediction_failure"
     assert records[0]["status"] == "failed"
-    assert records[0]["error"] == "No champion model found."
+    assert records[0]["error_category"] == "model_loading"
+    assert records[0]["error_message"] == "No champion model found."
+    assert records[0]["failure_stage"] == "model_loading"
     assert records[0]["request_id"] == response.json()["request_id"]
 
 
@@ -160,8 +187,11 @@ def test_predict_endpoint_logs_prediction_failure(monkeypatch):
 
     assert response.status_code == 500
     assert len(records) == 1
+    assert records[0]["event_type"] == "prediction_failure"
     assert records[0]["status"] == "failed"
-    assert records[0]["error"] == "Prediction failed."
+    assert records[0]["error_category"] == "prediction"
+    assert records[0]["error_message"] == "Prediction failed."
+    assert records[0]["failure_stage"] == "prediction"
     assert records[0]["request_id"] == response.json()["request_id"]
 
 

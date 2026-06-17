@@ -75,6 +75,11 @@ def predict(request: PredictionRequest):
                 request,
                 request_id=request_id,
                 error=str(exc),
+                endpoint="/predict",
+                error_category="model_loading",
+                failure_stage="model_loading",
+                serving_environment=settings.modelopslab_env,
+                deployment_version=settings.deployment_version,
             ),
             log_path=settings.prediction_log_path,
         )
@@ -96,6 +101,11 @@ def predict(request: PredictionRequest):
                 request,
                 request_id=request_id,
                 error=str(exc),
+                endpoint="/predict",
+                error_category="prediction",
+                failure_stage="prediction",
+                serving_environment=settings.modelopslab_env,
+                deployment_version=settings.deployment_version,
             ),
             log_path=settings.prediction_log_path,
         )
@@ -113,7 +123,13 @@ def predict(request: PredictionRequest):
         )
 
     write_prediction_log(
-        build_prediction_success_log(request, prediction_response),
+        build_prediction_success_log(
+            request,
+            prediction_response,
+            endpoint="/predict",
+            serving_environment=settings.modelopslab_env,
+            deployment_version=settings.deployment_version,
+        ),
         log_path=settings.prediction_log_path,
     )
     log_prediction_completed(
@@ -144,6 +160,19 @@ def predict_batch(request: BatchPredictionRequest):
             mlruns_dir=settings.mlflow_runs_dir,
         )
     except ModelLoaderError as exc:
+        write_prediction_log(
+            build_prediction_failure_log(
+                request.instances[0],
+                request_id=batch_request_id,
+                error=str(exc),
+                endpoint="/predict/batch",
+                error_category="model_loading",
+                failure_stage="model_loading",
+                serving_environment=settings.modelopslab_env,
+                deployment_version=settings.deployment_version,
+            ),
+            log_path=settings.prediction_log_path,
+        )
         log_prediction_failed(
             endpoint="/predict/batch",
             request_id=batch_request_id,
@@ -158,19 +187,40 @@ def predict_batch(request: BatchPredictionRequest):
         )
 
     predictions = []
+    current_instance = request.instances[0]
     try:
         for index, instance in enumerate(request.instances):
+            current_instance = instance
             prediction_response = predict_customer_churn(
                 instance,
                 loaded_model,
                 request_id=f"{batch_request_id}-{index}",
             )
             write_prediction_log(
-                build_prediction_success_log(instance, prediction_response),
+                build_prediction_success_log(
+                    instance,
+                    prediction_response,
+                    endpoint="/predict/batch",
+                    serving_environment=settings.modelopslab_env,
+                    deployment_version=settings.deployment_version,
+                ),
                 log_path=settings.prediction_log_path,
             )
             predictions.append(prediction_response)
     except PredictionError as exc:
+        write_prediction_log(
+            build_prediction_failure_log(
+                current_instance,
+                request_id=batch_request_id,
+                error=str(exc),
+                endpoint="/predict/batch",
+                error_category="prediction",
+                failure_stage="prediction",
+                serving_environment=settings.modelopslab_env,
+                deployment_version=settings.deployment_version,
+            ),
+            log_path=settings.prediction_log_path,
+        )
         log_prediction_failed(
             endpoint="/predict/batch",
             request_id=batch_request_id,

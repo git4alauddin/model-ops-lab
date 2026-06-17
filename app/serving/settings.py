@@ -14,6 +14,7 @@ DEFAULT_MODEL_REGISTRY_DIR = Path("model_registry")
 DEFAULT_MLFLOW_RUNS_DIR = Path("mlruns")
 DEFAULT_PREDICTION_LOG_PATH = Path("logs/predictions.jsonl")
 DEFAULT_APP_LOG_PATH = Path("logs/modelopslab.log")
+DEFAULT_DEPLOYMENT_VERSION = "local"
 
 
 class ServingSettingsError(ValueError):
@@ -32,6 +33,7 @@ class ServingSettings:
     mlflow_runs_dir: Path = DEFAULT_MLFLOW_RUNS_DIR
     prediction_log_path: Path = DEFAULT_PREDICTION_LOG_PATH
     app_log_path: Path = DEFAULT_APP_LOG_PATH
+    deployment_version: str = DEFAULT_DEPLOYMENT_VERSION
 
 
 def get_serving_settings(
@@ -56,6 +58,11 @@ def get_serving_settings(
             DEFAULT_PREDICTION_LOG_PATH,
         ),
         app_log_path=_read_path(env, "APP_LOG_PATH", DEFAULT_APP_LOG_PATH),
+        deployment_version=_read_string(
+            env,
+            "DEPLOYMENT_VERSION",
+            DEFAULT_DEPLOYMENT_VERSION,
+        ),
     )
 
 

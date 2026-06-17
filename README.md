@@ -226,6 +226,12 @@ V9 observability strategy:
 docs/monitoring/observability_strategy.md
 ```
 
+Prediction telemetry contract:
+
+```text
+docs/monitoring/prediction_telemetry_contract.md
+```
+
 Workload Identity Federation learning notes:
 
 ```text
