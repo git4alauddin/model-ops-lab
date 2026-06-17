@@ -16,6 +16,7 @@ The project starts with a local ML training pipeline and gradually adds validati
 | V6 | Model registry and model lifecycle foundations |
 | V7 | FastAPI model serving |
 | V8 | Dockerization and deployment foundations |
+| V9 | Monitoring, drift detection, and production observability |
 
 Detailed implementation history lives under `docs/versions/`.
 
@@ -217,6 +218,12 @@ Cloud Run rollback and cleanup guide:
 
 ```text
 docs/deployment/cloud_run_rollback_cleanup_guide.md
+```
+
+V9 observability strategy:
+
+```text
+docs/monitoring/observability_strategy.md
 ```
 
 Workload Identity Federation learning notes:
