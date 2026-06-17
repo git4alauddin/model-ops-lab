@@ -4,6 +4,7 @@ from copy import deepcopy
 from datetime import UTC, datetime
 import json
 from pathlib import Path
+import re
 from typing import Any
 
 import yaml
@@ -26,8 +27,14 @@ DEFAULT_DATASET_VERSION_PATH = Path("data_versions/customer_churn/v1.yaml")
 DEFAULT_SCHEMA_PATH = Path("schema_versions/customer_churn_v1.yaml")
 
 CANDIDATE_RUN_INITIALIZED = "candidate_run_initialized"
+CANDIDATE_TRAINED = "candidate_trained"
 APPROVAL_PENDING = "pending"
 PROMOTION_PENDING_EVALUATION = "pending_evaluation"
+VALID_CANDIDATE_RUN_STATUSES = {
+    CANDIDATE_RUN_INITIALIZED,
+    CANDIDATE_TRAINED,
+}
+_SAFE_RUN_ID_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+$")
 
 
 class CandidateRetrainingRunError(ValueError):
@@ -58,6 +65,28 @@ def load_yaml_object(path: Path) -> dict[str, Any]:
     if not isinstance(data, dict):
         raise CandidateRetrainingRunError("YAML metadata source must be an object.")
     return data
+
+
+def build_candidate_retraining_run_metadata_path(
+    run_id: str,
+    runs_dir: Path = DEFAULT_RETRAINING_RUNS_DIR,
+) -> Path:
+    """Build a safe metadata path for one candidate retraining run."""
+    _validate_run_id(run_id)
+    return runs_dir / run_id / "retraining_metadata.json"
+
+
+def load_candidate_retraining_run_metadata(
+    run_id: str,
+    *,
+    runs_dir: Path = DEFAULT_RETRAINING_RUNS_DIR,
+) -> dict[str, Any]:
+    """Load one candidate retraining run metadata record."""
+    metadata = load_json_object(
+        build_candidate_retraining_run_metadata_path(run_id, runs_dir)
+    )
+    _validate_candidate_retraining_run_metadata(metadata)
+    return metadata
 
 
 def find_previous_production_model(
@@ -181,7 +210,7 @@ def save_candidate_retraining_run_metadata(
     """Persist candidate retraining metadata under retraining_runs/<run_id>/."""
     _validate_candidate_retraining_run_metadata(metadata)
     run_id = metadata["run_id"]
-    path = runs_dir / run_id / "retraining_metadata.json"
+    path = build_candidate_retraining_run_metadata_path(run_id, runs_dir)
     try:
         save_json(metadata, path)
     except ArtifactError as exc:
@@ -259,8 +288,11 @@ def _validate_candidate_retraining_run_metadata(metadata: dict[str, Any]) -> Non
         raise CandidateRetrainingRunError(
             f"Missing candidate retraining metadata fields: {missing}"
         )
-    if metadata["status"] != CANDIDATE_RUN_INITIALIZED:
-        raise CandidateRetrainingRunError("Candidate retraining run must start initialized.")
+    if metadata["status"] not in VALID_CANDIDATE_RUN_STATUSES:
+        raise CandidateRetrainingRunError(
+            "Invalid candidate retraining status: "
+            f"{metadata['status']}. Expected one of {sorted(VALID_CANDIDATE_RUN_STATUSES)}."
+        )
     if metadata["approval"].get("state") != APPROVAL_PENDING:
         raise CandidateRetrainingRunError("Candidate retraining approval must start pending.")
     if metadata["promotion"].get("decision") != APPROVAL_PENDING:
@@ -302,6 +334,12 @@ def _build_run_id(created_at: str) -> str:
     return f"retrain-{safe_timestamp}"
 
 
+def _validate_run_id(run_id: str) -> None:
+    if not isinstance(run_id, str) or not run_id:
+        raise CandidateRetrainingRunError("run_id is required.")
+    if not _SAFE_RUN_ID_PATTERN.fullmatch(run_id):
+        raise CandidateRetrainingRunError("run_id must be filesystem-safe.")
+
+
 def _utc_now() -> str:
     return datetime.now(UTC).isoformat()
-

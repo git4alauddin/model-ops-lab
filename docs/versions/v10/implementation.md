@@ -137,3 +137,64 @@ insufficient_monitoring_data
 V10-C2 evaluates whether retraining should be considered.
 
 It does not run retraining, train a candidate model, compare models, promote artifacts, schedule jobs, or change production state.
+
+## V10-C4: Candidate Retraining Command
+
+### Files Added
+
+```text
+app/retraining/candidate_training.py
+app/run_candidate_retraining.py
+tests/test_v10_c4_candidate_retraining_command.py
+```
+
+### Files Updated
+
+```text
+README.md
+app/retraining/candidate_run_metadata.py
+docs/versions/v10/
+```
+
+### Behavior
+- Added a governed candidate retraining command:
+
+```powershell
+python -m app.run_candidate_retraining --run-id <run_id>
+```
+
+- Reads:
+
+```text
+retraining_runs/<run_id>/retraining_metadata.json
+configs/training.yaml
+data/churn.csv
+schema_versions/customer_churn_v1.yaml
+data_versions/customer_churn/v1.yaml
+```
+
+- Writes candidate artifacts inside the selected retraining run:
+
+```text
+retraining_runs/<run_id>/candidate/model.pkl
+retraining_runs/<run_id>/candidate/metrics.json
+retraining_runs/<run_id>/candidate/confusion_matrix.json
+retraining_runs/<run_id>/candidate/config_snapshot.json
+retraining_runs/<run_id>/candidate/training_metadata.json
+```
+
+- Updates:
+
+```text
+retraining_runs/<run_id>/retraining_metadata.json
+```
+
+- Requires the run metadata status to be `candidate_run_initialized`.
+- Moves the run status to `candidate_trained`.
+- Stores candidate artifact paths, validation status, model type, metrics, and training metadata in the retraining metadata record.
+- Keeps approval and promotion states as `pending`.
+
+### Important Boundary
+V10-C4 trains a candidate model only inside the governed retraining run folder.
+
+It does not register the candidate model, compare it against production, approve it, promote it, overwrite production artifacts, update the serving model, schedule retraining, or change rollback state.

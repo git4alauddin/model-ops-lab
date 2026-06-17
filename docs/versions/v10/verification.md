@@ -57,6 +57,41 @@ git diff --check
 passed with CRLF normalization warnings only
 ```
 
+## V10-C4: Candidate Retraining Command
+
+Planned verification:
+
+```powershell
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c4_candidate_retraining_command.py
+vir_env\Scripts\python.exe -m py_compile app\retraining\candidate_run_metadata.py app\retraining\candidate_training.py app\run_candidate_retraining.py
+vir_env\Scripts\python.exe -m app.run_candidate_retraining --run-id <run_id>
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py tests\test_v10_c4_candidate_retraining_command.py
+vir_env\Scripts\python.exe -m pytest -q
+git diff --check
+```
+
+Actual verification:
+
+```text
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c4_candidate_retraining_command.py
+4 passed in 1.74s
+
+vir_env\Scripts\python.exe -m py_compile app\retraining\candidate_run_metadata.py app\retraining\candidate_training.py app\run_candidate_retraining.py
+passed
+
+vir_env\Scripts\python.exe -m app.run_candidate_retraining --run-id retrain-20260617T184250573186Z
+generated retraining_runs\retrain-20260617T184250573186Z\candidate\model.pkl and updated status=candidate_trained
+
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py tests\test_v10_c4_candidate_retraining_command.py
+21 passed in 1.75s
+
+vir_env\Scripts\python.exe -m pytest -q
+602 passed, 1 warning in 7.12s
+
+git diff --check
+passed with CRLF normalization warnings only
+```
+
 ## V10-C3: Candidate Retraining Run Metadata
 
 Planned verification:

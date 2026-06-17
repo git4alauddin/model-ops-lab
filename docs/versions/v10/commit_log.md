@@ -58,3 +58,25 @@
 - `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py` passed: `17 passed in 0.59s`.
 - `vir_env\Scripts\python.exe -m pytest -q` passed: `598 passed, 1 warning in 7.37s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## Uncommitted - v10-c4: add candidate retraining command
+
+### What Changed
+- Added a governed candidate retraining command.
+- Trains a candidate model for a selected initialized retraining run.
+- Writes candidate model, metrics, confusion matrix, config snapshot, and training metadata under `retraining_runs/<run_id>/candidate/`.
+- Updates `retraining_runs/<run_id>/retraining_metadata.json` from `candidate_run_initialized` to `candidate_trained`.
+- Keeps approval and promotion pending.
+- Added focused tests and V10 documentation.
+
+### What Problem It Solved
+- Turns a governed retraining run record into actual candidate model artifacts without touching production artifacts or the model registry.
+- Preserves the human approval and promotion gate for later V10 chunks.
+
+### Verification
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c4_candidate_retraining_command.py` passed: `4 passed in 1.74s`.
+- `vir_env\Scripts\python.exe -m py_compile app\retraining\candidate_run_metadata.py app\retraining\candidate_training.py app\run_candidate_retraining.py` passed.
+- `vir_env\Scripts\python.exe -m app.run_candidate_retraining --run-id retrain-20260617T184250573186Z` generated `retraining_runs\retrain-20260617T184250573186Z\candidate\model.pkl` and updated `status=candidate_trained`.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py tests\test_v10_c4_candidate_retraining_command.py` passed: `21 passed in 1.75s`.
+- `vir_env\Scripts\python.exe -m pytest -q` passed: `602 passed, 1 warning in 7.12s`.
+- `git diff --check` passed with CRLF normalization warnings only.

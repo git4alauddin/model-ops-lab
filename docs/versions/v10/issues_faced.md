@@ -23,3 +23,17 @@ No training job was added yet.
 The main design choice was making the candidate run initializer strict. It only starts when the trigger decision is `retraining_recommended`, because initializing retraining from a clean or insufficient signal would weaken the governance story.
 
 The metadata also stores the current champion model as rollback context. That keeps the next steps safer because candidate evaluation and promotion can always answer what production model existed before the candidate run started.
+
+## V10-C4: Candidate Retraining Command
+
+The main implementation risk was accidentally reusing the normal training command and overwriting global `artifacts/`.
+
+The fix was to reuse lower-level training, preprocessing, evaluation, and validation helpers, but write all candidate outputs under:
+
+```text
+retraining_runs/<run_id>/candidate/
+```
+
+This keeps candidate training useful without changing production state.
+
+Another boundary was avoiding repeated retraining of the same run. The command requires `candidate_run_initialized`, then moves the run to `candidate_trained`.

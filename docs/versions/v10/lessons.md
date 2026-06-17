@@ -26,3 +26,12 @@
 - Capturing the previous production model early creates rollback context before promotion decisions are made.
 - Pending candidate paths are useful because they show the lifecycle stage clearly: initialized, trained, compared, approved, then promoted or rejected.
 - A governed retraining run can exist without automatic promotion; this is safer and easier to explain in a production review.
+
+## V10-C4: Candidate Retraining Command
+
+- Candidate training is still not promotion.
+- The safest first retraining automation trains into an isolated run folder instead of overwriting production artifacts.
+- The retraining metadata file becomes the lifecycle control record: initialized first, then trained, then later compared, approved, and promoted or rejected.
+- Running validation again before candidate training prevents drift response from bypassing the same data quality gate used by normal training.
+- Candidate metrics are useful evidence, but they are not enough for promotion until compared against the current production model.
+- Keeping approval and promotion as pending after training protects the human-in-the-loop boundary.
