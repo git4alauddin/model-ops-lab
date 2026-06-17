@@ -135,3 +135,26 @@
 - `vir_env\Scripts\python.exe -m app.build_inference_snapshot` generated `reports\drift\inference_snapshot.json` with `row_count=0` and `skipped_event_count=297` because existing local telemetry predates `input_features`.
 - `vir_env\Scripts\python.exe -m pytest -q` passed: `517 passed, 1 warning in 8.20s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## Uncommitted - v9-c8: add local data drift comparison
+
+### What Changed
+- Added local baseline-vs-inference drift comparison.
+- Added a command to generate `reports/drift/data_drift_summary.json`.
+- Added numeric mean/range drift checks.
+- Added categorical ratio drift checks.
+- Added `insufficient_data` handling for empty inference snapshots.
+- Updated README and V9 documentation.
+- Added focused tests for drift comparison behavior and persistence.
+
+### What Problem It Solved
+- Turns the reference baseline and inference snapshot into a concrete local drift signal.
+- Creates the final no-install bridge before introducing tool-based drift reporting with Evidently.
+
+### Verification
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c8_local_data_drift_comparison.py` passed: `6 passed in 0.51s`.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c6_drift_reference_baseline.py tests\test_v9_c7_inference_feature_snapshot.py tests\test_v9_c8_local_data_drift_comparison.py` passed: `19 passed in 0.64s`.
+- `vir_env\Scripts\python.exe -m app.build_data_drift_summary` generated `reports\drift\data_drift_summary.json` with `overall_status=insufficient_data`, `inference_row_count=0`, and `insufficient_feature_count=7`.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py tests\test_v9_c6_drift_reference_baseline.py tests\test_v9_c7_inference_feature_snapshot.py tests\test_v9_c8_local_data_drift_comparison.py` passed: `49 passed, 1 warning in 1.36s`.
+- `vir_env\Scripts\python.exe -m pytest -q` passed: `523 passed, 1 warning in 7.16s`.
+- `git diff --check` passed with CRLF normalization warnings only.

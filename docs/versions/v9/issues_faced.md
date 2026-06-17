@@ -41,3 +41,9 @@ The main design choice was to build the reference baseline from the existing tra
 The existing V9 telemetry did not store input features, so it could support request monitoring but not feature drift checks.
 
 The fix was to add a bounded `input_features` snapshot to validated prediction telemetry. Validation failures still avoid raw payload logging because failed payloads may be malformed or unsafe to treat as feature data.
+
+## V9-C8: Local Data Drift Comparison
+
+The current local inference snapshot can have zero feature rows because existing telemetry was generated before `input_features` existed.
+
+V9-C8 handles that as `insufficient_data` instead of raising an error or reporting false `ok` status. This keeps the drift report honest until fresh feature-bearing prediction telemetry exists.

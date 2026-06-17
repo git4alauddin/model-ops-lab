@@ -325,3 +325,71 @@ It does not compare the inference snapshot against the reference baseline yet.
 It does not store identifiers, target labels, or raw invalid payloads in telemetry.
 
 It does not install Evidently or generate HTML drift reports.
+
+## V9-C8: Local Data Drift Comparison
+
+### Files Added
+
+```text
+app/build_data_drift_summary.py
+app/observability/drift_comparison.py
+tests/test_v9_c8_local_data_drift_comparison.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/versions/v9/
+```
+
+### Behavior
+- Added a local baseline-vs-inference drift comparison.
+- Reads:
+
+```text
+reports/drift/reference_baseline.json
+reports/drift/inference_snapshot.json
+```
+
+- Writes:
+
+```text
+reports/drift/data_drift_summary.json
+```
+
+- Added a command entry point:
+
+```powershell
+python -m app.build_data_drift_summary
+```
+
+- Compares numeric features using:
+
+```text
+mean relative change
+range expansion ratio
+```
+
+- Compares categorical features using:
+
+```text
+maximum category ratio change
+```
+
+- Reports:
+
+```text
+overall_status
+drifted_feature_count
+insufficient_feature_count
+per-feature drift checks
+thresholds used
+```
+
+### Important Boundary
+V9-C8 is a local, dependency-free drift comparison.
+
+It does not install Evidently, generate HTML drift reports, create dashboards, or send drift alerts.
+
+It can return `insufficient_data` when the inference snapshot has no feature rows.

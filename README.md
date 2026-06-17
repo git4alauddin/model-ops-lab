@@ -98,6 +98,12 @@ Build inference feature snapshot:
 python -m app.build_inference_snapshot
 ```
 
+Build local data drift summary:
+
+```powershell
+python -m app.build_data_drift_summary
+```
+
 Check dataset reproducibility:
 
 ```powershell
@@ -150,6 +156,7 @@ Generated runtime files are intentionally local and ignored by git:
 | `reports/monitoring/alerts.json` | local monitoring alert report |
 | `reports/drift/reference_baseline.json` | training-data reference baseline for drift checks |
 | `reports/drift/inference_snapshot.json` | production inference feature snapshot for drift checks |
+| `reports/drift/data_drift_summary.json` | local baseline-vs-inference drift summary |
 | `logs/` | local runtime logs |
 | `mlflow.db` | MLflow backend database |
 | `mlruns/` | MLflow run artifacts |

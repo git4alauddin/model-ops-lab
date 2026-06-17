@@ -57,3 +57,11 @@
 - Feature snapshots should be privacy-aware: keep useful feature values, but exclude identifiers, labels, and invalid raw payloads.
 - Validation failures are useful operational telemetry, but they should not become drift rows because they did not pass the input schema.
 - Snapshot builders should report skipped events so missing feature telemetry is visible.
+
+## V9-C8: Local Data Drift Comparison
+
+- Drift detection is a comparison between reference behavior and current inference behavior.
+- Numeric feature drift can start with simple mean and range movement before advanced statistical tests.
+- Categorical drift can start with category ratio changes.
+- `insufficient_data` is a valid monitoring result; it is better than pretending a drift check passed.
+- Local drift comparison makes later Evidently reports easier to understand because the basic math is visible.
