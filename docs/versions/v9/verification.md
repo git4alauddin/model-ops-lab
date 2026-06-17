@@ -50,6 +50,33 @@ git diff --check
 passed with CRLF normalization warnings only
 ```
 
+## V9-C16: Close Monitoring And Drift Detection
+
+Planned verification:
+
+```powershell
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c16_close_monitoring_drift_detection.py
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py tests\test_v9_c6_drift_reference_baseline.py tests\test_v9_c7_inference_feature_snapshot.py tests\test_v9_c8_local_data_drift_comparison.py tests\test_v9_c9_fresh_feature_telemetry_workflow.py tests\test_v9_c10_drift_alert_integration.py tests\test_v9_c11_dashboard_snapshot_contract.py tests\test_v9_c12_local_monitoring_dashboard_html.py tests\test_v9_c13_prometheus_metrics_endpoint.py tests\test_v9_c14_grafana_prometheus_local_stack.py tests\test_v9_c15_monitoring_retention_incident_workflow.py tests\test_v9_c16_close_monitoring_drift_detection.py
+vir_env\Scripts\python.exe -m pytest -q
+git diff --check
+```
+
+Actual verification:
+
+```text
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c16_close_monitoring_drift_detection.py
+7 passed in 0.05s
+
+vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py tests\test_v9_c6_drift_reference_baseline.py tests\test_v9_c7_inference_feature_snapshot.py tests\test_v9_c8_local_data_drift_comparison.py tests\test_v9_c9_fresh_feature_telemetry_workflow.py tests\test_v9_c10_drift_alert_integration.py tests\test_v9_c11_dashboard_snapshot_contract.py tests\test_v9_c12_local_monitoring_dashboard_html.py tests\test_v9_c13_prometheus_metrics_endpoint.py tests\test_v9_c14_grafana_prometheus_local_stack.py tests\test_v9_c15_monitoring_retention_incident_workflow.py tests\test_v9_c16_close_monitoring_drift_detection.py
+91 passed, 1 warning in 1.58s
+
+vir_env\Scripts\python.exe -m pytest -q
+580 passed, 1 warning in 6.83s
+
+git diff --check
+passed with CRLF normalization warnings only
+```
+
 ## V9-C15: Monitoring Retention And Incident Debugging Workflow
 
 Planned verification:

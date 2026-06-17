@@ -309,3 +309,25 @@
 - `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py tests\test_v9_c6_drift_reference_baseline.py tests\test_v9_c7_inference_feature_snapshot.py tests\test_v9_c8_local_data_drift_comparison.py tests\test_v9_c9_fresh_feature_telemetry_workflow.py tests\test_v9_c10_drift_alert_integration.py tests\test_v9_c11_dashboard_snapshot_contract.py tests\test_v9_c12_local_monitoring_dashboard_html.py tests\test_v9_c13_prometheus_metrics_endpoint.py tests\test_v9_c14_grafana_prometheus_local_stack.py tests\test_v9_c15_monitoring_retention_incident_workflow.py` passed: `84 passed, 1 warning in 1.52s`.
 - `vir_env\Scripts\python.exe -m pytest -q` passed: `573 passed, 1 warning in 7.95s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## Uncommitted - v9-c16: close monitoring and drift detection
+
+### What Changed
+- Added V9 closure documentation.
+- Marked V9 as complete.
+- Recorded final completed capabilities.
+- Recorded final observability path.
+- Recorded deferred production maturity scope.
+- Recorded the V10 handoff.
+- Updated README and V9 documentation.
+- Added focused closure tests.
+
+### What Problem It Solved
+- Formally closes V9 before continuing V10.
+- Makes the monitoring, drift, dashboard, Prometheus, Grafana, retention, and incident debugging scope explicit and auditable.
+
+### Verification
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c16_close_monitoring_drift_detection.py` passed: `7 passed in 0.05s`.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py tests\test_v9_c6_drift_reference_baseline.py tests\test_v9_c7_inference_feature_snapshot.py tests\test_v9_c8_local_data_drift_comparison.py tests\test_v9_c9_fresh_feature_telemetry_workflow.py tests\test_v9_c10_drift_alert_integration.py tests\test_v9_c11_dashboard_snapshot_contract.py tests\test_v9_c12_local_monitoring_dashboard_html.py tests\test_v9_c13_prometheus_metrics_endpoint.py tests\test_v9_c14_grafana_prometheus_local_stack.py tests\test_v9_c15_monitoring_retention_incident_workflow.py tests\test_v9_c16_close_monitoring_drift_detection.py` passed: `91 passed, 1 warning in 1.58s`.
+- `vir_env\Scripts\python.exe -m pytest -q` passed: `580 passed, 1 warning in 6.83s`.
+- `git diff --check` passed with CRLF normalization warnings only.

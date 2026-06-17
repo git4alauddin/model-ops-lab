@@ -119,3 +119,11 @@
 - Generated logs and reports should stay out of Git because they are runtime evidence and may contain sensitive context.
 - Report freshness matters during incidents because stale reports can point to the wrong cause.
 - A clear regeneration order prevents inconsistent monitoring reports during local debugging.
+
+## V9-C16: Close Monitoring And Drift Detection
+
+- A version should close with an explicit completed scope and an explicit deferred scope.
+- Local observability is valuable when telemetry, reports, metrics, dashboards, and debugging workflow connect into one path.
+- Concept drift should not be claimed as implemented without label feedback.
+- A clean V10 handoff matters because retraining should consume monitoring signals rather than duplicate monitoring logic.
+- Closure docs are useful portfolio evidence because they explain what was built, why it matters, and where the boundary is.

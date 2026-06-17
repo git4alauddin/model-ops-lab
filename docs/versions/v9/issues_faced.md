@@ -97,3 +97,11 @@ No new runtime system was added.
 The main design choice was to keep generated monitoring evidence local and ignored by Git while documenting how to use it for incident reconstruction.
 
 The workflow explicitly separates production-style evidence collection from long-term production retention infrastructure, which remains outside V9.
+
+## V9-C16: Close Monitoring And Drift Detection
+
+No implementation issue.
+
+The main closure decision was to be precise about deferred scope. V9 implements data drift and observability foundations, but real concept drift automation is not complete because production labels are not available yet.
+
+That boundary is recorded explicitly so V10 can focus on governed retraining instead of pretending monitoring automatically solves model evolution.

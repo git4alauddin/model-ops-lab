@@ -301,6 +301,12 @@ V9 observability strategy:
 docs/monitoring/observability_strategy.md
 ```
 
+V9 closure:
+
+```text
+docs/versions/v9/closure.md
+```
+
 Prediction telemetry contract:
 
 ```text

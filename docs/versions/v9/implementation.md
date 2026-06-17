@@ -743,3 +743,42 @@ Grafana
 V9-C15 documents local retention and incident debugging behavior.
 
 It does not add long-term storage, alert notifications, cloud monitoring, incident ticketing, or automatic remediation.
+
+## V9-C16: Close Monitoring And Drift Detection
+
+### Files Added
+
+```text
+docs/versions/v9/closure.md
+tests/test_v9_c16_close_monitoring_drift_detection.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/versions/v9/
+```
+
+### Behavior
+- Closed V9 as the monitoring, drift detection, and production observability version.
+- Marked V9 status as complete.
+- Recorded the final V9 observability path from prediction telemetry to Grafana and incident debugging.
+- Summarized completed V9 capabilities.
+- Recorded final runtime artifacts and committed observability infrastructure.
+- Documented the final dashboard position:
+
+```text
+static HTML dashboard
+Grafana dashboard
+```
+
+- Documented the final Prometheus and Grafana position.
+- Documented the concept drift boundary.
+- Listed intentionally deferred production maturity items.
+- Defined the V10 handoff.
+
+### Important Boundary
+V9-C16 is a closure and handoff chunk.
+
+It does not add new runtime behavior, new monitoring tools, new alerts, retraining automation, or deployment changes.

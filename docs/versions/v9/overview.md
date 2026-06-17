@@ -6,7 +6,7 @@ Add production-style monitoring, drift detection, and observability foundations.
 V9 moves ModelOpsLab from a deployable ML service to an observable ML service.
 
 ## Completion Status
-V9 is in progress.
+V9 is complete.
 
 Implemented chunks:
 - V9-C1: production observability foundation.
@@ -24,6 +24,13 @@ Implemented chunks:
 - V9-C13: Prometheus metrics endpoint.
 - V9-C14: Prometheus and Grafana local stack.
 - V9-C15: monitoring retention and incident debugging workflow.
+- V9-C16: close monitoring and drift detection.
+
+Closure:
+
+```text
+docs/versions/v9/closure.md
+```
 
 ## Final Definition
 V9 is a production-style ML observability and monitoring layer using prediction telemetry, drift detection, operational dashboards, latency monitoring, alert-ready metrics, and traceable production metrics for reliable long-term ML system operation.
@@ -121,7 +128,7 @@ Cloud Run observability notes
 
 This order keeps the project teachable and avoids introducing dashboards before the telemetry itself is reliable.
 
-## Out Of Scope For V9-C1
-V9-C1 does not add Prometheus, Grafana, Evidently, Cloud Monitoring, alert rules, or production cloud metrics.
+## Final Boundary
+V9 adds local-first production observability foundations, including Prometheus and Grafana configuration.
 
-Those belong in later V9 chunks after the monitoring contract is documented.
+V9 intentionally stops before real concept drift automation, alert notification channels, long-term Prometheus storage, managed cloud monitoring, and automatic remediation.
