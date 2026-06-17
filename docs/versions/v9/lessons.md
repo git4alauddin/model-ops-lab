@@ -73,3 +73,10 @@
 - A local workflow should regenerate dependent reports in order: prediction summary, inference snapshot, drift summary, then alerts.
 - Swagger UI is useful for learning the API interaction, while TestClient is useful for fast local refreshes.
 - Report transitions are a good learning signal: `insufficient_data` means the pipeline is honest, not broken.
+
+## V9-C10: Drift Alert Integration
+
+- Drift alerts connect ML-specific monitoring to the same operational alert report.
+- A drift detector is more useful when it produces actionable alert states, not only a standalone report.
+- `drift_detected` and `insufficient_data` are different alert situations and need different recommended actions.
+- Integrating drift alerts locally first keeps the alert logic visible before adding external notification systems.

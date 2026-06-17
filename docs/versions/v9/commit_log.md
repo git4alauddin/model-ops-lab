@@ -181,3 +181,24 @@
 - `vir_env\Scripts\python.exe -m app.build_monitoring_alerts` generated `reports\monitoring\alerts.json` with `status=alerting` and `active_alerts=2`.
 - `vir_env\Scripts\python.exe -m pytest -q` passed: `526 passed, 1 warning in 6.73s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## Uncommitted - v9-c10: integrate drift alerts
+
+### What Changed
+- Added drift alert integration to the local monitoring alert report.
+- Added `data_drift_detected` and `data_drift_insufficient_data` alerts.
+- Added drift summary timestamp metadata to alert reports.
+- Added focused tests for drift alert integration.
+- Updated V9 documentation.
+
+### What Problem It Solved
+- Connects local data drift detection to the existing alert-ready monitoring output.
+- Makes `reports/monitoring/alerts.json` the single local alert report for operational and ML-specific alert states.
+
+### Verification
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c10_drift_alert_integration.py` passed: `5 passed in 0.60s`.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c5_monitoring_alert_rules.py tests\test_v9_c10_drift_alert_integration.py` passed: `12 passed in 0.62s`.
+- `vir_env\Scripts\python.exe -m app.build_monitoring_alerts` generated `reports\monitoring\alerts.json` with `overall_status=alerting`, `active_alert_count=3`, and a triggered `data_drift_detected` alert.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py tests\test_v9_c6_drift_reference_baseline.py tests\test_v9_c7_inference_feature_snapshot.py tests\test_v9_c8_local_data_drift_comparison.py tests\test_v9_c9_fresh_feature_telemetry_workflow.py tests\test_v9_c10_drift_alert_integration.py` passed: `57 passed, 1 warning in 1.21s`.
+- `vir_env\Scripts\python.exe -m pytest -q` passed: `531 passed, 1 warning in 5.64s`.
+- `git diff --check` passed with CRLF normalization warnings only.

@@ -436,3 +436,38 @@ alerts.active_alert_count: 2
 V9-C9 is a local workflow validation chunk.
 
 It does not install Evidently, add new runtime services, start Prometheus, create Grafana dashboards, or deploy anything.
+
+## V9-C10: Drift Alert Integration
+
+### Files Added
+
+```text
+tests/test_v9_c10_drift_alert_integration.py
+```
+
+### Files Updated
+
+```text
+app/observability/monitoring_alerts.py
+docs/versions/v9/
+```
+
+### Behavior
+- Extended local monitoring alerts to optionally include data drift summary results.
+- Reads `reports/drift/data_drift_summary.json` when available.
+- Adds drift-specific alert checks:
+
+```text
+data_drift_detected
+data_drift_insufficient_data
+```
+
+- Triggers `data_drift_detected` when `data_drift_summary.overall_status=drift_detected`.
+- Triggers `data_drift_insufficient_data` when `data_drift_summary.overall_status=insufficient_data`.
+- Preserves existing operational alert checks.
+- Adds `drift_summary_generated_at` to `reports/monitoring/alerts.json`.
+
+### Important Boundary
+V9-C10 integrates local drift results into local alert output.
+
+It does not send notifications, configure Alertmanager, configure Cloud Monitoring, create Grafana dashboards, or install new tools.

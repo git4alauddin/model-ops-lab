@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from app.observability.drift_comparison import DEFAULT_DATA_DRIFT_SUMMARY_PATH
 from app.observability.monitoring_summary import DEFAULT_MONITORING_SUMMARY_PATH
 
 DEFAULT_MONITORING_ALERTS_PATH = Path("reports/monitoring/alerts.json")
@@ -14,6 +15,7 @@ DEFAULT_ALERT_THRESHOLDS = {
     "max_p95_latency_ms": 1000.0,
     "max_skipped_event_ratio": 0.1,
     "max_prediction_class_share": 0.95,
+    "minimum_drift_inference_rows": 1,
 }
 
 
@@ -37,9 +39,28 @@ def load_prediction_monitoring_summary(summary_path: Path) -> dict[str, Any]:
     return summary
 
 
+def load_data_drift_summary(drift_summary_path: Path) -> dict[str, Any]:
+    """Load a data drift summary JSON file."""
+    if not drift_summary_path.is_file():
+        raise MonitoringAlertsError(
+            f"Data drift summary file not found: {drift_summary_path}"
+        )
+
+    try:
+        summary = json.loads(drift_summary_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise MonitoringAlertsError(
+            f"Invalid data drift summary JSON: {drift_summary_path}"
+        ) from exc
+    if not isinstance(summary, dict):
+        raise MonitoringAlertsError("Data drift summary must be a JSON object.")
+    return summary
+
+
 def evaluate_prediction_monitoring_alerts(
     summary: dict[str, Any],
     *,
+    drift_summary: dict[str, Any] | None = None,
     thresholds: dict[str, float | int] | None = None,
     generated_at: str | None = None,
 ) -> dict[str, Any]:
@@ -52,12 +73,17 @@ def evaluate_prediction_monitoring_alerts(
         _skipped_event_ratio_alert(summary, resolved_thresholds),
         _prediction_collapse_alert(summary, resolved_thresholds),
     ]
+    if drift_summary is not None:
+        alerts.extend(_drift_alerts(drift_summary, resolved_thresholds))
     active_alerts = [alert for alert in alerts if alert["status"] == "triggered"]
 
     return {
         "generated_at": generated_at or _utc_now(),
         "source_path": summary.get("source_path"),
         "summary_generated_at": summary.get("generated_at"),
+        "drift_summary_generated_at": (
+            drift_summary.get("generated_at") if drift_summary else None
+        ),
         "overall_status": "alerting" if active_alerts else "ok",
         "active_alert_count": len(active_alerts),
         "thresholds": resolved_thresholds,
@@ -80,13 +106,18 @@ def save_monitoring_alerts(
 def build_and_save_monitoring_alerts(
     *,
     summary_path: Path = DEFAULT_MONITORING_SUMMARY_PATH,
+    drift_summary_path: Path | None = DEFAULT_DATA_DRIFT_SUMMARY_PATH,
     output_path: Path = DEFAULT_MONITORING_ALERTS_PATH,
     thresholds: dict[str, float | int] | None = None,
 ) -> dict[str, Any]:
     """Load a prediction summary, evaluate alerts, and persist the report."""
     summary = load_prediction_monitoring_summary(summary_path)
+    drift_summary = None
+    if drift_summary_path is not None and drift_summary_path.is_file():
+        drift_summary = load_data_drift_summary(drift_summary_path)
     alert_report = evaluate_prediction_monitoring_alerts(
         summary,
+        drift_summary=drift_summary,
         thresholds=thresholds,
     )
     save_monitoring_alerts(alert_report, output_path)
@@ -197,6 +228,58 @@ def _prediction_collapse_alert(
         message="One prediction class dominates the local telemetry window.",
         recommended_action=(
             "Inspect prediction_distribution and compare against expected traffic."
+        ),
+    )
+
+
+def _drift_alerts(
+    drift_summary: dict[str, Any],
+    thresholds: dict[str, float | int],
+) -> list[dict[str, Any]]:
+    return [
+        _data_drift_detected_alert(drift_summary),
+        _data_drift_insufficient_data_alert(drift_summary, thresholds),
+    ]
+
+
+def _data_drift_detected_alert(drift_summary: dict[str, Any]) -> dict[str, Any]:
+    drifted_feature_count = _number(
+        drift_summary.get("drifted_feature_count"),
+        default=0,
+    )
+    triggered = drift_summary.get("overall_status") == "drift_detected"
+    return _alert(
+        name="data_drift_detected",
+        status="triggered" if triggered else "ok",
+        severity="warning",
+        metric_value=drifted_feature_count,
+        threshold=0,
+        message="Local data drift comparison detected drifted features.",
+        recommended_action=(
+            "Inspect reports/drift/data_drift_summary.json and review drifted features."
+        ),
+    )
+
+
+def _data_drift_insufficient_data_alert(
+    drift_summary: dict[str, Any],
+    thresholds: dict[str, float | int],
+) -> dict[str, Any]:
+    inference_row_count = _number(
+        drift_summary.get("inference_row_count"),
+        default=0,
+    )
+    threshold = thresholds["minimum_drift_inference_rows"]
+    triggered = drift_summary.get("overall_status") == "insufficient_data"
+    return _alert(
+        name="data_drift_insufficient_data",
+        status="triggered" if triggered else "ok",
+        severity="warning",
+        metric_value=inference_row_count,
+        threshold=threshold,
+        message="Data drift comparison does not have enough inference rows.",
+        recommended_action=(
+            "Generate fresh feature-bearing prediction telemetry and rebuild drift reports."
         ),
     )
 

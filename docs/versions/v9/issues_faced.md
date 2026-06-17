@@ -53,3 +53,9 @@ V9-C8 handles that as `insufficient_data` instead of raising an error or reporti
 Existing local reports initially showed `insufficient_data` because the telemetry file contained many events generated before V9-C7 added `input_features`.
 
 Generating fresh valid prediction requests fixed the missing inference feature rows and allowed the drift summary to produce a real `drift_detected` result.
+
+## V9-C10: Drift Alert Integration
+
+No external alerting tool was added.
+
+The main integration choice was to keep drift alerts in `reports/monitoring/alerts.json` instead of creating a separate alert report. That keeps operational and ML-specific alert states in one local place.
