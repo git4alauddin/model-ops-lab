@@ -80,3 +80,25 @@
 - `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py tests\test_v10_c4_candidate_retraining_command.py` passed: `21 passed in 1.75s`.
 - `vir_env\Scripts\python.exe -m pytest -q` passed: `602 passed, 1 warning in 7.12s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## Uncommitted - v10-c5: add candidate production comparison
+
+### What Changed
+- Added a candidate-vs-production comparison builder.
+- Added a command to generate `retraining_runs/<run_id>/comparison_report.json`.
+- Updates retraining metadata with comparison report path, regression gate results, and promotion recommendation.
+- Moves candidate runs from `candidate_trained` to `candidate_compared`.
+- Keeps approval and promotion decisions pending.
+- Added focused tests and V10 documentation.
+
+### What Problem It Solved
+- Creates a reviewable evidence layer between candidate training and any approval or promotion decision.
+- Prevents a trained candidate from being treated as production-ready without explicit comparison against the current champion.
+
+### Verification
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c5_candidate_production_comparison.py` passed: `6 passed in 0.59s`.
+- `vir_env\Scripts\python.exe -m py_compile app\retraining\candidate_run_metadata.py app\retraining\candidate_comparison.py app\compare_candidate_to_production.py` passed.
+- `vir_env\Scripts\python.exe -m app.compare_candidate_to_production --run-id retrain-20260617T184250573186Z` generated `retraining_runs\retrain-20260617T184250573186Z\comparison_report.json` with `status=passed` and `recommendation=ready_for_approval`.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py tests\test_v10_c4_candidate_retraining_command.py tests\test_v10_c5_candidate_production_comparison.py` passed: `27 passed in 1.91s`.
+- `vir_env\Scripts\python.exe -m pytest -q` passed: `608 passed, 1 warning in 7.23s`.
+- `git diff --check` passed with CRLF normalization warnings only.

@@ -28,9 +28,11 @@ DEFAULT_SCHEMA_PATH = Path("schema_versions/customer_churn_v1.yaml")
 
 CANDIDATE_RUN_INITIALIZED = "candidate_run_initialized"
 CANDIDATE_TRAINED = "candidate_trained"
+CANDIDATE_COMPARED = "candidate_compared"
 APPROVAL_PENDING = "pending"
 PROMOTION_PENDING_EVALUATION = "pending_evaluation"
 VALID_CANDIDATE_RUN_STATUSES = {
+    CANDIDATE_COMPARED,
     CANDIDATE_RUN_INITIALIZED,
     CANDIDATE_TRAINED,
 }

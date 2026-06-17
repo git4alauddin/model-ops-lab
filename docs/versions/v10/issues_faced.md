@@ -37,3 +37,24 @@ retraining_runs/<run_id>/candidate/
 This keeps candidate training useful without changing production state.
 
 Another boundary was avoiding repeated retraining of the same run. The command requires `candidate_run_initialized`, then moves the run to `candidate_trained`.
+
+## V10-C5: Candidate vs Production Comparison Report
+
+The main design choice was separating comparison from approval.
+
+A candidate can pass metric comparison and still need human review before production changes. For that reason C5 only updates:
+
+```text
+regression_gates
+promotion.recommendation
+candidate.comparison_report_path
+```
+
+It keeps:
+
+```text
+approval.state = pending
+promotion.decision = pending
+```
+
+Missing metrics are treated as manual review instead of passing by default.

@@ -143,6 +143,12 @@ Train a candidate model for an initialized retraining run:
 python -m app.run_candidate_retraining --run-id <run_id>
 ```
 
+Compare a trained candidate against production:
+
+```powershell
+python -m app.compare_candidate_to_production --run-id <run_id>
+```
+
 Check dataset reproducibility:
 
 ```powershell
@@ -206,6 +212,7 @@ Generated runtime files are intentionally local and ignored by git:
 | `reports/retraining/retraining_trigger_decision.json` | local retraining trigger recommendation |
 | `retraining_runs/<run_id>/retraining_metadata.json` | governed candidate retraining run metadata |
 | `retraining_runs/<run_id>/candidate/` | candidate retraining model, metrics, config snapshot, and training metadata |
+| `retraining_runs/<run_id>/comparison_report.json` | candidate-vs-production metric comparison report |
 | `reports/drift/reference_baseline.json` | training-data reference baseline for drift checks |
 | `reports/drift/inference_snapshot.json` | production inference feature snapshot for drift checks |
 | `reports/drift/data_drift_summary.json` | local baseline-vs-inference drift summary |

@@ -198,3 +198,58 @@ retraining_runs/<run_id>/retraining_metadata.json
 V10-C4 trains a candidate model only inside the governed retraining run folder.
 
 It does not register the candidate model, compare it against production, approve it, promote it, overwrite production artifacts, update the serving model, schedule retraining, or change rollback state.
+
+## V10-C5: Candidate vs Production Comparison Report
+
+### Files Added
+
+```text
+app/retraining/candidate_comparison.py
+app/compare_candidate_to_production.py
+tests/test_v10_c5_candidate_production_comparison.py
+```
+
+### Files Updated
+
+```text
+README.md
+app/retraining/candidate_run_metadata.py
+docs/versions/v10/
+```
+
+### Behavior
+- Added a governed comparison command:
+
+```powershell
+python -m app.compare_candidate_to_production --run-id <run_id>
+```
+
+- Reads:
+
+```text
+retraining_runs/<run_id>/retraining_metadata.json
+```
+
+- Writes:
+
+```text
+retraining_runs/<run_id>/comparison_report.json
+```
+
+- Updates:
+
+```text
+retraining_runs/<run_id>/retraining_metadata.json
+```
+
+- Requires run status `candidate_trained`.
+- Compares candidate metrics against `previous_production_model.metrics`.
+- Tracks accuracy, precision, recall, and F1 regression checks.
+- Moves the run status to `candidate_compared`.
+- Updates `candidate.comparison_report_path`, `regression_gates.status`, `regression_gates.results`, and `promotion.recommendation`.
+- Keeps approval and promotion decisions as `pending`.
+
+### Important Boundary
+V10-C5 produces comparison evidence only.
+
+It does not approve the candidate, promote it, register it, update the serving model, overwrite artifacts, or change rollback state.

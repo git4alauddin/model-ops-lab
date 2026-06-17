@@ -35,3 +35,12 @@
 - Running validation again before candidate training prevents drift response from bypassing the same data quality gate used by normal training.
 - Candidate metrics are useful evidence, but they are not enough for promotion until compared against the current production model.
 - Keeping approval and promotion as pending after training protects the human-in-the-loop boundary.
+
+## V10-C5: Candidate vs Production Comparison Report
+
+- Comparison is evidence, not approval.
+- A candidate model should be judged against the current production model, not only against an abstract metric target.
+- Regression gates make the comparison explicit: which metric passed, which metric failed, and by how much.
+- Missing candidate or production metrics should lead to manual review instead of a fake pass.
+- A passing comparison can recommend `ready_for_approval`, but the actual promotion decision should still happen in a separate approval gate.
+- Keeping the comparison report inside the retraining run folder makes the lifecycle auditable.
