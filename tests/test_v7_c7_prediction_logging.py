@@ -61,6 +61,7 @@ def test_success_log_record_contains_prediction_metadata():
         "endpoint": "/predict",
         "status": "success",
         "input_schema_version": "v1",
+        "input_features": _expected_input_features(),
         "model_name": "customer_churn_model",
         "model_version": "v1-test",
         "serving_environment": "local",
@@ -92,6 +93,7 @@ def test_failure_log_record_contains_error_metadata():
         "endpoint": "/predict",
         "status": "failed",
         "input_schema_version": "v1",
+        "input_features": _expected_input_features(),
         "model_name": None,
         "model_version": None,
         "serving_environment": "local",
@@ -135,6 +137,7 @@ def test_predict_endpoint_logs_success(monkeypatch):
     assert records[0]["event_version"] == "v1"
     assert records[0]["event_type"] == "prediction_success"
     assert records[0]["status"] == "success"
+    assert records[0]["input_features"] == _expected_input_features()
     assert records[0]["model_version"] == "v1-test"
     assert records[0]["serving_environment"] == "local"
     assert records[0]["deployment_version"] == "local"
@@ -160,6 +163,7 @@ def test_predict_endpoint_logs_model_loader_failure(monkeypatch):
     assert len(records) == 1
     assert records[0]["event_type"] == "prediction_failure"
     assert records[0]["status"] == "failed"
+    assert records[0]["input_features"] == _expected_input_features()
     assert records[0]["error_category"] == "model_loading"
     assert records[0]["error_message"] == "No champion model found."
     assert records[0]["failure_stage"] == "model_loading"
@@ -189,6 +193,7 @@ def test_predict_endpoint_logs_prediction_failure(monkeypatch):
     assert len(records) == 1
     assert records[0]["event_type"] == "prediction_failure"
     assert records[0]["status"] == "failed"
+    assert records[0]["input_features"] == _expected_input_features()
     assert records[0]["error_category"] == "prediction"
     assert records[0]["error_message"] == "Prediction failed."
     assert records[0]["failure_stage"] == "prediction"
@@ -235,4 +240,10 @@ def _valid_prediction_payload(**overrides):
         "is_senior": False,
     }
     payload.update(overrides)
+    return payload
+
+
+def _expected_input_features():
+    payload = _valid_prediction_payload()
+    payload.pop("schema_version")
     return payload

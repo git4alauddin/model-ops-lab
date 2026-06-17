@@ -35,3 +35,9 @@ The key design choice was to keep alert thresholds local and explicit. This lets
 No external drift library was added.
 
 The main design choice was to build the reference baseline from the existing training config and validation schema. That keeps the drift baseline aligned with the same dataset and feature roles already used by training, validation, and serving.
+
+## V9-C7: Production Inference Feature Snapshot
+
+The existing V9 telemetry did not store input features, so it could support request monitoring but not feature drift checks.
+
+The fix was to add a bounded `input_features` snapshot to validated prediction telemetry. Validation failures still avoid raw payload logging because failed payloads may be malformed or unsafe to treat as feature data.

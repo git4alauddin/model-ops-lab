@@ -45,6 +45,7 @@ def test_prediction_telemetry_fields_are_stable() -> None:
         "endpoint",
         "status",
         "input_schema_version",
+        "input_features",
         "model_name",
         "model_version",
         "serving_environment",
@@ -78,6 +79,15 @@ def test_success_event_contains_traceable_prediction_metadata() -> None:
     assert event["event_version"] == PREDICTION_TELEMETRY_VERSION
     assert event["event_type"] == PREDICTION_SUCCESS_EVENT
     assert event["input_schema_version"] == "v1"
+    assert event["input_features"] == {
+        "tenure_months": 12,
+        "monthly_charges": 79.5,
+        "total_charges": 950.0,
+        "contract_type": "month_to_month",
+        "internet_service": "fiber_optic",
+        "payment_method": "credit_card",
+        "is_senior": False,
+    }
     assert event["model_version"] == "v1-test"
     assert event["deployment_version"] == "git-sha-1"
     assert event["error_category"] is None
@@ -98,6 +108,7 @@ def test_failure_event_contains_error_category_and_stage() -> None:
 
     assert event["event_type"] == PREDICTION_FAILURE_EVENT
     assert event["status"] == "failed"
+    assert event["input_features"]["contract_type"] == "month_to_month"
     assert event["model_version"] is None
     assert event["prediction"] is None
     assert event["error_category"] == "model_loading"
@@ -118,6 +129,7 @@ def test_validation_failure_event_is_separate_from_prediction_failure() -> None:
     assert event["error_category"] == "schema_validation"
     assert event["failure_stage"] == "validation"
     assert event["input_schema_version"] is None
+    assert event["input_features"] is None
 
 
 def test_predict_validation_failure_logs_telemetry_without_changing_422(monkeypatch):

@@ -114,3 +114,24 @@
 - `vir_env\Scripts\python.exe -m app.build_drift_reference_baseline` generated `reports\drift\reference_baseline.json` with `row_count=20` and `feature_count=7`.
 - `vir_env\Scripts\python.exe -m pytest -q` passed: `511 passed, 1 warning in 8.64s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## Uncommitted - v9-c7: add production inference feature snapshot
+
+### What Changed
+- Added `input_features` to prediction telemetry for validated requests.
+- Added an inference feature snapshot builder from prediction telemetry.
+- Added a command to generate `reports/drift/inference_snapshot.json`.
+- Updated the telemetry contract documentation.
+- Added focused tests for feature snapshot extraction, skipped event accounting, and persistence.
+
+### What Problem It Solved
+- Creates the production inference distribution needed for future baseline-vs-inference drift comparison.
+- Keeps feature telemetry bounded to validated serving features instead of identifiers, labels, or invalid raw payloads.
+
+### Verification
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c7_inference_feature_snapshot.py` passed: `6 passed in 1.29s`.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v7_c7_prediction_logging.py tests\test_v9_c2_prediction_telemetry_contract.py` passed: `13 passed in 1.34s`.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v9_c1_observability_foundation.py tests\test_v9_c2_prediction_telemetry_contract.py tests\test_v9_c3_local_monitoring_summary.py tests\test_v9_c4_monitoring_summary_event_filtering.py tests\test_v9_c5_monitoring_alert_rules.py tests\test_v9_c6_drift_reference_baseline.py tests\test_v9_c7_inference_feature_snapshot.py` passed: `43 passed, 1 warning in 1.40s`.
+- `vir_env\Scripts\python.exe -m app.build_inference_snapshot` generated `reports\drift\inference_snapshot.json` with `row_count=0` and `skipped_event_count=297` because existing local telemetry predates `input_features`.
+- `vir_env\Scripts\python.exe -m pytest -q` passed: `517 passed, 1 warning in 8.20s`.
+- `git diff --check` passed with CRLF normalization warnings only.

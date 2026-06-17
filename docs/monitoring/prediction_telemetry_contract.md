@@ -36,6 +36,7 @@ Stable fields:
 | `endpoint` | serving endpoint |
 | `status` | `success` or `failed` |
 | `input_schema_version` | inference input schema version when available |
+| `input_features` | privacy-aware validated feature snapshot when available |
 | `model_name` | model name when available |
 | `model_version` | model version when available |
 | `serving_environment` | local, staging, production, or similar runtime name |
@@ -68,6 +69,15 @@ Example:
   "endpoint": "/predict",
   "status": "success",
   "input_schema_version": "v1",
+  "input_features": {
+    "tenure_months": 12,
+    "monthly_charges": 79.5,
+    "total_charges": 950.0,
+    "contract_type": "month_to_month",
+    "internet_service": "fiber_optic",
+    "payment_method": "credit_card",
+    "is_senior": false
+  },
   "model_name": "customer_churn_model",
   "model_version": "v1-test",
   "serving_environment": "local",
@@ -97,6 +107,8 @@ prediction
 
 The event keeps model fields empty when the model could not be loaded.
 
+It still keeps `input_features` when the request passed validation, because these features are needed for drift snapshots.
+
 ## Validation Failure Event
 Schema validation failures use:
 
@@ -107,6 +119,31 @@ prediction_validation_failure
 These events are logged for invalid `/predict` and `/predict/batch` requests.
 
 The API still returns the normal FastAPI `422` validation response.
+
+Validation failure events keep `input_features` as `null` because the request did not pass the schema contract.
+
+## Feature Snapshot Boundary
+`input_features` contains only the validated serving features from `PredictionRequest`.
+
+It excludes:
+
+```text
+customer identifiers
+target labels
+raw invalid payloads
+```
+
+The current feature set is:
+
+```text
+tenure_months
+monthly_charges
+total_charges
+contract_type
+internet_service
+payment_method
+is_senior
+```
 
 ## Deployment Version
 `DEPLOYMENT_VERSION` identifies the running deployment.

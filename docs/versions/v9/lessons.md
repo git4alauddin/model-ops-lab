@@ -49,3 +49,11 @@
 - Numeric drift needs distribution statistics, not only min and max.
 - Categorical drift needs value counts and value ratios so shifts can be measured later.
 - Building the baseline before using Evidently makes the tool easier to understand when we add it.
+
+## V9-C7: Production Inference Feature Snapshot
+
+- Drift detection needs both a reference baseline and a current inference snapshot.
+- Prediction telemetry must include validated input features before feature drift can be measured.
+- Feature snapshots should be privacy-aware: keep useful feature values, but exclude identifiers, labels, and invalid raw payloads.
+- Validation failures are useful operational telemetry, but they should not become drift rows because they did not pass the input schema.
+- Snapshot builders should report skipped events so missing feature telemetry is visible.

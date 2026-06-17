@@ -30,6 +30,7 @@ def build_prediction_success_event(
         endpoint=endpoint,
         status="success",
         input_schema_version=request.schema_version,
+        input_features=_input_features(request),
         model_name=response.model_name,
         model_version=response.model_version,
         serving_environment=serving_environment,
@@ -65,6 +66,7 @@ def build_prediction_failure_event(
         endpoint=endpoint,
         status="failed",
         input_schema_version=request.schema_version,
+        input_features=_input_features(request),
         model_name=model_name,
         model_version=model_version,
         serving_environment=serving_environment,
@@ -96,6 +98,7 @@ def build_prediction_validation_failure_event(
         endpoint=endpoint,
         status="failed",
         input_schema_version=input_schema_version,
+        input_features=None,
         model_name=None,
         model_version=None,
         serving_environment=serving_environment,
@@ -119,6 +122,7 @@ def prediction_telemetry_fields() -> tuple[str, ...]:
         "endpoint",
         "status",
         "input_schema_version",
+        "input_features",
         "model_name",
         "model_version",
         "serving_environment",
@@ -140,6 +144,7 @@ def _base_event(
     endpoint: str,
     status: PredictionTelemetryStatus,
     input_schema_version: str | None,
+    input_features: dict[str, Any] | None,
     model_name: str | None,
     model_version: str | None,
     serving_environment: str,
@@ -159,6 +164,7 @@ def _base_event(
         "endpoint": endpoint,
         "status": status,
         "input_schema_version": input_schema_version,
+        "input_features": input_features,
         "model_name": model_name,
         "model_version": model_version,
         "serving_environment": serving_environment,
@@ -175,3 +181,11 @@ def _base_event(
 
 def _utc_now() -> str:
     return datetime.now(UTC).isoformat()
+
+
+def _input_features(request: PredictionRequest) -> dict[str, Any]:
+    return {
+        key: value
+        for key, value in request.model_dump().items()
+        if key != "schema_version"
+    }

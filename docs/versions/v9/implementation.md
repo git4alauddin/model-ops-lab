@@ -276,3 +276,52 @@ It does not compare production inference data against the baseline yet.
 It does not install Evidently, generate HTML drift reports, add dashboards, or trigger alerts from drift metrics.
 
 Those belong in later V9 chunks.
+
+## V9-C7: Production Inference Feature Snapshot
+
+### Files Added
+
+```text
+app/build_inference_snapshot.py
+app/observability/inference_snapshot.py
+tests/test_v9_c7_inference_feature_snapshot.py
+```
+
+### Files Updated
+
+```text
+README.md
+app/observability/prediction_telemetry.py
+docs/monitoring/prediction_telemetry_contract.md
+docs/versions/v9/
+tests/test_v7_c7_prediction_logging.py
+tests/test_v9_c2_prediction_telemetry_contract.py
+```
+
+### Behavior
+- Added privacy-aware `input_features` to success and controlled failure prediction telemetry events.
+- Kept validation failure telemetry without raw invalid request payloads.
+- Added an inference feature snapshot builder from prediction telemetry.
+- Reads feature-bearing events from `logs/predictions.jsonl`.
+- Summarizes schema-defined inference feature distributions.
+- Skips telemetry events that do not contain valid feature snapshots.
+- Writes:
+
+```text
+reports/drift/inference_snapshot.json
+```
+
+- Added a command entry point:
+
+```powershell
+python -m app.build_inference_snapshot
+```
+
+### Important Boundary
+V9-C7 creates the production inference side of drift detection.
+
+It does not compare the inference snapshot against the reference baseline yet.
+
+It does not store identifiers, target labels, or raw invalid payloads in telemetry.
+
+It does not install Evidently or generate HTML drift reports.
