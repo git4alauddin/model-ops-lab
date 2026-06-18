@@ -167,6 +167,12 @@ Validate serving update handoff readiness:
 python -m app.validate_serving_handoff --run-id <run_id>
 ```
 
+Update the local registry champion and validate local serving:
+
+```powershell
+python -m app.update_local_serving_model --run-id <run_id>
+```
+
 Check dataset reproducibility:
 
 ```powershell
@@ -234,6 +240,7 @@ Generated runtime files are intentionally local and ignored by git:
 | `retraining_runs/<run_id>/approval_record.json` | human approval decision record before promotion |
 | `retraining_runs/<run_id>/promotion_record.json` | approved candidate promotion decision record |
 | `retraining_runs/<run_id>/serving_handoff_report.json` | validation report for serving update readiness |
+| `retraining_runs/<run_id>/local_serving_update_report.json` | local champion update, readiness, and prediction evidence |
 | `reports/drift/reference_baseline.json` | training-data reference baseline for drift checks |
 | `reports/drift/inference_snapshot.json` | production inference feature snapshot for drift checks |
 | `reports/drift/data_drift_summary.json` | local baseline-vs-inference drift summary |
@@ -389,6 +396,12 @@ Serving update handoff:
 
 ```text
 docs/retraining/serving_update_handoff.md
+```
+
+Local registry and serving update:
+
+```text
+docs/retraining/local_registry_serving_update.md
 ```
 
 Workload Identity Federation learning notes:

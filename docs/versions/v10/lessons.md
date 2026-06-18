@@ -71,3 +71,12 @@
 - A handoff report should prove the candidate model, metrics, comparison report, approval record, promotion record, and rollback target exist before any serving mutation.
 - Keeping `registry_update = not_performed` and `serving_update = not_performed` in the handoff report makes the production boundary honest.
 - `/health` only proves the API process is alive; `/ready` and `/predict` are the meaningful checks after a serving update.
+
+## V10-C9: Local Registry and Serving Update
+
+- Local serving update is a real production-state mutation for the local environment.
+- The serving API follows the model registry champion, so writing a promotion record alone cannot change predictions.
+- Candidate artifact validation should happen before the current champion is archived.
+- Readiness and a real prediction should be validated after the champion switch.
+- Registry rollback protection matters because a failed post-update validation must not leave local serving without the previous known-good champion.
+- Cloud Run remains unchanged because local registry files and local candidate artifacts are not automatically present in the deployed container.

@@ -116,3 +116,24 @@ retraining_runs/<run_id>/candidate/model.pkl
 Those are not the same path or contract.
 
 C8 validates that the promoted candidate is ready for a future serving update, but it does not update serving. This keeps the learning path honest and prevents metadata-only promotion from being confused with live model serving.
+
+## V10-C9: Local Registry and Serving Update
+
+The main risk was changing the local champion and discovering afterward that the candidate could not be loaded or used for prediction.
+
+The implementation protects against that in two ways:
+
+```text
+validate candidate artifact before mutation
+restore previous champion metadata if post-update validation fails
+```
+
+Another important distinction is environment scope:
+
+```text
+local registry changed
+local FastAPI model selection changed
+Cloud Run did not change
+```
+
+The local update report records this boundary explicitly.

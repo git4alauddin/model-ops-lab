@@ -17,6 +17,7 @@ Implemented chunks:
 - V10-C6: human approval record and promotion gate.
 - V10-C7: approved candidate promotion record.
 - V10-C8: serving update handoff validation.
+- V10-C9: local registry and serving update.
 
 ## Final Definition
 V10 is a production-style continuous ML lifecycle management layer with governed retraining workflows, drift-triggered automation, regression protection, deployment safeguards, architecture documentation, and portfolio-grade operational ML system presentation.

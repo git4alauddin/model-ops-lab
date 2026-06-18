@@ -455,3 +455,89 @@ V10-C8 validates readiness for a future serving update.
 It does not copy model artifacts, update `model_registry/`, archive champions, change the FastAPI serving model, rebuild Docker images, redeploy Cloud Run, or shift traffic.
 
 The serving update itself remains a separate operational step.
+
+## V10-C9: Local Registry and Serving Update
+
+### Files Added
+
+```text
+app/retraining/local_serving_update.py
+app/update_local_serving_model.py
+docs/retraining/local_registry_serving_update.md
+tests/test_v10_c9_local_registry_serving_update.py
+```
+
+### Files Updated
+
+```text
+README.md
+app/retraining/candidate_run_metadata.py
+docs/versions/v10/
+```
+
+### Behavior
+- Added the first real local serving-state update command:
+
+```powershell
+python -m app.update_local_serving_model --run-id <run_id>
+```
+
+- Requires:
+
+```text
+candidate_serving_handoff_validated status
+approval.state = approved
+promotion.decision = promoted
+promotion.serving_handoff_status = ready
+promotion.serving_update_ready = true
+loadable candidate model artifact
+exactly one current local champion
+```
+
+- Performs:
+
+```text
+candidate artifact validation
+current champion snapshot
+current champion archival
+new retraining champion registry write
+local readiness validation
+real serving-loader model load
+real prediction smoke test
+```
+
+- Writes:
+
+```text
+retraining_runs/<run_id>/local_serving_update_report.json
+```
+
+- Moves the retraining run status to:
+
+```text
+candidate_local_serving_updated
+```
+
+- Updates:
+
+```text
+promotion.registry_update = completed
+promotion.serving_update = local_registry_completed
+promotion.local_champion_model_version
+promotion.local_serving_update_report_path
+promotion.cloud_run_update = not_performed
+```
+
+### Rollback Protection
+If readiness or prediction validation fails after registry mutation:
+
+```text
+remove the failed new champion record
+restore the previous champion metadata
+raise a controlled failure
+```
+
+### Important Boundary
+C9 changes the local model registry and the model selected by local FastAPI serving.
+
+It does not rebuild Docker, push an image, redeploy Cloud Run, change cloud traffic, or update cloud-serving model artifacts.
