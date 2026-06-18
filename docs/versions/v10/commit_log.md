@@ -214,3 +214,22 @@
 - `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py tests\test_v10_c4_candidate_retraining_command.py tests\test_v10_c5_candidate_production_comparison.py tests\test_v10_c6_retraining_approval_gate.py tests\test_v10_c7_candidate_promotion_record.py tests\test_v10_c8_serving_handoff.py tests\test_v10_c9_local_registry_serving_update.py tests\test_v10_c10_local_retraining_rollback.py` passed: `53 passed in 2.14s`.
 - `vir_env\Scripts\python.exe -m pytest -q` passed: `634 passed, 1 warning in 6.81s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## Uncommitted - v10-c11: add architecture and portfolio packaging
+
+### What Changed
+- Added the V10 governed retraining Mermaid diagram.
+- Added the continuous ML lifecycle architecture narrative.
+- Added a portfolio case study, interview/resume guide, demo checklist, and V10 completion checklist.
+- Strengthened README problem framing, architecture, engineering highlights, safety boundaries, trade-offs, and limitations.
+- Added focused static tests for documentation content and Mermaid component structure.
+
+### What Problem It Solved
+- Makes the full V1-V10 system explainable to engineers, interviewers, and future maintainers.
+- Packages actual operational evidence without inventing cloud retraining or production claims.
+
+### Verification
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c11_portfolio_packaging.py` passed: `6 passed in 0.07s`.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v8_v9_mermaid_diagrams.py tests\test_v10_c11_portfolio_packaging.py` passed: `18 passed in 0.09s`.
+- `vir_env\Scripts\python.exe -m pytest -q` passed: `640 passed, 1 warning in 7.29s`.
+- `git diff --check` passed with CRLF normalization warnings only.

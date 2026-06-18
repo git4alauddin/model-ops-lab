@@ -89,3 +89,12 @@
 - Restoring registry status is not enough; readiness and a real prediction must prove the old model is usable.
 - A failed rollback attempt should restore the pre-rollback registry snapshot so the currently working retraining champion remains active.
 - Cloud Run remains unchanged because this command only modifies the local model registry.
+
+## V10-C11: Architecture And Portfolio Packaging
+
+- Technical storytelling must preserve operational boundaries.
+- A portfolio README should explain the problem, architecture, safeguards, trade-offs, and limitations before listing commands.
+- Architecture diagrams are more useful when major system components are grouped and the mutation boundaries are visible.
+- Resume bullets should describe implemented engineering outcomes, not unvalidated production claims.
+- Manual screenshots are evidence tasks and should not be fabricated by documentation.
+- Explicit limitations make the project more credible and create clear future extension points.

@@ -154,3 +154,26 @@ successful prediction
 The second risk was a failed rollback leaving the registry partially changed. The implementation snapshots every registry metadata record before mutation and restores that snapshot if post-rollback validation fails.
 
 The focused failure-path test initially exposed a missing import for the registry metadata path helper. That defect only affected snapshot restoration and was fixed before the real rollback command was run. This is a useful example of why failure-path tests matter as much as success-path tests for production mutation code.
+
+## V10-C11: Architecture And Portfolio Packaging
+
+The primary risk was overstating project maturity during portfolio packaging.
+
+The project has validated:
+
+```text
+Cloud Run container deployment and /health
+local registry-based /ready and prediction
+local retraining promotion and rollback
+```
+
+It has not validated:
+
+```text
+scheduled V10 execution
+automatic cloud retraining
+Cloud Run model rollout from retraining artifacts
+real label-based concept drift
+```
+
+The README, case study, interview guide, and diagram keep those boundaries explicit.

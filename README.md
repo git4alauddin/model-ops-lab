@@ -1,8 +1,72 @@
 # ModelOpsLab
 
-Production-style, versioned MLOps project built incrementally.
+Production-style, versioned MLOps platform built incrementally.
 
-The project starts with a local ML training pipeline and gradually adds validation, reproducibility, experiment tracking, orchestration, model lifecycle management, serving, and deployment foundations.
+ModelOpsLab demonstrates the operational lifecycle around an ML model: reproducible training, validation, experiment tracking, orchestration, registry management, API serving, deployment, monitoring, governed retraining, and rollback.
+
+## Problem Statement
+
+An ML model is not production-ready only because it can train successfully.
+
+The system must also answer:
+
+```text
+Can the run be reproduced?
+Can invalid data block training?
+Which model is serving?
+Can behavior be monitored?
+Can drift lead to controlled retraining?
+Can a weak candidate be rejected?
+Can serving changes be validated and rolled back?
+```
+
+ModelOpsLab implements those controls as explicit commands, artifacts, tests, and documentation.
+
+## Architecture At A Glance
+
+```text
+validated data
+-> reproducible training
+-> MLflow experiments
+-> Prefect orchestration
+-> model registry lifecycle
+-> FastAPI serving
+-> Docker and Cloud Run deployment
+-> telemetry, drift, Prometheus, and Grafana
+-> governed retraining
+-> local promotion and rollback validation
+```
+
+Architecture references:
+
+```text
+docs/architecture/continuous_ml_lifecycle.md
+docs/diagrams/v10_retraining_flow.md
+```
+
+## Engineering Highlights
+
+- Config-driven scikit-learn training with schema and data quality gates.
+- Dataset, configuration, experiment, model, and retraining lineage.
+- MLflow experiment comparison and explainable champion selection.
+- Prefect orchestration with stage-level failure visibility.
+- Registry-based FastAPI serving with `/health`, `/ready`, `/predict`, and batch prediction.
+- Docker and GitHub Actions deployment to Cloud Run through Artifact Registry and Workload Identity Federation.
+- Prediction telemetry, drift reports, Prometheus metrics, and Grafana dashboards.
+- Governed retraining with production comparison, regression gates, human approval, serving validation, and rollback restoration.
+
+## Safety Boundaries
+
+Model decisions and production mutations are separate:
+
+```text
+comparison != approval
+approval != promotion
+promotion != serving update
+local serving update != Cloud Run deployment
+```
+
+Local registry updates and rollbacks validate readiness and a real prediction. Failed post-mutation validation restores the previous registry state.
 
 ## Current Scope
 
@@ -20,6 +84,44 @@ The project starts with a local ML training pipeline and gradually adds validati
 | V10 | Retraining automation, governance, and portfolio packaging |
 
 Detailed implementation history lives under `docs/versions/`.
+
+## Technology Stack
+
+```text
+Python, pandas, scikit-learn, PyYAML
+MLflow
+Prefect
+FastAPI, Pydantic, Uvicorn
+Docker, Docker Compose
+GitHub Actions
+Google Artifact Registry, Cloud Run
+Prometheus, Grafana
+pytest
+```
+
+## Trade-Offs And Limitations
+
+Key trade-offs:
+
+```text
+local registry for inspectability instead of managed registry complexity
+Prefect for low-overhead orchestration instead of Airflow infrastructure
+Cloud Run for simple revisioned deployment instead of Kubernetes operations
+human approval before automatic promotion
+```
+
+Current limitations:
+
+```text
+small synthetic dataset
+local filesystem model and report storage
+no delayed production labels or real concept drift
+no scheduled V10 retraining execution
+no automated Cloud Run rollout from retraining artifacts
+no fairness, calibration, or latency promotion gates
+```
+
+Full case study: `docs/portfolio/project_case_study.md`.
 
 ## Setup
 
@@ -266,6 +368,9 @@ Generated runtime files are intentionally local and ignored by git:
 | Experiment tracking docs | `docs/experiments/` |
 | Deployment notes | `docs/deployment/` |
 | Flow diagrams | `docs/diagrams/` |
+| Portfolio case study | `docs/portfolio/project_case_study.md` |
+| Interview and resume guide | `docs/portfolio/interview_resume_guide.md` |
+| Demo checklist | `docs/portfolio/demo_checklist.md` |
 
 Manual CI run guide:
 
@@ -445,6 +550,18 @@ V9 observability flow diagram:
 
 ```text
 docs/diagrams/v9_observability_flow.md
+```
+
+V10 governed retraining flow diagram:
+
+```text
+docs/diagrams/v10_retraining_flow.md
+```
+
+Continuous ML lifecycle architecture:
+
+```text
+docs/architecture/continuous_ml_lifecycle.md
 ```
 
 ## Project Structure

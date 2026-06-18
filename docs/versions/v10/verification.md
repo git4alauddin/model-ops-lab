@@ -57,6 +57,33 @@ git diff --check
 passed with CRLF normalization warnings only
 ```
 
+## V10-C11: Architecture And Portfolio Packaging
+
+Planned verification:
+
+```powershell
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c11_portfolio_packaging.py
+vir_env\Scripts\python.exe -m pytest -q tests\test_v8_v9_mermaid_diagrams.py tests\test_v10_c11_portfolio_packaging.py
+vir_env\Scripts\python.exe -m pytest -q
+git diff --check
+```
+
+Actual verification:
+
+```text
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c11_portfolio_packaging.py
+6 passed in 0.07s
+
+vir_env\Scripts\python.exe -m pytest -q tests\test_v8_v9_mermaid_diagrams.py tests\test_v10_c11_portfolio_packaging.py
+18 passed in 0.09s
+
+vir_env\Scripts\python.exe -m pytest -q
+640 passed, 1 warning in 7.29s
+
+git diff --check
+passed with CRLF normalization warnings only
+```
+
 ## V10-C10: Local Retraining Rollback Validation
 
 Planned verification:

@@ -19,6 +19,7 @@ Implemented chunks:
 - V10-C8: serving update handoff validation.
 - V10-C9: local registry and serving update.
 - V10-C10: local retraining rollback validation.
+- V10-C11: architecture and portfolio packaging.
 
 ## Final Definition
 V10 is a production-style continuous ML lifecycle management layer with governed retraining workflows, drift-triggered automation, regression protection, deployment safeguards, architecture documentation, and portfolio-grade operational ML system presentation.
@@ -91,6 +92,25 @@ portfolio packaging docs
 ```
 
 This order keeps the project teachable and prevents retraining automation from becoming unsafe.
+
+## Portfolio Packaging Position
+
+V10 packaging presents the project as an implementation-grounded production engineering case study.
+
+It includes:
+
+```text
+V10 governed retraining diagram
+continuous ML lifecycle architecture
+project case study
+trade-offs and limitations
+resume bullets
+interview answer anchors
+demo checklist
+completion evidence checklist
+```
+
+It does not claim scheduled retraining, concept drift, managed model registry, or retraining-driven Cloud Run rollout because those are not implemented.
 
 ## Out Of Scope For V10-C1
 V10-C1 does not schedule jobs, run retraining, promote models, change production artifacts, install Airflow, or add new cloud infrastructure.

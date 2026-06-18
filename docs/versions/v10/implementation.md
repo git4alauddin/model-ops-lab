@@ -625,3 +625,58 @@ raise a controlled failure
 C10 changes and validates local registry and serving state only.
 
 It does not roll back Cloud Run, change cloud traffic, redeploy a container, or alter Artifact Registry images.
+
+## V10-C11: Architecture And Portfolio Packaging
+
+### Files Added
+
+```text
+docs/diagrams/v10_retraining_flow.md
+docs/architecture/continuous_ml_lifecycle.md
+docs/portfolio/project_case_study.md
+docs/portfolio/interview_resume_guide.md
+docs/portfolio/demo_checklist.md
+docs/portfolio/v10_completion_checklist.md
+tests/test_v10_c11_portfolio_packaging.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/architecture/README.md
+docs/versions/v10/
+```
+
+### Behavior
+- Added the V10 governed retraining Mermaid diagram using component-level subgraphs.
+- Connected V9 alerts and drift reports to the complete V10 lifecycle:
+
+```text
+trigger
+candidate run
+training
+comparison
+regression gates
+approval
+promotion
+serving handoff
+local champion update
+rollback
+```
+
+- Added a system architecture narrative covering training, lifecycle, serving, deployment, observability, and retraining.
+- Documented the control-plane vs runtime-plane distinction.
+- Added implementation-grounded architecture decisions and trade-offs.
+- Converted the README into a concise production engineering case-study entry point.
+- Added a portfolio case study with problem, lifecycle, safety, observability, deployment, trade-offs, limitations, and future improvements.
+- Added reusable resume bullets and interview answer anchors.
+- Added a demo checklist and real-evidence screenshot list.
+- Added a completion checklist that separates completed, manual evidence, and explicitly deferred work.
+
+### Important Boundary
+C11 packages actual implementation evidence.
+
+It does not invent screenshots, production metrics, scheduled retraining, concept drift, managed registry behavior, or Cloud Run retraining rollout.
+
+Manual screenshots remain unchecked until captured from the real tools.
