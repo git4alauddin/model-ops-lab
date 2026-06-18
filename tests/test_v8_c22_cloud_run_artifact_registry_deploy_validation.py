@@ -5,7 +5,6 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 VALIDATION_PATH = PROJECT_ROOT / "docs" / "deployment" / "cloud_run_artifact_registry_deploy_validation.md"
 SOURCE_GATE_PATH = PROJECT_ROOT / "docs" / "deployment" / "cloud_run_image_source_gate.md"
 DEPLOYMENT_README_PATH = PROJECT_ROOT / "docs" / "deployment" / "README.md"
-README_PATH = PROJECT_ROOT / "README.md"
 V8_OVERVIEW_PATH = PROJECT_ROOT / "docs" / "versions" / "v8" / "overview.md"
 V8_COMMIT_LOG_PATH = PROJECT_ROOT / "docs" / "versions" / "v8" / "commit_log.md"
 
@@ -84,12 +83,10 @@ def test_v8_cloud_run_artifact_registry_deploy_validation_records_boundary() -> 
 
 
 def test_v8_cloud_run_artifact_registry_deploy_validation_links_are_visible() -> None:
-    readme = README_PATH.read_text()
     deployment_readme = DEPLOYMENT_README_PATH.read_text()
     source_gate = SOURCE_GATE_PATH.read_text()
     overview = V8_OVERVIEW_PATH.read_text()
 
-    assert "cloud_run_artifact_registry_deploy_validation.md" in readme
     assert "cloud_run_artifact_registry_deploy_validation.md" in deployment_readme
     assert "cloud_run_artifact_registry_deploy_validation.md" in source_gate
     assert "cloud_run_artifact_registry_deploy_validation.md" in overview

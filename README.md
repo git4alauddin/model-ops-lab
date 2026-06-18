@@ -1,63 +1,137 @@
 # ModelOpsLab
 
-Production-style, versioned MLOps platform built incrementally.
+**Production-style MLOps platform for reproducible training, deployment, monitoring, governed retraining, and rollback.**
 
-ModelOpsLab demonstrates the operational lifecycle around an ML model: reproducible training, validation, experiment tracking, orchestration, registry management, API serving, deployment, monitoring, governed retraining, and rollback.
+![Lifecycle](https://img.shields.io/badge/lifecycle-V1--V10_complete-16a34a)
+![Tests](https://img.shields.io/badge/tests-645_passing-2563eb)
+![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-containerized-2496ED?logo=docker&logoColor=white)
+![Cloud Run](https://img.shields.io/badge/Cloud_Run-deployment_foundation-4285F4?logo=googlecloud&logoColor=white)
 
 ## Problem Statement
 
-An ML model is not production-ready only because it can train successfully.
-
-The system must also answer:
+Training a model is only one part of operating ML safely. ModelOpsLab addresses the surrounding questions:
 
 ```text
 Can the run be reproduced?
 Can invalid data block training?
 Which model is serving?
-Can behavior be monitored?
-Can drift lead to controlled retraining?
-Can a weak candidate be rejected?
+Can behavior and drift be monitored?
+Can a weak retraining candidate be rejected?
 Can serving changes be validated and rolled back?
 ```
 
-ModelOpsLab implements those controls as explicit commands, artifacts, tests, and documentation.
-
 ## Architecture At A Glance
 
-```text
-validated data
--> reproducible training
--> MLflow experiments
--> Prefect orchestration
--> model registry lifecycle
--> FastAPI serving
--> Docker and Cloud Run deployment
--> telemetry, drift, Prometheus, and Grafana
--> governed retraining
--> local promotion and rollback validation
+```mermaid
+flowchart LR
+    subgraph build["Build and govern"]
+        data["Versioned data<br/>and schemas"]
+        validate["Validation<br/>gates"]
+        train["Training and<br/>MLflow experiments"]
+        orchestrate["Prefect<br/>orchestration"]
+        registry["Model registry<br/>candidate / champion / archived"]
+
+        data --> validate --> train --> orchestrate --> registry
+    end
+
+    subgraph serve["Serve and deploy"]
+        api["FastAPI<br/>health / ready / predict"]
+        container["Docker<br/>container"]
+        cloud["Artifact Registry<br/>and Cloud Run"]
+
+        registry --> api --> container --> cloud
+    end
+
+    subgraph observe["Observe"]
+        telemetry["Prediction<br/>telemetry"]
+        metrics["Prometheus<br/>metrics"]
+        dashboard["Grafana dashboard<br/>alerts and drift"]
+
+        api --> telemetry --> metrics --> dashboard
+    end
+
+    subgraph evolve["Governed retraining"]
+        trigger["Retraining<br/>decision"]
+        candidate["Candidate training<br/>and comparison"]
+        approval["Human approval<br/>and promotion record"]
+        update["Validated local<br/>update or rollback"]
+
+        trigger --> candidate --> approval --> update
+    end
+
+    dashboard --> trigger
+    update --> registry
+    update -. explicit deployment remains separate .-> cloud
+
+    classDef buildNode fill:#dcfce7,stroke:#15803d,color:#14532d
+    classDef serveNode fill:#dbeafe,stroke:#1d4ed8,color:#1e3a8a
+    classDef observeNode fill:#fef3c7,stroke:#b45309,color:#78350f
+    classDef evolveNode fill:#f3e8ff,stroke:#7e22ce,color:#581c87
+
+    class data,validate,train,orchestrate,registry buildNode
+    class api,container,cloud serveNode
+    class telemetry,metrics,dashboard observeNode
+    class trigger,candidate,approval,update evolveNode
 ```
 
-Architecture references:
-
-```text
-docs/architecture/continuous_ml_lifecycle.md
-docs/diagrams/v10_retraining_flow.md
-```
+Detailed flows: [continuous lifecycle](docs/architecture/continuous_ml_lifecycle.md), [V8 deployment](docs/diagrams/v8_deployment_flow.md), [V9 observability](docs/diagrams/v9_observability_flow.md), and [V10 retraining](docs/diagrams/v10_retraining_flow.md).
 
 ## Engineering Highlights
 
-- Config-driven scikit-learn training with schema and data quality gates.
+- Config-driven scikit-learn training with schema and data-quality gates.
 - Dataset, configuration, experiment, model, and retraining lineage.
 - MLflow experiment comparison and explainable champion selection.
 - Prefect orchestration with stage-level failure visibility.
-- Registry-based FastAPI serving with `/health`, `/ready`, `/predict`, and batch prediction.
+- Registry-based FastAPI serving through `/health`, `/ready`, `/predict`, and `/predict/batch`.
 - Docker and GitHub Actions deployment to Cloud Run through Artifact Registry and Workload Identity Federation.
-- Prediction telemetry, drift reports, Prometheus metrics, and Grafana dashboards.
-- Governed retraining with production comparison, regression gates, human approval, serving validation, and rollback restoration.
+- Prediction telemetry, drift reports, `prometheus-client`, `GET /metrics`, and Grafana dashboards.
+- Governed retraining with regression gates, human approval, serving validation, and rollback restoration.
 
-## Safety Boundaries
+## Governed ML Lifecycle
 
-Model decisions and production mutations are separate:
+```mermaid
+flowchart LR
+    signal["Monitoring or<br/>drift signal"]
+    decision{"Retraining<br/>recommended?"}
+    train["Train candidate"]
+    compare["Compare with<br/>production champion"]
+    regression{"Regression<br/>gates pass?"}
+    approval{"Human<br/>approval?"}
+    promotion["Record promotion<br/>decision"]
+    handoff["Validate serving<br/>handoff"]
+    update["Update local<br/>champion"]
+    validate{"Ready and prediction<br/>checks pass?"}
+    serving["Validated local<br/>serving"]
+    rollback["Restore previous<br/>champion"]
+    review["Stop and retain<br/>audit evidence"]
+
+    signal --> decision
+    decision -- no --> review
+    decision -- yes --> train --> compare --> regression
+    regression -- no --> review
+    regression -- yes --> approval
+    approval -- rejected --> review
+    approval -- approved --> promotion --> handoff --> update --> validate
+    validate -- yes --> serving
+    validate -- no --> rollback
+    serving -. explicit rollback .-> rollback
+    rollback --> review
+
+    classDef signalNode fill:#fef3c7,stroke:#b45309,color:#78350f
+    classDef actionNode fill:#dbeafe,stroke:#1d4ed8,color:#1e3a8a
+    classDef gateNode fill:#f3e8ff,stroke:#7e22ce,color:#581c87
+    classDef successNode fill:#dcfce7,stroke:#15803d,color:#14532d
+    classDef stopNode fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d
+
+    class signal signalNode
+    class train,compare,promotion,handoff,update actionNode
+    class decision,regression,approval,validate gateNode
+    class serving successNode
+    class rollback,review stopNode
+```
+
+The lifecycle deliberately separates evaluation, authorization, and runtime mutation:
 
 ```text
 comparison != approval
@@ -66,51 +140,141 @@ promotion != serving update
 local serving update != Cloud Run deployment
 ```
 
-Local registry updates and rollbacks validate readiness and a real prediction. Failed post-mutation validation restores the previous registry state.
+Governance details are defined in [retraining governance](docs/retraining/retraining_governance.md).
 
-## Current Scope
+## Version-Wise Implementation
 
-| Version | Focus |
-|---|---|
-| V1 | Baseline local training pipeline |
-| V2 | Data validation and training gate |
-| V3 | Dataset versioning and reproducibility |
-| V4 | MLflow experiment tracking and champion selection |
-| V5 | Local orchestration with Prefect |
-| V6 | Model registry and model lifecycle foundations |
-| V7 | FastAPI model serving |
-| V8 | Dockerization and deployment foundations |
-| V9 | Monitoring, drift detection, and production observability |
-| V10 | Retraining automation, governance, and portfolio packaging |
-
-Detailed implementation history lives under `docs/versions/`.
+| Version | Focus | Status |
+|---|---|---|
+| V1 | Baseline local training pipeline | ![Done](https://img.shields.io/badge/status-done-brightgreen) |
+| V2 | Data validation and training gate | ![Done](https://img.shields.io/badge/status-done-brightgreen) |
+| V3 | Dataset versioning and reproducibility | ![Done](https://img.shields.io/badge/status-done-brightgreen) |
+| V4 | MLflow experiment tracking and champion selection | ![Done](https://img.shields.io/badge/status-done-brightgreen) |
+| V5 | Local orchestration with Prefect | ![Done](https://img.shields.io/badge/status-done-brightgreen) |
+| V6 | Model registry and model lifecycle foundations | ![Done](https://img.shields.io/badge/status-done-brightgreen) |
+| V7 | FastAPI model serving | ![Done](https://img.shields.io/badge/status-done-brightgreen) |
+| V8 | Dockerization and deployment foundations | ![Done](https://img.shields.io/badge/status-done-brightgreen) |
+| V9 | Monitoring, drift detection, and production observability | ![Done](https://img.shields.io/badge/status-done-brightgreen) |
+| V10 | Retraining automation, governance, and portfolio packaging | ![Done](https://img.shields.io/badge/status-done-brightgreen) |
 
 ## Technology Stack
 
-```text
-Python, pandas, scikit-learn, PyYAML
-MLflow
-Prefect
-FastAPI, Pydantic, Uvicorn
-Docker, Docker Compose
-GitHub Actions
-Google Artifact Registry, Cloud Run
-Prometheus, Grafana
-pytest
+| Area | Tools |
+|---|---|
+| ML and data | Python, pandas, scikit-learn, PyYAML |
+| Tracking and orchestration | MLflow, Prefect |
+| Serving | FastAPI, Pydantic, Uvicorn |
+| Observability | Prometheus, Grafana |
+| Delivery | Docker, GitHub Actions, Artifact Registry, Cloud Run |
+| Quality | pytest |
+
+## Quick Start
+
+Run from the repository root in PowerShell:
+
+```powershell
+python -m venv vir_env
+.\vir_env\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python -m pytest -q
+python -m app.run_training_pipeline
+uvicorn app.serve_api:app --reload
 ```
+
+Start the local experiment and monitoring tools in separate terminals:
+
+```powershell
+mlflow ui --backend-store-uri sqlite:///mlflow.db
+docker compose -f deployment/docker-compose.monitoring.yaml up
+```
+
+- MLflow: `http://127.0.0.1:5000`
+- API: `http://127.0.0.1:8000`
+- Grafana: `http://localhost:3000`
+- Prometheus: `http://localhost:9090`
+
+## Command Reference
+
+**Core workflows**
+
+```powershell
+python -m app.validate_data
+python -m app.train
+python -m app.run_experiments
+python -m app.run_training_pipeline
+python -m app.run_prefect_pipeline
+python -m app.check_reproducibility
+```
+
+**Monitoring and drift**
+
+```powershell
+python -m app.build_prediction_monitoring_summary
+python -m app.build_monitoring_alerts
+python -m app.build_drift_reference_baseline
+python -m app.build_inference_snapshot
+python -m app.build_data_drift_summary
+python -m app.build_dashboard_snapshot
+python -m app.build_monitoring_dashboard
+```
+
+**Governed retraining**
+
+```powershell
+python -m app.evaluate_retraining_trigger
+python -m app.start_candidate_retraining_run
+python -m app.run_candidate_retraining --run-id <run_id>
+python -m app.compare_candidate_to_production --run-id <run_id>
+python -m app.record_retraining_approval --run-id <run_id> --decision approved --approved-by <name>
+python -m app.record_candidate_promotion --run-id <run_id> --promoted-by <name> --reason "<reason>"
+python -m app.validate_serving_handoff --run-id <run_id>
+python -m app.update_local_serving_model --run-id <run_id>
+python -m app.rollback_local_retraining_model --run-id <run_id> --reason "<reason>" --rolled-back-by <name>
+```
+
+**Container serving**
+
+```powershell
+docker build -f deployment/Dockerfile -t modelopslab-serving:v8-c1 .
+docker run --rm -p 8000:8000 modelopslab-serving:v8-c1
+docker compose -f deployment/docker-compose.yaml --env-file .env.example up --build
+```
+
+## Runtime Evidence
+
+Generated evidence stays local and is ignored by Git.
+
+| Area | Paths |
+|---|---|
+| Training | `artifacts/`, `pipeline_runs/`, `mlruns/`, `mlflow.db` |
+| Monitoring | `reports/monitoring/prediction_summary.json`, `reports/monitoring/alerts.json`, `reports/monitoring/dashboard_snapshot.json`, `reports/monitoring/dashboard.html` |
+| Drift | `reports/drift/reference_baseline.json`, `reports/drift/inference_snapshot.json`, `reports/drift/data_drift_summary.json` |
+| Retraining trigger | `reports/retraining/retraining_trigger_decision.json` |
+| Retraining run | `retraining_runs/<run_id>/retraining_metadata.json`, `retraining_runs/<run_id>/candidate/` |
+| Governance | `retraining_runs/<run_id>/comparison_report.json`, `retraining_runs/<run_id>/approval_record.json`, `retraining_runs/<run_id>/promotion_record.json` |
+| Serving lifecycle | `retraining_runs/<run_id>/serving_handoff_report.json`, `retraining_runs/<run_id>/local_serving_update_report.json`, `retraining_runs/<run_id>/local_serving_rollback_report.json` |
+
+## Engineering Decisions
+
+| Decision | Reason | Trade-Off |
+|---|---|---|
+| Local model registry | Transparent lifecycle and rollback learning | Not a distributed managed registry |
+| Prefect before Airflow | Lower local operational overhead | No managed scheduler deployment |
+| Cloud Run before Kubernetes | Simple revisioned container delivery | Less control over complex topology |
+| Human approval before auto-promotion | Safer, auditable model evolution | Slower remediation |
 
 ## Trade-Offs And Limitations
 
-Key trade-offs:
+**Implemented and validated**
 
 ```text
-local registry for inspectability instead of managed registry complexity
-Prefect for low-overhead orchestration instead of Airflow infrastructure
-Cloud Run for simple revisioned deployment instead of Kubernetes operations
-human approval before automatic promotion
+local registry-based serving
+Cloud Run container deployment and /health
+local monitoring and drift detection
+governed local retraining promotion and rollback
 ```
 
-Current limitations:
+**Current limitations**
 
 ```text
 small synthetic dataset
@@ -121,471 +285,50 @@ no automated Cloud Run rollout from retraining artifacts
 no fairness, calibration, or latency promotion gates
 ```
 
-Full case study: `docs/portfolio/project_case_study.md`.
-
-## Setup
-
-```powershell
-python -m venv vir_env
-.\vir_env\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-```
-
-## Main Commands
-
-Run tests:
-
-```powershell
-python -m pytest -q
-```
-
-Run data validation:
-
-```powershell
-python -m app.validate_data
-```
-
-Run baseline training:
-
-```powershell
-python -m app.train
-```
-
-Run multi-model experiments:
-
-```powershell
-python -m app.run_experiments
-```
-
-Run the plain training pipeline:
-
-```powershell
-python -m app.run_training_pipeline
-```
-
-Run the Prefect training pipeline locally:
-
-```powershell
-python -m app.run_prefect_pipeline
-```
-
-Run the FastAPI serving API locally:
-
-```powershell
-uvicorn app.serve_api:app --reload
-```
-
-Expose Prometheus metrics from the serving API:
-
-```text
-GET /metrics
-```
-
-The endpoint uses `prometheus-client` and local V9 monitoring reports as the metrics source.
-
-Build local prediction monitoring summary:
-
-```powershell
-python -m app.build_prediction_monitoring_summary
-```
-
-The summary uses supported V9 telemetry events and reports skipped legacy records.
-
-Build local monitoring alerts:
-
-```powershell
-python -m app.build_monitoring_alerts
-```
-
-Build drift reference baseline:
-
-```powershell
-python -m app.build_drift_reference_baseline
-```
-
-Build inference feature snapshot:
-
-```powershell
-python -m app.build_inference_snapshot
-```
-
-Build local data drift summary:
-
-```powershell
-python -m app.build_data_drift_summary
-```
-
-Build dashboard-ready monitoring snapshot:
-
-```powershell
-python -m app.build_dashboard_snapshot
-```
-
-Build local monitoring dashboard HTML:
-
-```powershell
-python -m app.build_monitoring_dashboard
-```
-
-Evaluate local retraining trigger decision:
-
-```powershell
-python -m app.evaluate_retraining_trigger
-```
-
-Initialize a governed candidate retraining run:
-
-```powershell
-python -m app.start_candidate_retraining_run
-```
-
-Train a candidate model for an initialized retraining run:
-
-```powershell
-python -m app.run_candidate_retraining --run-id <run_id>
-```
-
-Compare a trained candidate against production:
-
-```powershell
-python -m app.compare_candidate_to_production --run-id <run_id>
-```
-
-Record a human retraining approval decision:
-
-```powershell
-python -m app.record_retraining_approval --run-id <run_id> --decision approved --approved-by <name> --notes "<reason>"
-```
-
-Record an approved candidate promotion decision:
-
-```powershell
-python -m app.record_candidate_promotion --run-id <run_id> --promoted-by <name> --reason "<reason>"
-```
-
-Validate serving update handoff readiness:
-
-```powershell
-python -m app.validate_serving_handoff --run-id <run_id>
-```
-
-Update the local registry champion and validate local serving:
-
-```powershell
-python -m app.update_local_serving_model --run-id <run_id>
-```
-
-Rollback the local retraining champion:
-
-```powershell
-python -m app.rollback_local_retraining_model --run-id <run_id> --reason "<reason>" --rolled-back-by <name>
-```
-
-Check dataset reproducibility:
-
-```powershell
-python -m app.check_reproducibility
-```
-
-Build the serving Docker image:
-
-```powershell
-docker build -f deployment/Dockerfile -t modelopslab-serving:v8-c1 .
-```
-
-Run the serving Docker image:
-
-```powershell
-docker run --rm -p 8000:8000 modelopslab-serving:v8-c1
-```
-
-Run the serving API with Docker Compose:
-
-```powershell
-docker compose -f deployment/docker-compose.yaml --env-file .env.example up --build
-```
-
-Serving environment defaults live in `.env.example`.
-
-Run the local Prometheus and Grafana monitoring stack:
-
-```powershell
-docker compose -f deployment/docker-compose.monitoring.yaml up
-```
-
-Grafana opens at `http://localhost:3000` and Prometheus opens at `http://localhost:9090`.
-
-## MLflow UI
-
-Start the local MLflow UI:
-
-```powershell
-mlflow ui --backend-store-uri sqlite:///mlflow.db
-```
-
-Open:
-
-```text
-http://127.0.0.1:5000
-```
-
-## Important Outputs
-
-Generated runtime files are intentionally local and ignored by git:
-
-| Path | Purpose |
-|---|---|
-| `artifacts/` | trained model, metrics, config snapshot, training metadata |
-| `reports/` | validation reports and champion selection report |
-| `reports/monitoring/prediction_summary.json` | local prediction monitoring summary |
-| `reports/monitoring/alerts.json` | local monitoring alert report |
-| `reports/monitoring/dashboard_snapshot.json` | dashboard-ready monitoring and drift snapshot |
-| `reports/monitoring/dashboard.html` | local static monitoring dashboard |
-| `reports/retraining/retraining_trigger_decision.json` | local retraining trigger recommendation |
-| `retraining_runs/<run_id>/retraining_metadata.json` | governed candidate retraining run metadata |
-| `retraining_runs/<run_id>/candidate/` | candidate retraining model, metrics, config snapshot, and training metadata |
-| `retraining_runs/<run_id>/comparison_report.json` | candidate-vs-production metric comparison report |
-| `retraining_runs/<run_id>/approval_record.json` | human approval decision record before promotion |
-| `retraining_runs/<run_id>/promotion_record.json` | approved candidate promotion decision record |
-| `retraining_runs/<run_id>/serving_handoff_report.json` | validation report for serving update readiness |
-| `retraining_runs/<run_id>/local_serving_update_report.json` | local champion update, readiness, and prediction evidence |
-| `retraining_runs/<run_id>/local_serving_rollback_report.json` | local rollback, readiness, and restored prediction evidence |
-| `reports/drift/reference_baseline.json` | training-data reference baseline for drift checks |
-| `reports/drift/inference_snapshot.json` | production inference feature snapshot for drift checks |
-| `reports/drift/data_drift_summary.json` | local baseline-vs-inference drift summary |
-| `logs/` | local runtime logs |
-| `mlflow.db` | MLflow backend database |
-| `mlruns/` | MLflow run artifacts |
-| `pipeline_runs/` | pipeline-level run metadata |
-
-## Useful Docs
-
-| Topic | Location |
-|---|---|
-| Version history | `docs/versions/` |
-| Architecture notes | `docs/architecture/` |
-| Decision records | `docs/decisions/` |
-| Experiment tracking docs | `docs/experiments/` |
-| Deployment notes | `docs/deployment/` |
-| Flow diagrams | `docs/diagrams/` |
-| Portfolio case study | `docs/portfolio/project_case_study.md` |
-| Interview and resume guide | `docs/portfolio/interview_resume_guide.md` |
-| Demo checklist | `docs/portfolio/demo_checklist.md` |
-
-Manual CI run guide:
-
-```text
-docs/deployment/ci_manual_run_guide.md
-```
-
-Docker Hub publishing plan:
-
-```text
-docs/deployment/dockerhub_publishing_plan.md
-```
-
-Docker Hub secrets setup:
-
-```text
-docs/deployment/dockerhub_secrets_setup.md
-```
-
-Docker Hub publish run guide:
-
-```text
-docs/deployment/dockerhub_publish_run_guide.md
-```
-
-Cloud Run GitHub Actions deployment guide:
-
-```text
-docs/deployment/cloud_run_github_actions_deploy.md
-```
-
-Cloud Run live validation:
-
-```text
-docs/deployment/cloud_run_live_validation.md
-```
-
-Artifact Registry foundation:
-
-```text
-docs/deployment/artifact_registry_foundation.md
-```
-
-Artifact Registry setup validation:
-
-```text
-docs/deployment/artifact_registry_setup_validation.md
-```
-
-Artifact Registry publish gate:
-
-```text
-docs/deployment/artifact_registry_publish_gate.md
-```
-
-Artifact Registry publish validation:
-
-```text
-docs/deployment/artifact_registry_publish_validation.md
-```
-
-Cloud Run image source gate:
-
-```text
-docs/deployment/cloud_run_image_source_gate.md
-```
-
-Cloud Run Artifact Registry deployment validation:
-
-```text
-docs/deployment/cloud_run_artifact_registry_deploy_validation.md
-```
-
-Artifact Registry default deploy source:
-
-```text
-docs/deployment/artifact_registry_default_deploy_source.md
-```
-
-Cloud Run rollback and cleanup guide:
-
-```text
-docs/deployment/cloud_run_rollback_cleanup_guide.md
-```
-
-V9 observability strategy:
-
-```text
-docs/monitoring/observability_strategy.md
-```
-
-V9 closure:
-
-```text
-docs/versions/v9/closure.md
-```
-
-Prediction telemetry contract:
-
-```text
-docs/monitoring/prediction_telemetry_contract.md
-```
-
-Fresh feature telemetry workflow:
-
-```text
-docs/monitoring/fresh_feature_telemetry_workflow.md
-```
-
-Grafana and Prometheus local stack:
-
-```text
-docs/monitoring/grafana_prometheus_local_stack.md
-```
-
-Monitoring retention and incident debugging:
-
-```text
-docs/monitoring/monitoring_retention_incident_workflow.md
-```
-
-Prometheus and Grafana learning notes:
-
-```text
-docs/learning/prometheus_grafana_notes.md
-```
-
-Retraining governance:
-
-```text
-docs/retraining/retraining_governance.md
-```
-
-Serving update handoff:
-
-```text
-docs/retraining/serving_update_handoff.md
-```
-
-Local registry and serving update:
-
-```text
-docs/retraining/local_registry_serving_update.md
-```
-
-Local retraining rollback:
-
-```text
-docs/retraining/local_retraining_rollback.md
-```
-
-Workload Identity Federation learning notes:
-
-```text
-docs/learning/workload_identity_federation_notes.md
-```
-
-Manual CI Cloud Run trigger learning notes:
-
-```text
-docs/learning/manual_ci_cloud_run_trigger_notes.md
-```
-
-V8 closure:
-
-```text
-docs/versions/v8/closure.md
-```
-
-V8 deployment flow diagram:
-
-```text
-docs/diagrams/v8_deployment_flow.md
-```
-
-V9 observability flow diagram:
-
-```text
-docs/diagrams/v9_observability_flow.md
-```
-
-V10 governed retraining flow diagram:
-
-```text
-docs/diagrams/v10_retraining_flow.md
-```
-
-Continuous ML lifecycle architecture:
-
-```text
-docs/architecture/continuous_ml_lifecycle.md
-```
-
-V10 closure:
-
-```text
-docs/versions/v10/closure.md
-```
-
 ## Project Structure
 
 ```text
-modelOpsLab/
-  app/                 # application code
-  configs/             # training configuration
-  data/                # local sample data
-  data_versions/       # dataset version metadata
-  schema_versions/     # validation schema versions
-  tests/               # versioned test suite
-  docs/                # project documentation
-  deployment/          # Docker and deployment assets
-  artifacts/           # local runtime artifacts
-  reports/             # local runtime reports
-  logs/                # local logs
-  mlruns/              # MLflow artifact store
-  pipeline_runs/       # pipeline run metadata
-  retraining_runs/     # local retraining run metadata
+.github/workflows/   GitHub Actions CI and deployment workflow
+app/
+  api/               FastAPI routes and application setup
+  observability/     metrics, monitoring, alerts, and drift logic
+  orchestration/     Prefect flow and task definitions
+  pipeline/          reusable training pipeline stages
+  retraining/        trigger, comparison, governance, and lifecycle logic
+  serving/           model loading and prediction services
+  validation/        schema and data-quality validation
+  *.py               runnable project commands
+configs/             model and training configuration
+data/                sample source dataset
+data_versions/       dataset version metadata and checksums
+schema_versions/     versioned validation contracts
+deployment/          Docker, Compose, Prometheus, and Grafana configuration
+docs/                architecture, learning, operations, versions, and portfolio
+tests/               automated contracts covering V1 through V10
+prefect.yaml         local Prefect deployment definition
+requirements.txt     Python dependency manifest
 ```
+
+**Generated locally and excluded from version control**
+
+```text
+artifacts/           latest training artifacts
+logs/                application and prediction logs
+mlflow.db, mlruns/   MLflow metadata and run artifacts
+model_registry/      local model lifecycle records
+pipeline_runs/       pipeline execution metadata
+reports/             validation, monitoring, drift, and decision reports
+retraining_runs/     governed retraining run evidence
+```
+
+## Final Status
+
+| Scope | Result |
+|---|---|
+| Version lifecycle | **V1-V10 complete** |
+| Automated verification | **645 tests passing** |
+| Retraining promotion | **Validated locally** |
+| Champion rollback | **Validated locally** |
+| Cloud deployment | **Cloud Run foundation validated** |
+
+The implementation story is captured in the [project case study](docs/portfolio/project_case_study.md). Final scope and deferred production extensions are recorded in [V10 closure](docs/versions/v10/closure.md).

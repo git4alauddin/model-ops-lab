@@ -7,7 +7,6 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW_PATH = PROJECT_ROOT / ".github" / "workflows" / "ci.yaml"
 GUIDE_PATH = PROJECT_ROOT / "docs" / "deployment" / "cloud_run_image_source_gate.md"
 DEPLOYMENT_README_PATH = PROJECT_ROOT / "docs" / "deployment" / "README.md"
-README_PATH = PROJECT_ROOT / "README.md"
 V8_OVERVIEW_PATH = PROJECT_ROOT / "docs" / "versions" / "v8" / "overview.md"
 V8_COMMIT_LOG_PATH = PROJECT_ROOT / "docs" / "versions" / "v8" / "commit_log.md"
 
@@ -78,11 +77,9 @@ def test_v8_cloud_run_image_source_docs_describe_both_paths() -> None:
 
 
 def test_v8_cloud_run_image_source_docs_are_linked() -> None:
-    readme = README_PATH.read_text()
     deployment_readme = DEPLOYMENT_README_PATH.read_text()
     overview = V8_OVERVIEW_PATH.read_text()
 
-    assert "cloud_run_image_source_gate.md" in readme
     assert "cloud_run_image_source_gate.md" in deployment_readme
     assert "cloud_run_image_source_gate.md" in overview
 

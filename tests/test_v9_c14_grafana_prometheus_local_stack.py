@@ -34,6 +34,7 @@ DASHBOARD_PATH = (
     / "modelopslab-monitoring.json"
 )
 README_PATH = PROJECT_ROOT / "README.md"
+MONITORING_INDEX_PATH = PROJECT_ROOT / "docs" / "monitoring" / "README.md"
 IMPLEMENTATION_PATH = PROJECT_ROOT / "docs" / "versions" / "v9" / "implementation.md"
 GUIDE_PATH = PROJECT_ROOT / "docs" / "monitoring" / "grafana_prometheus_local_stack.md"
 
@@ -86,10 +87,11 @@ def test_grafana_dashboard_contains_modelopslab_metrics() -> None:
 
 def test_v9_c14_docs_mention_local_grafana_stack() -> None:
     readme = README_PATH.read_text(encoding="utf-8")
+    monitoring_index = MONITORING_INDEX_PATH.read_text(encoding="utf-8")
     implementation = IMPLEMENTATION_PATH.read_text(encoding="utf-8")
     guide = GUIDE_PATH.read_text(encoding="utf-8")
 
     assert "docker compose -f deployment/docker-compose.monitoring.yaml up" in readme
-    assert "docs/monitoring/grafana_prometheus_local_stack.md" in readme
+    assert "grafana_prometheus_local_stack.md" in monitoring_index
     assert "V9-C14: Prometheus And Grafana Local Stack" in implementation
     assert "host.docker.internal:8000/metrics" in guide

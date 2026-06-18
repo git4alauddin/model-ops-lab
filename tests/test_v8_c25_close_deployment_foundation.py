@@ -3,7 +3,6 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 CLOSURE_PATH = PROJECT_ROOT / "docs" / "versions" / "v8" / "closure.md"
-README_PATH = PROJECT_ROOT / "README.md"
 V8_OVERVIEW_PATH = PROJECT_ROOT / "docs" / "versions" / "v8" / "overview.md"
 V8_IMPLEMENTATION_PATH = PROJECT_ROOT / "docs" / "versions" / "v8" / "implementation.md"
 V8_COMMIT_LOG_PATH = PROJECT_ROOT / "docs" / "versions" / "v8" / "commit_log.md"
@@ -68,11 +67,9 @@ def test_v8_closure_records_v9_handoff() -> None:
 
 
 def test_v8_closure_links_are_visible() -> None:
-    readme = README_PATH.read_text()
     overview = V8_OVERVIEW_PATH.read_text()
     implementation = V8_IMPLEMENTATION_PATH.read_text()
 
-    assert "docs/versions/v8/closure.md" in readme
     assert "closure.md" in overview
     assert "closure.md" in implementation
 

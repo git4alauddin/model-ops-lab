@@ -3,7 +3,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 NOTES_PATH = PROJECT_ROOT / "docs" / "learning" / "prometheus_grafana_notes.md"
-README_PATH = PROJECT_ROOT / "README.md"
+LEARNING_INDEX_PATH = PROJECT_ROOT / "docs" / "learning" / "README.md"
 
 
 def test_prometheus_grafana_learning_notes_exist() -> None:
@@ -42,7 +42,7 @@ def test_prometheus_grafana_learning_notes_connect_to_modelopslab_files() -> Non
         assert term in notes
 
 
-def test_readme_links_prometheus_grafana_learning_notes() -> None:
-    readme = README_PATH.read_text(encoding="utf-8")
+def test_learning_index_links_prometheus_grafana_learning_notes() -> None:
+    learning_index = LEARNING_INDEX_PATH.read_text(encoding="utf-8")
 
-    assert "docs/learning/prometheus_grafana_notes.md" in readme
+    assert "prometheus_grafana_notes.md" in learning_index

@@ -3,7 +3,6 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 CLOSURE_PATH = PROJECT_ROOT / "docs" / "versions" / "v9" / "closure.md"
-README_PATH = PROJECT_ROOT / "README.md"
 OVERVIEW_PATH = PROJECT_ROOT / "docs" / "versions" / "v9" / "overview.md"
 IMPLEMENTATION_PATH = PROJECT_ROOT / "docs" / "versions" / "v9" / "implementation.md"
 COMMIT_LOG_PATH = PROJECT_ROOT / "docs" / "versions" / "v9" / "commit_log.md"
@@ -80,10 +79,8 @@ def test_v9_closure_records_deferred_scope_and_v10_handoff() -> None:
 
 
 def test_v9_closure_links_are_visible() -> None:
-    readme = README_PATH.read_text(encoding="utf-8")
     overview = OVERVIEW_PATH.read_text(encoding="utf-8")
 
-    assert "docs/versions/v9/closure.md" in readme
     assert "docs/versions/v9/closure.md" in overview
 
 

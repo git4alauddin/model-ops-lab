@@ -3,6 +3,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 README_PATH = PROJECT_ROOT / "README.md"
+PORTFOLIO_INDEX_PATH = PROJECT_ROOT / "docs" / "portfolio" / "README.md"
 DIAGRAM_PATH = PROJECT_ROOT / "docs" / "diagrams" / "v10_retraining_flow.md"
 ARCHITECTURE_PATH = (
     PROJECT_ROOT / "docs" / "architecture" / "continuous_ml_lifecycle.md"
@@ -93,6 +94,7 @@ def test_v10_completion_checklist_separates_done_manual_and_deferred() -> None:
 
 def test_readme_and_v10_docs_link_portfolio_packaging() -> None:
     readme = README_PATH.read_text()
+    portfolio_index = PORTFOLIO_INDEX_PATH.read_text()
     implementation = IMPLEMENTATION_PATH.read_text()
     lessons = LESSONS_PATH.read_text()
 
@@ -101,6 +103,6 @@ def test_readme_and_v10_docs_link_portfolio_packaging() -> None:
     assert "## Engineering Highlights" in readme
     assert "## Trade-Offs And Limitations" in readme
     assert "docs/diagrams/v10_retraining_flow.md" in readme
-    assert "docs/portfolio/project_case_study.md" in readme
+    assert "project_case_study.md" in portfolio_index
     assert "V10-C11: Architecture And Portfolio Packaging" in implementation
     assert "Technical storytelling must preserve operational boundaries" in lessons

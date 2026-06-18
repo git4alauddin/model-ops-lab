@@ -7,7 +7,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DIAGRAM_DIR = PROJECT_ROOT / "docs" / "diagrams"
 V8_DIAGRAM_PATH = PROJECT_ROOT / "docs" / "diagrams" / "v8_deployment_flow.md"
 V9_DIAGRAM_PATH = PROJECT_ROOT / "docs" / "diagrams" / "v9_observability_flow.md"
-README_PATH = PROJECT_ROOT / "README.md"
+ARCHITECTURE_INDEX_PATH = PROJECT_ROOT / "docs" / "architecture" / "README.md"
 
 
 @pytest.mark.parametrize(
@@ -56,8 +56,8 @@ def test_v9_observability_mermaid_diagram_exists() -> None:
     assert "incident debugging workflow" in diagram
 
 
-def test_readme_links_v8_and_v9_diagrams() -> None:
-    readme = README_PATH.read_text(encoding="utf-8")
+def test_architecture_index_links_v8_and_v9_diagrams() -> None:
+    architecture_index = ARCHITECTURE_INDEX_PATH.read_text(encoding="utf-8")
 
-    assert "docs/diagrams/v8_deployment_flow.md" in readme
-    assert "docs/diagrams/v9_observability_flow.md" in readme
+    assert "docs/diagrams/v8_deployment_flow.md" in architecture_index
+    assert "docs/diagrams/v9_observability_flow.md" in architecture_index

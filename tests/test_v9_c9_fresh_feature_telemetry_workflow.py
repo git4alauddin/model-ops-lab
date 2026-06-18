@@ -5,7 +5,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW_PATH = (
     PROJECT_ROOT / "docs" / "monitoring" / "fresh_feature_telemetry_workflow.md"
 )
-README_PATH = PROJECT_ROOT / "README.md"
+MONITORING_INDEX_PATH = PROJECT_ROOT / "docs" / "monitoring" / "README.md"
 IMPLEMENTATION_PATH = PROJECT_ROOT / "docs" / "versions" / "v9" / "implementation.md"
 LESSONS_PATH = PROJECT_ROOT / "docs" / "versions" / "v9" / "lessons.md"
 
@@ -42,10 +42,10 @@ def test_fresh_feature_telemetry_workflow_records_expected_report_transition() -
 
 
 def test_v9_c9_docs_reference_fresh_telemetry_workflow() -> None:
-    readme = README_PATH.read_text()
+    monitoring_index = MONITORING_INDEX_PATH.read_text()
     implementation = IMPLEMENTATION_PATH.read_text()
     lessons = LESSONS_PATH.read_text()
 
-    assert "docs/monitoring/fresh_feature_telemetry_workflow.md" in readme
+    assert "fresh_feature_telemetry_workflow.md" in monitoring_index
     assert "V9-C9: Fresh Feature-Bearing Telemetry Workflow" in implementation
     assert "Fresh feature-bearing telemetry turns drift comparison from missing-data reporting into real drift evaluation." in lessons

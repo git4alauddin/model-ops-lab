@@ -5,7 +5,6 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 VALIDATION_PATH = PROJECT_ROOT / "docs" / "deployment" / "artifact_registry_publish_validation.md"
 PUBLISH_GATE_PATH = PROJECT_ROOT / "docs" / "deployment" / "artifact_registry_publish_gate.md"
 DEPLOYMENT_README_PATH = PROJECT_ROOT / "docs" / "deployment" / "README.md"
-README_PATH = PROJECT_ROOT / "README.md"
 V8_OVERVIEW_PATH = PROJECT_ROOT / "docs" / "versions" / "v8" / "overview.md"
 V8_COMMIT_LOG_PATH = PROJECT_ROOT / "docs" / "versions" / "v8" / "commit_log.md"
 
@@ -66,12 +65,10 @@ def test_v8_artifact_registry_publish_validation_records_boundary() -> None:
 
 
 def test_v8_artifact_registry_publish_validation_links_are_visible() -> None:
-    readme = README_PATH.read_text()
     deployment_readme = DEPLOYMENT_README_PATH.read_text()
     publish_gate = PUBLISH_GATE_PATH.read_text()
     overview = V8_OVERVIEW_PATH.read_text()
 
-    assert "artifact_registry_publish_validation.md" in readme
     assert "artifact_registry_publish_validation.md" in deployment_readme
     assert "artifact_registry_publish_validation.md" in publish_gate
     assert "artifact_registry_publish_validation.md" in overview

@@ -7,6 +7,7 @@ RETRAINING_GOVERNANCE_PATH = (
     PROJECT_ROOT / "docs" / "retraining" / "retraining_governance.md"
 )
 README_PATH = PROJECT_ROOT / "README.md"
+RETRAINING_INDEX_PATH = PROJECT_ROOT / "docs" / "retraining" / "README.md"
 
 
 def test_v10_documentation_scaffold_exists() -> None:
@@ -77,6 +78,7 @@ def test_retraining_governance_defines_regression_and_metadata() -> None:
 
 def test_readme_lists_v10_current_scope_and_docs() -> None:
     readme = README_PATH.read_text()
+    retraining_index = RETRAINING_INDEX_PATH.read_text()
 
     assert "| V10 | Retraining automation, governance, and portfolio packaging |" in readme
-    assert "docs/retraining/retraining_governance.md" in readme
+    assert "retraining_governance.md" in retraining_index

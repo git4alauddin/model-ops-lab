@@ -4,7 +4,6 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 FOUNDATION_PATH = PROJECT_ROOT / "docs" / "deployment" / "artifact_registry_foundation.md"
 DEPLOYMENT_README_PATH = PROJECT_ROOT / "docs" / "deployment" / "README.md"
-README_PATH = PROJECT_ROOT / "README.md"
 V8_OVERVIEW_PATH = PROJECT_ROOT / "docs" / "versions" / "v8" / "overview.md"
 V8_COMMIT_LOG_PATH = PROJECT_ROOT / "docs" / "versions" / "v8" / "commit_log.md"
 
@@ -57,11 +56,9 @@ def test_v8_artifact_registry_foundation_records_future_workflow_boundary() -> N
 
 def test_v8_artifact_registry_foundation_links_are_visible() -> None:
     deployment_readme = DEPLOYMENT_README_PATH.read_text()
-    readme = README_PATH.read_text()
     overview = V8_OVERVIEW_PATH.read_text()
 
     assert "artifact_registry_foundation.md" in deployment_readme
-    assert "artifact_registry_foundation.md" in readme
     assert "artifact_registry_foundation.md" in overview
 
 

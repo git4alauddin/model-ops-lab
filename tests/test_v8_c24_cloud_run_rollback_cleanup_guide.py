@@ -4,7 +4,6 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 GUIDE_PATH = PROJECT_ROOT / "docs" / "deployment" / "cloud_run_rollback_cleanup_guide.md"
 DEPLOYMENT_README_PATH = PROJECT_ROOT / "docs" / "deployment" / "README.md"
-README_PATH = PROJECT_ROOT / "README.md"
 V8_OVERVIEW_PATH = PROJECT_ROOT / "docs" / "versions" / "v8" / "overview.md"
 V8_COMMIT_LOG_PATH = PROJECT_ROOT / "docs" / "versions" / "v8" / "commit_log.md"
 
@@ -63,11 +62,9 @@ def test_v8_cloud_run_rollback_cleanup_guide_documents_cleanup_rules() -> None:
 
 
 def test_v8_cloud_run_rollback_cleanup_guide_links_are_visible() -> None:
-    readme = README_PATH.read_text()
     deployment_readme = DEPLOYMENT_README_PATH.read_text()
     overview = V8_OVERVIEW_PATH.read_text()
 
-    assert "cloud_run_rollback_cleanup_guide.md" in readme
     assert "cloud_run_rollback_cleanup_guide.md" in deployment_readme
     assert "cloud_run_rollback_cleanup_guide.md" in overview
 

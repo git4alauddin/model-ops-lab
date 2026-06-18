@@ -3,7 +3,7 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 LEARNING_PATH = PROJECT_ROOT / "docs" / "learning" / "manual_ci_cloud_run_trigger_notes.md"
-README_PATH = PROJECT_ROOT / "README.md"
+LEARNING_INDEX_PATH = PROJECT_ROOT / "docs" / "learning" / "README.md"
 DEPLOY_GUIDE_PATH = PROJECT_ROOT / "docs" / "deployment" / "cloud_run_github_actions_deploy.md"
 V8_OVERVIEW_PATH = PROJECT_ROOT / "docs" / "versions" / "v8" / "overview.md"
 
@@ -62,10 +62,10 @@ def test_v8_manual_ci_trigger_notes_include_gui_checkpoints_and_failure_points()
 
 
 def test_v8_manual_ci_trigger_notes_are_linked_from_public_docs() -> None:
-    readme = README_PATH.read_text()
+    learning_index = LEARNING_INDEX_PATH.read_text()
     guide = DEPLOY_GUIDE_PATH.read_text()
     overview = V8_OVERVIEW_PATH.read_text()
 
-    assert "manual_ci_cloud_run_trigger_notes.md" in readme
+    assert "manual_ci_cloud_run_trigger_notes.md" in learning_index
     assert "manual_ci_cloud_run_trigger_notes.md" in guide
     assert "manual_ci_cloud_run_trigger_notes.md" in overview

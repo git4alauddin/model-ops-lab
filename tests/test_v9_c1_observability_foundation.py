@@ -7,6 +7,7 @@ OBSERVABILITY_STRATEGY_PATH = (
     PROJECT_ROOT / "docs" / "monitoring" / "observability_strategy.md"
 )
 README_PATH = PROJECT_ROOT / "README.md"
+MONITORING_INDEX_PATH = PROJECT_ROOT / "docs" / "monitoring" / "README.md"
 
 
 def test_v9_documentation_scaffold_exists() -> None:
@@ -77,6 +78,7 @@ def test_observability_strategy_defines_drift_and_alert_boundaries() -> None:
 
 def test_readme_lists_v9_current_scope() -> None:
     readme = README_PATH.read_text()
+    monitoring_index = MONITORING_INDEX_PATH.read_text()
 
     assert "| V9 | Monitoring, drift detection, and production observability |" in readme
-    assert "docs/monitoring/observability_strategy.md" in readme
+    assert "observability_strategy.md" in monitoring_index
