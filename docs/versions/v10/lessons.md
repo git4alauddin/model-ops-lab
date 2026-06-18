@@ -98,3 +98,11 @@
 - Resume bullets should describe implemented engineering outcomes, not unvalidated production claims.
 - Manual screenshots are evidence tasks and should not be fabricated by documentation.
 - Explicit limitations make the project more credible and create clear future extension points.
+
+## V10-C12: Final Closure
+
+- Closure is a scope decision backed by evidence.
+- A version can be complete while clearly deferring larger production extensions.
+- The final stable state matters; V10 closes with the previous champion restored after a validated rollback.
+- Manual screenshots strengthen portfolio presentation but do not replace automated engineering verification.
+- A credible project conclusion states both what works and what remains outside the implemented boundary.

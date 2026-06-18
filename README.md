@@ -564,6 +564,12 @@ Continuous ML lifecycle architecture:
 docs/architecture/continuous_ml_lifecycle.md
 ```
 
+V10 closure:
+
+```text
+docs/versions/v10/closure.md
+```
+
 ## Project Structure
 
 ```text

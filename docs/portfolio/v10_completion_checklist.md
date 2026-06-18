@@ -29,6 +29,7 @@
 - [x] Interview and resume guide exists.
 - [x] Demo checklist exists.
 - [x] README includes architecture, safety, trade-offs, and limitations.
+- [x] V10 closure document exists.
 
 ## Operational Evidence
 
@@ -69,4 +70,3 @@ Screenshots are intentionally manual because they must reflect real tool state a
 - [ ] Fairness, calibration, and latency promotion gates.
 
 Deferred items are future production extensions, not hidden completion claims.
-

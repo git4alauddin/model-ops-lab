@@ -57,6 +57,33 @@ git diff --check
 passed with CRLF normalization warnings only
 ```
 
+## V10-C12: Final Closure
+
+Planned verification:
+
+```powershell
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c12_closure.py
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c11_portfolio_packaging.py tests\test_v10_c12_closure.py
+vir_env\Scripts\python.exe -m pytest -q
+git diff --check
+```
+
+Actual verification:
+
+```text
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c12_closure.py
+5 passed in 0.06s
+
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c11_portfolio_packaging.py tests\test_v10_c12_closure.py
+11 passed in 0.08s
+
+vir_env\Scripts\python.exe -m pytest -q
+645 passed, 1 warning in 6.83s
+
+git diff --check
+passed with CRLF normalization warnings only
+```
+
 ## V10-C11: Architecture And Portfolio Packaging
 
 Planned verification:

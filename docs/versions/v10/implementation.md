@@ -680,3 +680,41 @@ C11 packages actual implementation evidence.
 It does not invent screenshots, production metrics, scheduled retraining, concept drift, managed registry behavior, or Cloud Run retraining rollout.
 
 Manual screenshots remain unchecked until captured from the real tools.
+
+## V10-C12: Final Closure
+
+### Files Added
+
+```text
+docs/versions/v10/closure.md
+tests/test_v10_c12_closure.py
+```
+
+### Files Updated
+
+```text
+README.md
+docs/portfolio/v10_completion_checklist.md
+docs/versions/v10/
+```
+
+### Behavior
+- Marked V10 complete.
+- Recorded the final governed retraining lifecycle.
+- Summarized V10-C1 through V10-C12.
+- Recorded the real final local registry state:
+
+```text
+active champion: v1-7ab8f00a
+retraining version: archived
+retraining run: candidate_local_serving_rolled_back
+```
+
+- Recorded completed safety controls, runtime artifacts, portfolio assets, and final positioning.
+- Separated manual screenshot evidence from engineering completion.
+- Preserved scheduled retraining, concept drift, managed registry, cloud retraining rollout, and advanced promotion gates as explicit deferred scope.
+
+### Important Boundary
+Closure does not mean every possible production extension was implemented.
+
+It means the defined local-first V10 scope is complete, validated, documented, explainable, and rollback-safe.

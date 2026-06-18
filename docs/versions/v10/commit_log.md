@@ -233,3 +233,23 @@
 - `vir_env\Scripts\python.exe -m pytest -q tests\test_v8_v9_mermaid_diagrams.py tests\test_v10_c11_portfolio_packaging.py` passed: `18 passed in 0.09s`.
 - `vir_env\Scripts\python.exe -m pytest -q` passed: `640 passed, 1 warning in 7.29s`.
 - `git diff --check` passed with CRLF normalization warnings only.
+
+## Uncommitted - v10-c12: close governed retraining lifecycle
+
+### What Changed
+- Added the V10 closure document.
+- Marked V10 complete in the overview.
+- Recorded the final stable champion and retraining rollback state.
+- Separated completed engineering scope, manual screenshot evidence, and deferred production extensions.
+- Linked V10 closure from README and completion checklist.
+- Added focused closure tests.
+
+### What Problem It Solved
+- Creates one authoritative final record for V10 scope, evidence, boundaries, and portfolio position.
+- Prevents future readers from confusing optional screenshots or deferred cloud rollout with incomplete local lifecycle engineering.
+
+### Verification
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c12_closure.py` passed: `5 passed in 0.06s`.
+- `vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c11_portfolio_packaging.py tests\test_v10_c12_closure.py` passed: `11 passed in 0.08s`.
+- `vir_env\Scripts\python.exe -m pytest -q` passed: `645 passed, 1 warning in 6.83s`.
+- `git diff --check` passed with CRLF normalization warnings only.

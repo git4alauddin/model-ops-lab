@@ -177,3 +177,19 @@ real label-based concept drift
 ```
 
 The README, case study, interview guide, and diagram keep those boundaries explicit.
+
+## V10-C12: Final Closure
+
+The closure risk was treating unchecked portfolio screenshots or deferred cloud retraining features as blockers for the implemented local-first V10 scope.
+
+The final classification is:
+
+```text
+engineering lifecycle: complete
+automated verification: complete
+documentation packaging: complete
+manual screenshots: optional follow-up evidence
+cloud retraining rollout: deferred production extension
+```
+
+This keeps closure evidence-based without hiding future work.

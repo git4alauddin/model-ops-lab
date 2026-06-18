@@ -6,7 +6,7 @@ Add governed retraining automation, production evolution safeguards, and portfol
 V10 moves ModelOpsLab from an observable ML service to a continuously managed ML lifecycle system.
 
 ## Completion Status
-V10 is in progress.
+V10 is complete.
 
 Implemented chunks:
 - V10-C1: retraining governance foundation.
@@ -20,6 +20,7 @@ Implemented chunks:
 - V10-C9: local registry and serving update.
 - V10-C10: local retraining rollback validation.
 - V10-C11: architecture and portfolio packaging.
+- V10-C12: final closure.
 
 ## Final Definition
 V10 is a production-style continuous ML lifecycle management layer with governed retraining workflows, drift-triggered automation, regression protection, deployment safeguards, architecture documentation, and portfolio-grade operational ML system presentation.
@@ -111,6 +112,14 @@ completion evidence checklist
 ```
 
 It does not claim scheduled retraining, concept drift, managed model registry, or retraining-driven Cloud Run rollout because those are not implemented.
+
+## Closure
+
+Final scope, evidence, stable state, and deferred boundaries are recorded in:
+
+```text
+docs/versions/v10/closure.md
+```
 
 ## Out Of Scope For V10-C1
 V10-C1 does not schedule jobs, run retraining, promote models, change production artifacts, install Airflow, or add new cloud infrastructure.
