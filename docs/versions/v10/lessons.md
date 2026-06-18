@@ -80,3 +80,12 @@
 - Readiness and a real prediction should be validated after the champion switch.
 - Registry rollback protection matters because a failed post-update validation must not leave local serving without the previous known-good champion.
 - Cloud Run remains unchanged because local registry files and local candidate artifacts are not automatically present in the deployed container.
+
+## V10-C10: Local Retraining Rollback Validation
+
+- A rollback also needs validation.
+- The rollback target should be captured before promotion, not guessed during an incident.
+- A retraining-aware rollback must verify that the current champion is the model created by that retraining run.
+- Restoring registry status is not enough; readiness and a real prediction must prove the old model is usable.
+- A failed rollback attempt should restore the pre-rollback registry snapshot so the currently working retraining champion remains active.
+- Cloud Run remains unchanged because this command only modifies the local model registry.

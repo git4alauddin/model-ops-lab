@@ -173,6 +173,12 @@ Update the local registry champion and validate local serving:
 python -m app.update_local_serving_model --run-id <run_id>
 ```
 
+Rollback the local retraining champion:
+
+```powershell
+python -m app.rollback_local_retraining_model --run-id <run_id> --reason "<reason>" --rolled-back-by <name>
+```
+
 Check dataset reproducibility:
 
 ```powershell
@@ -241,6 +247,7 @@ Generated runtime files are intentionally local and ignored by git:
 | `retraining_runs/<run_id>/promotion_record.json` | approved candidate promotion decision record |
 | `retraining_runs/<run_id>/serving_handoff_report.json` | validation report for serving update readiness |
 | `retraining_runs/<run_id>/local_serving_update_report.json` | local champion update, readiness, and prediction evidence |
+| `retraining_runs/<run_id>/local_serving_rollback_report.json` | local rollback, readiness, and restored prediction evidence |
 | `reports/drift/reference_baseline.json` | training-data reference baseline for drift checks |
 | `reports/drift/inference_snapshot.json` | production inference feature snapshot for drift checks |
 | `reports/drift/data_drift_summary.json` | local baseline-vs-inference drift summary |
@@ -402,6 +409,12 @@ Local registry and serving update:
 
 ```text
 docs/retraining/local_registry_serving_update.md
+```
+
+Local retraining rollback:
+
+```text
+docs/retraining/local_retraining_rollback.md
 ```
 
 Workload Identity Federation learning notes:

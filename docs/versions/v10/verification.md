@@ -57,6 +57,46 @@ git diff --check
 passed with CRLF normalization warnings only
 ```
 
+## V10-C10: Local Retraining Rollback Validation
+
+Planned verification:
+
+```powershell
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c10_local_retraining_rollback.py
+vir_env\Scripts\python.exe -m py_compile app\retraining\candidate_run_metadata.py app\retraining\local_serving_rollback.py app\rollback_local_retraining_model.py
+vir_env\Scripts\python.exe -m app.rollback_local_retraining_model --run-id <run_id> --reason "<reason>" --rolled-back-by <name>
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py tests\test_v10_c4_candidate_retraining_command.py tests\test_v10_c5_candidate_production_comparison.py tests\test_v10_c6_retraining_approval_gate.py tests\test_v10_c7_candidate_promotion_record.py tests\test_v10_c8_serving_handoff.py tests\test_v10_c9_local_registry_serving_update.py tests\test_v10_c10_local_retraining_rollback.py
+vir_env\Scripts\python.exe -m pytest -q
+git diff --check
+```
+
+Actual verification:
+
+```text
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c10_local_retraining_rollback.py
+5 passed in 0.68s
+
+vir_env\Scripts\python.exe -m py_compile app\retraining\candidate_run_metadata.py app\retraining\local_serving_rollback.py app\rollback_local_retraining_model.py
+passed
+
+vir_env\Scripts\python.exe -m app.rollback_local_retraining_model --run-id retrain-20260617T184250573186Z --reason "Validate V10 local rollback and restore the previous known-good champion." --rolled-back-by alauddin
+restored champion v1-7ab8f00a
+archived retraining champion v1-retrain-20260617T184250573186Z
+generated retraining_runs\retrain-20260617T184250573186Z\local_serving_rollback_report.json
+local readiness status=ready
+local prediction status=success
+cloud_run_update=not_performed
+
+vir_env\Scripts\python.exe -m pytest -q tests\test_v10_c1_retraining_governance_foundation.py tests\test_v10_c2_retraining_trigger_decision.py tests\test_v10_c3_candidate_retraining_run_metadata.py tests\test_v10_c4_candidate_retraining_command.py tests\test_v10_c5_candidate_production_comparison.py tests\test_v10_c6_retraining_approval_gate.py tests\test_v10_c7_candidate_promotion_record.py tests\test_v10_c8_serving_handoff.py tests\test_v10_c9_local_registry_serving_update.py tests\test_v10_c10_local_retraining_rollback.py
+53 passed in 2.14s
+
+vir_env\Scripts\python.exe -m pytest -q
+634 passed, 1 warning in 6.81s
+
+git diff --check
+passed with CRLF normalization warnings only
+```
+
 ## V10-C9: Local Registry and Serving Update
 
 Planned verification:

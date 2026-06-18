@@ -137,3 +137,20 @@ Cloud Run did not change
 ```
 
 The local update report records this boundary explicitly.
+
+## V10-C10: Local Retraining Rollback Validation
+
+The main risk was a rollback that changes registry statuses but fails to restore a usable model.
+
+C10 handles this by validating:
+
+```text
+exactly one restored champion
+expected rollback model version
+loadable restored artifact
+successful prediction
+```
+
+The second risk was a failed rollback leaving the registry partially changed. The implementation snapshots every registry metadata record before mutation and restores that snapshot if post-rollback validation fails.
+
+The focused failure-path test initially exposed a missing import for the registry metadata path helper. That defect only affected snapshot restoration and was fixed before the real rollback command was run. This is a useful example of why failure-path tests matter as much as success-path tests for production mutation code.

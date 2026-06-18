@@ -541,3 +541,87 @@ raise a controlled failure
 C9 changes the local model registry and the model selected by local FastAPI serving.
 
 It does not rebuild Docker, push an image, redeploy Cloud Run, change cloud traffic, or update cloud-serving model artifacts.
+
+## V10-C10: Local Retraining Rollback Validation
+
+### Files Added
+
+```text
+app/retraining/local_serving_rollback.py
+app/rollback_local_retraining_model.py
+docs/retraining/local_retraining_rollback.md
+tests/test_v10_c10_local_retraining_rollback.py
+```
+
+### Files Updated
+
+```text
+README.md
+app/retraining/candidate_run_metadata.py
+docs/versions/v10/
+```
+
+### Behavior
+- Added a retraining-aware local rollback command:
+
+```powershell
+python -m app.rollback_local_retraining_model --run-id <run_id> --reason "<reason>" --rolled-back-by <name>
+```
+
+- Requires:
+
+```text
+candidate_local_serving_updated status
+recorded rollback target
+archived rollback target in model_registry/
+rollback target artifact URI match
+exactly one current champion
+current champion matches the retraining champion recorded by C9
+```
+
+- Performs:
+
+```text
+full registry metadata snapshot
+retraining champion archival
+rollback target restoration
+local readiness validation
+real restored-model prediction smoke test
+```
+
+- Writes:
+
+```text
+retraining_runs/<run_id>/local_serving_rollback_report.json
+```
+
+- Moves the run status to:
+
+```text
+candidate_local_serving_rolled_back
+```
+
+- Updates:
+
+```text
+promotion.serving_update = local_registry_rolled_back
+promotion.local_rollback_status = completed
+promotion.local_active_model_version
+promotion.local_rollback_report_path
+promotion.cloud_run_update = not_performed
+```
+
+### Rollback Failure Protection
+If readiness or prediction fails after rollback mutation:
+
+```text
+restore the complete pre-rollback registry snapshot
+make the retraining model champion again
+return the rollback target to archived
+raise a controlled failure
+```
+
+### Important Boundary
+C10 changes and validates local registry and serving state only.
+
+It does not roll back Cloud Run, change cloud traffic, redeploy a container, or alter Artifact Registry images.
