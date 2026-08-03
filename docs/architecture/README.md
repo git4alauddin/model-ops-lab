@@ -6,6 +6,9 @@ Current system-level reference:
 
 ```text
 continuous_ml_lifecycle.md
+app_structure.md
+technology_ownership_map.md
+component_chain_brief.md
 ```
 
 Version flow diagrams:
